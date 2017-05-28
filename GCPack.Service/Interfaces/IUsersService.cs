@@ -1,4 +1,5 @@
 ﻿using GCPack.Model;
+using System.Collections.Generic;
 
 namespace GCPack.Service.Interfaces
 {
@@ -6,5 +7,10 @@ namespace GCPack.Service.Interfaces
     {
         UserModel GetUser(string ticket);
         string Login(string username, string password);
+
+        ICollection<UserModel> GetUsers(UserFilter filter);
+
+        UserModel AddUser(UserModel user);
+        void DeleteUser(int userId);
     }
 }

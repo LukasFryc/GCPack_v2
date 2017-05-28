@@ -87,5 +87,48 @@ namespace GCPack.Repository
             }
         }
 
+        public ICollection<UserModel> GetUsers(UserFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var users = db.Users.Select(u => u);
+
+                switch (filter.OrderBy)
+                {
+
+                    case "FirstName":
+                        users = users.OrderBy(u => u.FirstName).ThenBy(u => u.LastName);
+                        break;
+                    case "LastName":
+                        users = users.OrderBy(u => u.LastName).ThenBy(u => u.FirstName);
+                        break;
+                }
+                return Mapper.Map<ICollection<UserModel>>(users);
+            }
+        }
+
+        public void DeleteUser(int userId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                db.Logins.RemoveRange(db.Logins.Where(l => l.UserID == userId));
+                db.SaveChanges();
+                var user = db.Users.Where(u => u.ID == userId).SingleOrDefault();
+                if (user != null) db.Users.Remove(user);
+                db.SaveChanges();
+            }
+        }
+
+        public UserModel AddUser(UserModel user)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                User newDbUser = db.Users.Add(Mapper.Map<User>(user));
+                db.SaveChanges();
+                // bacha toto je finta tyv reveryni mapovani - vracim si z db zpatky model
+                return Mapper.Map<UserModel>(newDbUser);
+            }
+        }
+
     }
 }

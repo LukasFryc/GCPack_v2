@@ -41,6 +41,9 @@ namespace GCPack.Web.App_Start
         }
         public static void ConfigureWebApiContainer(ContainerBuilder containerBuilder)
         {
+            // LF
+            // zde se konfiguruje IOC 
+            // IOC je navrhovy vzor pro vytvareni instanci trid
             containerBuilder.RegisterType<UsersService>().As<IUsersService>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<UsersRepository>().As<IUsersRepository>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<DocumentsService>().As<IDocumentsService>().AsImplementedInterfaces().InstancePerRequest();

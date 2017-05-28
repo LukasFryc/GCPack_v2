@@ -13,6 +13,8 @@ namespace GCPack.Service
     public class UsersService : IUsersService
     {
         readonly IUsersRepository usersRepository;
+
+        // IOC  se inicializuje v boostrap (ten je GCPack.Web/App_Start)
         public UsersService(IUsersRepository usersRepository)
         {
             this.usersRepository = usersRepository;
@@ -45,6 +47,22 @@ namespace GCPack.Service
         public void UpdateTicket(string ticket, UserModel user)
         {
             usersRepository.UpdateTicket(ticket,user);
+        }
+
+
+        public ICollection<UserModel> GetUsers(UserFilter filter)
+        {
+            return usersRepository.GetUsers(filter);
+        }
+
+        public UserModel AddUser(UserModel user)
+        {
+            return usersRepository.AddUser(user);
+        }
+
+        public void DeleteUser(int userId)
+        {
+            usersRepository.DeleteUser(userId);
         }
 
     }

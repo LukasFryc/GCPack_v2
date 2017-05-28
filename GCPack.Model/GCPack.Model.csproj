@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="DocumentModel.cs" />
     <Compile Include="DocumentTypeModel.cs" />
+    <Compile Include="Filters.cs" />
     <Compile Include="JobPositionModel.cs" />
     <Compile Include="LogEventModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

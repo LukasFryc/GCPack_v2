@@ -11,7 +11,14 @@ namespace GCPack.Web.Filter
         private static string GetRoles()
         {
             ClaimsPrincipal principal = (ClaimsPrincipal)HttpContext.Current.User;
-            return System.Convert.ToString(principal.Claims.SingleOrDefault(c => c.Type == "Role").Value);
+            if (principal.Claims.Count() > 0)
+            {
+                return System.Convert.ToString(principal.Claims.SingleOrDefault(c => c.Type == "Role").Value);
+            }
+            else
+            {
+                return string.Empty;
+            }
 
         }
 
