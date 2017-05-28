@@ -1,0 +1,14 @@
+﻿@model GCPack.Model.UserModel
+@{
+    ViewBag.Title = "Index";
+}
+    @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { id = "loginForm" }))
+    {
+        <div>
+            <h2>Prihlaseni</h2>
+            Jmeno: <input name="UserName" value="@Model.UserName" />
+            Heslo: <input name="Password" value="@Model.Password"/>
+            <input type="submit" value="Prihlasit" />
+        </div>
+        
+    }

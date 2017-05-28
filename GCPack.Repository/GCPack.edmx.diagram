@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="83138d74017e436eaed3e188e2add6a9" Name="Diagram1" >
+        <EntityTypeShape EntityType="GCPack.AppSystem" Width="1.5" PointX="10.5" PointY="9" />
+        <EntityTypeShape EntityType="GCPack.Division" Width="1.5" PointX="10.5" PointY="6" />
+        <EntityTypeShape EntityType="GCPack.DivisionCategory" Width="1.5" PointX="12.75" PointY="12.75" />
+        <EntityTypeShape EntityType="GCPack.Document" Width="1.5" PointX="7.5" PointY="11.625" />
+        <EntityTypeShape EntityType="GCPack.DocumentType" Width="1.5" PointX="5.25" PointY="12.625" />
+        <EntityTypeShape EntityType="GCPack.File" Width="1.5" PointX="9.75" PointY="25.5" />
+        <EntityTypeShape EntityType="GCPack.JobPosition" Width="1.5" PointX="0.75" PointY="10.25" />
+        <EntityTypeShape EntityType="GCPack.LogEvent" Width="1.5" PointX="9.75" PointY="14.125" />
+        <EntityTypeShape EntityType="GCPack.ReadConfirmation" Width="1.5" PointX="9.75" PointY="20.125" />
+        <EntityTypeShape EntityType="GCPack.Role" Width="1.5" PointX="3" PointY="5" />
+        <EntityTypeShape EntityType="GCPack.Signature" Width="1.5" PointX="9.75" PointY="11.25" />
+        <EntityTypeShape EntityType="GCPack.State" Width="1.5" PointX="5.25" PointY="15.875" />
+        <EntityTypeShape EntityType="GCPack.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="GCPack.SystemCategory" Width="1.5" PointX="12.75" PointY="9.75" />
+        <EntityTypeShape EntityType="GCPack.User" Width="1.5" PointX="3" PointY="8.75" />
+        <EntityTypeShape EntityType="GCPack.UserRole" Width="1.5" PointX="5.25" PointY="9" />
+        <AssociationConnector Association="GCPack.FK_SystemCategory_System" />
+        <AssociationConnector Association="GCPack.FK_DivisionCategory_Division" />
+        <AssociationConnector Association="GCPack.FK_DivisionCategory_RizeneDokumeny" />
+        <AssociationConnector Association="GCPack.FK_Documents_State" />
+        <AssociationConnector Association="GCPack.FK_File_RizeneDokumeny" />
+        <AssociationConnector Association="GCPack.FK_LogEvent_RizeneDokumeny" />
+        <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
+        <AssociationConnector Association="GCPack.FK_RizeneDokumeny_DocumentType" />
+        <AssociationConnector Association="GCPack.FK_Signature_RizeneDokumeny" />
+        <AssociationConnector Association="GCPack.FK_SystemCategory_RizeneDokumeny" />
+        <AssociationConnector Association="GCPack.FK_DocumentType_User" />
+        <AssociationConnector Association="GCPack.FK_User_JobPosition" />
+        <AssociationConnector Association="GCPack.FK_LogEvent_User" />
+        <AssociationConnector Association="GCPack.FK_UserRoles_Roles" />
+        <AssociationConnector Association="GCPack.FK_Signature_User" />
+        <AssociationConnector Association="GCPack.FK_UserRoles_Users" />
+        <EntityTypeShape EntityType="GCPack.Login" Width="1.5" PointX="3.375" PointY="0.75" />
+        <AssociationConnector Association="GCPack.FK_Login_User" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

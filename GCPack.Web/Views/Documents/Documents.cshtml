@@ -1,0 +1,76 @@
+﻿@model IEnumerable<GCPack.Repository.Document>
+
+@{
+    ViewBag.Title = "Documents";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Documents</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DocumentTypeID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DocumentNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EffeciencyDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReviewDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NextReviewDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AdministratorID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StateID)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocumentTypeID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocumentNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EffeciencyDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReviewDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NextReviewDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AdministratorID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StateID)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
