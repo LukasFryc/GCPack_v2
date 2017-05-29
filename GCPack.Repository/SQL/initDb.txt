@@ -1,0 +1,402 @@
+﻿/****** Object:  Table [dbo].[JobPosition]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[JobPosition](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_JobPosition] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Division]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Division](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_Division] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[System]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[System](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_System] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[DivisionCategory]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[DivisionCategory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[DocumentID] [int] NOT NULL,
+	[DivisionID] [int] NOT NULL,
+ CONSTRAINT [PK_DivisionCategory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[SystemCategory]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SystemCategory](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[DocumentID] [int] NOT NULL,
+	[ID_System] [int] NOT NULL,
+ CONSTRAINT [PK_SystemCategory] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[LogEvent]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[LogEvent](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[Text] [varchar](50) NOT NULL,
+	[Date] [varchar](50) NOT NULL,
+	[DocumentID] [int] NOT NULL,
+ CONSTRAINT [PK_LogEvent] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[User]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[User](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[FirstName] [nvarchar](50) NOT NULL,
+	[LastName] [nvarchar](50) NOT NULL,
+	[UserNumber] [nvarchar](50) NOT NULL,
+	[UserName] [varchar](50) NOT NULL,
+	[Password] [varchar](50) NOT NULL,
+	[Email1] [nvarchar](50) NULL,
+	[Email2] [nvarchar](50) NULL,
+	[Phone1] [nvarchar](50) NULL,
+	[Phone2] [nvarchar](50) NULL,
+	[Active] [bit] NOT NULL,
+	[ManagerID] [int],
+	[AdministratorID] [int] NULL,
+ CONSTRAINT [PK_User] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[Signature]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Signature](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[DocumentID] [int] NOT NULL,
+	[UserID] [int] NOT NULL,
+ CONSTRAINT [PK_Signature] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Document]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Document](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[DocumentTypeID] [int] NOT NULL,
+	[DocumentNumber] [nvarchar](50) NULL,
+	[Title] [nvarchar](50) NULL,
+	[EffeciencyDate] [datetime] NULL,
+	[ReviewDate] [datetime] NULL,
+	[NextReviewDate] [datetime] NULL,
+	[AdministratorID] [int] NOT NULL,
+	[StateID] [int] NULL,
+ CONSTRAINT [PK_RizeneDokumeny] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Roles]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[Roles](
+	[RoleId] [smallint] IDENTITY NOT NULL,
+	[RoleName] [varchar](50) NOT NULL,
+	[RoleCode] [varchar](50) NOT NULL,
+	[RoleDescription] [varchar](255) NOT NULL,
+ CONSTRAINT [PK_Roles] PRIMARY KEY CLUSTERED 
+(
+	[RoleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[ReadConfirmation]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ReadConfirmation](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[ReadDate] [datetime] NULL,
+	[DocumentID] [int] NOT NULL,
+ CONSTRAINT [PK_ReadConfirmation] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[File]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[File](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varbinary](max) NOT NULL,
+	[DocumentID] [int] NOT NULL,
+ CONSTRAINT [PK_File] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[State]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[State](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+	[Code] [varchar](50) NOT NULL,
+ CONSTRAINT [PK_State] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[DocumentType]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+CREATE TABLE [dbo].[DocumentType](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Name] [varchar](50) NOT NULL,
+	[AdministratorID] [int] NULL,
+	[AuthorizinOfficerID] [int] NULL,
+ CONSTRAINT [PK_DocumentType] PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+SET ANSI_PADDING OFF
+GO
+/****** Object:  Table [dbo].[UserRoles]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UserRoles](
+	[UserRoleId] [int] IDENTITY(1,1) NOT NULL,
+	[UserID] [int] NOT NULL,
+	[RoleId] [smallint] NOT NULL,
+ CONSTRAINT [PK_UserRoles] PRIMARY KEY CLUSTERED 
+(
+	[UserRoleId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 5/26/2017 4:12:21 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+SET ANSI_PADDING ON
+GO
+SET ANSI_PADDING OFF
+GO
+ALTER TABLE [dbo].[DivisionCategory]  WITH CHECK ADD  CONSTRAINT [FK_DivisionCategory_Division] FOREIGN KEY([DivisionID])
+REFERENCES [dbo].[Division] ([ID])
+GO
+ALTER TABLE [dbo].[DivisionCategory] CHECK CONSTRAINT [FK_DivisionCategory_Division]
+GO
+ALTER TABLE [dbo].[DivisionCategory]  WITH CHECK ADD  CONSTRAINT [FK_DivisionCategory_RizeneDokumeny] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+ALTER TABLE [dbo].[DivisionCategory] CHECK CONSTRAINT [FK_DivisionCategory_RizeneDokumeny]
+GO
+ALTER TABLE [dbo].[SystemCategory]  WITH CHECK ADD  CONSTRAINT [FK_SystemCategory_System] FOREIGN KEY([ID_System])
+REFERENCES [dbo].[System] ([ID])
+GO
+ALTER TABLE [dbo].[SystemCategory] CHECK CONSTRAINT [FK_SystemCategory_System]
+GO
+ALTER TABLE [dbo].[SystemCategory]  WITH CHECK ADD  CONSTRAINT [FK_SystemCategory_RizeneDokumeny] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+ALTER TABLE [dbo].[SystemCategory] CHECK CONSTRAINT [FK_SystemCategory_RizeneDokumeny]
+GO
+ALTER TABLE [dbo].[LogEvent]  WITH CHECK ADD  CONSTRAINT [FK_LogEvent_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[LogEvent] CHECK CONSTRAINT [FK_LogEvent_User]
+GO
+ALTER TABLE [dbo].[LogEvent]  WITH CHECK ADD  CONSTRAINT [FK_LogEvent_RizeneDokumeny] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+ALTER TABLE [dbo].[LogEvent] CHECK CONSTRAINT [FK_LogEvent_RizeneDokumeny]
+GO
+
+
+ALTER TABLE [dbo].[User]  WITH CHECK ADD  CONSTRAINT [FK_User_JobPosition] FOREIGN KEY([ID])
+REFERENCES [dbo].[JobPosition] ([ID])
+
+
+GO
+ALTER TABLE [dbo].[User] CHECK CONSTRAINT [FK_User_JobPosition]
+GO
+ALTER TABLE [dbo].[Signature]  WITH CHECK ADD  CONSTRAINT [FK_Signature_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[Signature] CHECK CONSTRAINT [FK_Signature_User]
+GO
+ALTER TABLE [dbo].[Signature]  WITH CHECK ADD  CONSTRAINT [FK_Signature_RizeneDokumeny] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+ALTER TABLE [dbo].[Signature] CHECK CONSTRAINT [FK_Signature_RizeneDokumeny]
+GO
+ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_Documents_State] FOREIGN KEY([StateID])
+REFERENCES [dbo].[State] ([ID])
+GO
+ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_Documents_State]
+GO
+ALTER TABLE [dbo].[Document]  WITH CHECK ADD  CONSTRAINT [FK_RizeneDokumeny_DocumentType] FOREIGN KEY([DocumentTypeID])
+REFERENCES [dbo].[DocumentType] ([ID])
+GO
+ALTER TABLE [dbo].[Document] CHECK CONSTRAINT [FK_RizeneDokumeny_DocumentType]
+GO
+ALTER TABLE [dbo].[ReadConfirmation]  WITH CHECK ADD  CONSTRAINT [FK_ReadConfirmation_RizeneDokumeny] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+ALTER TABLE [dbo].[ReadConfirmation] CHECK CONSTRAINT [FK_ReadConfirmation_RizeneDokumeny]
+GO
+ALTER TABLE [dbo].[File]  WITH CHECK ADD  CONSTRAINT [FK_File_RizeneDokumeny] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+ALTER TABLE [dbo].[File] CHECK CONSTRAINT [FK_File_RizeneDokumeny]
+GO
+ALTER TABLE [dbo].[DocumentType]  WITH CHECK ADD  CONSTRAINT [FK_DocumentType_User] FOREIGN KEY([AdministratorID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[DocumentType] CHECK CONSTRAINT [FK_DocumentType_User]
+GO
+ALTER TABLE [dbo].[UserRoles]  WITH CHECK ADD  CONSTRAINT [FK_UserRoles_Roles] FOREIGN KEY([RoleId])
+REFERENCES [dbo].[Roles] ([RoleId])
+GO
+ALTER TABLE [dbo].[UserRoles] CHECK CONSTRAINT [FK_UserRoles_Roles]
+GO
+ALTER TABLE [dbo].[UserRoles]  WITH CHECK ADD  CONSTRAINT [FK_UserRoles_Users] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ALTER TABLE [dbo].[UserRoles] CHECK CONSTRAINT [FK_UserRoles_Users]
+GO
+
+INSERT INTO Roles (RoleCode,RoleName,RoleDescription) VALUES ('SystemAdministrator','SystemAdministrator','Administrator aplikace')
+INSERT INTO Roles (RoleCode,RoleName,RoleDescription) VALUES ('DocumentAdministrator','DocumentAdministrator','Spravce dokumentu')
+INSERT INTO Roles (RoleCode,RoleName,RoleDescription) VALUES ('Supervisor','Supervisor','Supervizor')
+INSERT INTO Roles (RoleCode,RoleName,RoleDescription) VALUES ('PowerUser','PowerUser','Uživatel 1')
+INSERT INTO Roles (RoleCode,RoleName,RoleDescription) VALUES ('User','User','Uživatel 2')
+GO
+INSERT INTO [User] (FirstName,LastName,UserNumber,UserName,Password,Active) VALUES ('Administrátor aplikace','','10','systemAdministrator','heslo',1)
+INSERT INTO [User] (FirstName,LastName,UserNumber,UserName,Password,Active) VALUES ('Správce dokumentu','','11','spravce','heslo',1)
+INSERT INTO [User] (FirstName,LastName,UserNumber,UserName,Password,Active) VALUES ('Supervizor','','12','supervizor','heslo',1)
+INSERT INTO [User] (FirstName,LastName,UserNumber,UserName,Password,Active) VALUES ('Uživatel 1','','13','poweruser','heslo',1)
+INSERT INTO [User] (FirstName,LastName,UserNumber,UserName,Password,Active) VALUES ('Uživatel 2','','14','user','heslo',1)
+GO 
+-- inicializovat uzivatele
+INSERT INTO UserRoles (UserID,RoleID) VALUES(1,1)
