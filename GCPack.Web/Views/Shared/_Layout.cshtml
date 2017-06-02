@@ -32,6 +32,7 @@
                     <li>@Html.ActionLink("About", "About", "Home")</li>
                     <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
                     <li>@Html.ActionLink("Dokumenty", "Index", "Documents")</li>
+                    <li>@Html.ActionLink("Dokumenty editace", "Edit", "Documents")</li>
                     @if (GCPack.Web.Filter.UserRoles.HasRole("SystemAdministrator"))
                     {
                         <li>@Html.ActionLink("Administrace uživatelů", "Index", "User")</li>

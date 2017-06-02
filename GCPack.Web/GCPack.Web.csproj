@@ -243,6 +243,8 @@
     <Content Include="Views\Documents\Documents.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
+    <Content Include="Views\Documents\Edit.cshtml" />
+    <Content Include="Views\Documents\Pokus.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

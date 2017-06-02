@@ -1,0 +1,53 @@
+﻿@model GCPack.Model.DocumentModel
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Type</h2>
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+<div>
+@using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+{
+    <div class="form-group">
+        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    if (Model != null && Model.Users != null)
+    {
+        for (int i=0; i < Model.Users.Count; i++)
+        {
+        <div class="form-group">
+            @Html.LabelFor(model => model.Users[i].LastName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Users[i].LastName, new { htmlAttributes = new { @class = "form-control", @name = "davidovo" } })
+                @Html.ValidationMessageFor(model => model.Users[i].LastName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        }
+    }
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="file" name="file1" id="file1" value="Přidat soubor" class="btn btn-default" />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="file" name="file2" id="file2" value="Přidat soubor" class="btn btn-default" />
+        </div>
+    </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Uložit" class="btn btn-default" />
+            </div>
+        </div>
+
+        }
+    </div>
