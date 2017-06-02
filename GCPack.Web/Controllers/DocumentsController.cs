@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using GCPack.Web.Filters;
 using GCPack.Model;
 using GCPack.Service.Interfaces;
+using System.IO;
 
 namespace GCPack.Web.Controllers
 {
@@ -36,7 +37,19 @@ namespace GCPack.Web.Controllers
 
         public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload)
         {
-            this.Request.Files[0].SaveAs("");
+            string folderForFiles = System.Configuration.ConfigurationManager.AppSettings["FileTemp"];
+            string guid = Guid.NewGuid().ToString();
+            ICollection<string> fileNames = new HashSet<string>();
+            string folderPath = folderForFiles + guid + @"\";
+            Directory.CreateDirectory(folderPath);
+            for (int i = 0;i < this.Request.Files.Count; i++)
+            {
+                string filePath = folderPath + this.Request.Files[i].FileName;
+                
+                fileNames.Add(filePath);
+                this.Request.Files[i].SaveAs(filePath);
+            }
+            
             return View("Edit");
         }
 

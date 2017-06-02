@@ -18,13 +18,14 @@ namespace GCPack.Model
         {
             Users = new List<UserModel>();
         }
-
+        public int DocumentID { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
         public DocumentAdminType DocumentAdminType { get; set; }
         public int AdminID { get; set; }
         public bool CanEdit { get; set; }
         public bool CanRevision { get; set; }
+        public string Revision { get; set; }
         public List<UserModel> Users { get; set; }
     }
 }

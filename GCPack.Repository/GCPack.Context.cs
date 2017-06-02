@@ -37,7 +37,6 @@ namespace GCPack.Repository
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Signature> Signatures { get; set; }
         public virtual DbSet<State> States { get; set; }
-        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
         public virtual DbSet<SystemCategory> SystemCategories { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }

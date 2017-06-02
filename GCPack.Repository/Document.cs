@@ -34,6 +34,9 @@ namespace GCPack.Repository
         public Nullable<System.DateTime> NextReviewDate { get; set; }
         public int AdministratorID { get; set; }
         public Nullable<int> StateID { get; set; }
+        public Nullable<int> DocumentAdminType { get; set; }
+        public string Annotation { get; set; }
+        public string Revision { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DivisionCategory> DivisionCategories { get; set; }

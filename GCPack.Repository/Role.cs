@@ -24,6 +24,7 @@ namespace GCPack.Repository
         public string RoleName { get; set; }
         public string RoleCode { get; set; }
         public string RoleDescription { get; set; }
+        public string ApplicationCode { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRole> UserRoles { get; set; }

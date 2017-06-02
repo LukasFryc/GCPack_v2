@@ -4,32 +4,46 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using GCPack.Model;
+using GCPack.Repository.Interfaces;
 
 namespace GCPack.Service
 {
     public class DocumentsService : Interfaces.IDocumentsService
     {
+        readonly IDocumentsRepository documentsRepository;
+
+        public DocumentsService(IDocumentsRepository documentsRepository)
+        {
+            this.documentsRepository = documentsRepository;
+        }
         public RizenyDokument GetDocument(int documentId)
         {
-            ICollection<Stredisko> strediska = new HashSet<Stredisko>();
-            strediska.Add(new Stredisko() { Nazev = "stredisko 1" });
-            strediska.Add(new Stredisko() { Nazev = "stredisko 2" });
-            strediska.Add(new Stredisko() { Nazev = "stredisko 3" });
-            strediska.Add(new Stredisko() { Nazev = "stredisko 4" });
-
-            ICollection<Uzivatel> uzivatele = new HashSet<Uzivatel>();
-            uzivatele.Add(new Uzivatel() { FirstName = "lukas", LastName = "Fryc" });
-            uzivatele.Add(new Uzivatel() { FirstName = "david", LastName = "navratil" });
-            uzivatele.Add(new Uzivatel() { FirstName = "petr", LastName = "novak" });
-            uzivatele.Add(new Uzivatel() { FirstName = "karel", LastName = "ctvrty" });
-            RizenyDokument dokument = new RizenyDokument()
-            {
-                Nazev = "Dokument prvni",
-                Strediska = strediska,
-                Uzivatele = uzivatele,
-                Popis = "Je docela dobře možné, že velký incident by mohl vést k nedostatku paliva, a to by byla hospodářská katastrofa,“ řekl listu The Sun nejmenovaný vysoce postavený zdroj námořnictva a dodal: „Hrozba proti tankerům s palivem se objevila před několika lety a od té doby stále provádíme výcvik, abychom jí čelili."
-            };
-            return dokument;
+            return new RizenyDokument();
         }
+
+
+        public DocumentModel AddDocument(DocumentModel document)
+        {
+            // pokud je dokument ve stavu n
+
+
+            return new DocumentModel();
+
+        }
+
+        public DocumentModel EditDocument(DocumentModel document)
+        {
+            // zjistit v jakem stavu je dokument pro posilani emailu pridanym nebo odstranenym uzivatelum
+
+            // nacist uzivatele kteri se smazou
+
+            // nacist uzivatele kteri se pridavaji
+
+
+
+            return new DocumentModel();
+
+        }
+
     }
 }

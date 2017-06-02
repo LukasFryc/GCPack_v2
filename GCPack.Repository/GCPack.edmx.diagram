@@ -17,7 +17,6 @@
         <EntityTypeShape EntityType="GCPack.Role" Width="1.5" PointX="3" PointY="5" />
         <EntityTypeShape EntityType="GCPack.Signature" Width="1.5" PointX="9.75" PointY="11.25" />
         <EntityTypeShape EntityType="GCPack.State" Width="1.5" PointX="5.25" PointY="15.875" />
-        <EntityTypeShape EntityType="GCPack.sysdiagram" Width="1.5" PointX="0.75" PointY="0.75" />
         <EntityTypeShape EntityType="GCPack.SystemCategory" Width="1.5" PointX="12.75" PointY="9.75" />
         <EntityTypeShape EntityType="GCPack.User" Width="1.5" PointX="3" PointY="8.75" />
         <EntityTypeShape EntityType="GCPack.UserRole" Width="1.5" PointX="5.25" PointY="9" />
