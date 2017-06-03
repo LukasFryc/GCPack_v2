@@ -46,10 +46,12 @@ namespace GCPack.Web.Controllers
             Directory.CreateDirectory(folderPath);
             for (int i = 0;i < this.Request.Files.Count; i++)
             {
-                string filePath = folderPath + this.Request.Files[i].FileName;
-                
-                fileNames.Add(filePath);
-                this.Request.Files[i].SaveAs(filePath);
+                if (this.Request.Files[i].ContentLength > 0)
+                {
+                    string filePath = folderPath + this.Request.Files[i].FileName;
+                    fileNames.Add(filePath);
+                    this.Request.Files[i].SaveAs(filePath);
+                }
             }
             
             return View("Edit");

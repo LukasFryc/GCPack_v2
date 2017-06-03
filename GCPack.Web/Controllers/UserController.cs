@@ -27,7 +27,7 @@ namespace GCPack.Web.Controllers
             return View("Edit");
         }
 
-        public ActionResult GetUsers(string name, int jobPositionId)
+        public ActionResult GetUsers(string name, int jobPositionId, Array[] preservedUsers)
         {
 
             var users = userService.GetUsers(new UserFilter() {Name = name, JobPositionID = jobPositionId });

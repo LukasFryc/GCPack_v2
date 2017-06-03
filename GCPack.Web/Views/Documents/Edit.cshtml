@@ -5,7 +5,9 @@
 }
 <script>
     var timeoutHandle;
+    var selectedUsers = [];
     $(document).ready(function () {
+        
         $('#filter').keyup(function () {
             GetUsers();
         });
@@ -13,6 +15,22 @@
         $('#jobPosition').change(function () {
             GetUsers();
         });
+
+        $("#RemoveSelectedUsers").click(function ()
+        {
+            $("#SelectedUsers :selected").each(function () {
+                $(this).remove();
+            });
+        });
+
+        $('#AddUserToList').click(function () {
+            $("#FilteredUsers :selected").each(function (index, user) {
+                $('#SelectedUsers').append('<option value="' + user.value + '">' + user.text + '</option>');
+            });
+            
+            GetUsers();
+        });
+        
 
         GetUsers();
 
@@ -22,8 +40,12 @@
 
             timeoutHandle = setTimeout(
                 function () {
+                    selectedUsers = [];
+                    $("#SelectedUsers").children().each(function () {
+                        selectedUsers.push($(this).val());
+                    });
                     $('#FilteredUsers').empty();
-                    $.getJSON("/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val() })
+                    $.getJSON("/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers })
                         .done(function (users) {
 
                             for (var user in users)
@@ -76,11 +98,11 @@
         <div class="col-md-offset-2 col-md-10">
             <div style="margin-bottom:20px" >
 
-                <b>Přiřazení uživatelé k doumentu</b><br />
-                <select multiple name="SelectedUsers" class="selectBoxes">
+                <b>Přiřazení uživatelé k dokumentu</b><br />
+                <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes">
                 </select>
                 <br />
-                <input type="button" value="Odebrat vybrané uživatele z dokumentu" class="btn btn-default" />
+                <input type="button" value="Odebrat vybrané uživatele z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
                 
             </div>
             <div>
