@@ -23,14 +23,14 @@ namespace GCPack.Web.Controllers
         [AuthorizeAttributeGC(Roles = "user,admin")]
         public ActionResult Index()
         {
-            RizenyDokument dokument = documentService.GetDocument(0);
+            DocumentModel dokument = documentService.GetDocument(0);
             return View(dokument);
         }
 
         [AuthorizeAttributeGC(Roles = "user,admin")]
         public ActionResult Documents()
         {
-            RizenyDokument dokument = documentService.GetDocument(0);
+            DocumentModel dokument = documentService.GetDocument(0);
             return View(dokument);
         }
 
@@ -67,8 +67,6 @@ namespace GCPack.Web.Controllers
         {
             ViewBag.Type = "Editace dokumentu";
             DocumentModel document = new DocumentModel() {Title = "Dokument 1"};
-            document.Users.Add(new UserModel() { LastName = "Navratil" });
-            document.Users.Add(new UserModel() { LastName = "Fryc" });
             ViewBag.Documents = document;
             
             return View(document);

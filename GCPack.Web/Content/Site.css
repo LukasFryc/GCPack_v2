@@ -22,3 +22,8 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.selectBoxes {
+    width:400px;
+    height:300px;
+}

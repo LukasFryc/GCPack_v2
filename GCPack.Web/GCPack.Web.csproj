@@ -238,9 +238,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Login\Index.cshtml" />
-    <Content Include="Views\Documents\Index.cshtml" />
     <Content Include="Views\Login\LoggedOut.cshtml" />
-    <Content Include="Views\Documents\Documents.cshtml" />
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\Documents\Edit.cshtml" />

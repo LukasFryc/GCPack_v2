@@ -76,8 +76,12 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                db.Logins.RemoveRange(db.Logins.Where (l => l.UserID == user.ID));
-                db.SaveChanges();
+                if (db.Logins.Where(l => l.UserID == user.ID).Count() > 0)
+                {
+                    db.Logins.RemoveRange(db.Logins.Where(l => l.UserID == user.ID));
+                    db.SaveChanges();
+                }
+
                 db.Logins.Add(new Login() {
                     LastTick = DateTime.Now,
                     Hash = ticket,

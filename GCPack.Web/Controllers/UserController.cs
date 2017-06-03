@@ -27,6 +27,14 @@ namespace GCPack.Web.Controllers
             return View("Edit");
         }
 
+        public ActionResult GetUsers(string name, int jobPositionId)
+        {
+            ICollection<UserModel> users = new HashSet<UserModel>();
+            users.Add(new UserModel() { FirstName = "petr", LastName = "konecny", ID = 10 });
+            users.Add(new UserModel() { FirstName = "jarka", LastName = "nova", ID = 11 });
+            return Json(users,JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult AddUser(UserModel user)
         {
             userService.AddUser(user);

@@ -14,10 +14,6 @@ namespace GCPack.Model
 
     public class DocumentModel
     {
-        public DocumentModel()
-        {
-            Users = new List<UserModel>();
-        }
         public int DocumentID { get; set; }
         public string Title { get; set; }
         public string Text { get; set; }
@@ -26,6 +22,6 @@ namespace GCPack.Model
         public bool CanEdit { get; set; }
         public bool CanRevision { get; set; }
         public string Revision { get; set; }
-        public List<UserModel> Users { get; set; }
+        public ICollection<int> SelectedUsers { get; set; }
     }
 }

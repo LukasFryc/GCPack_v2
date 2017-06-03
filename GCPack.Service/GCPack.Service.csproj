@@ -46,7 +46,9 @@
   <ItemGroup>
     <Compile Include="DocumentsService.cs" />
     <Compile Include="Interfaces\IDocumentsService.cs" />
+    <Compile Include="Interfaces\IMailService.cs" />
     <Compile Include="Interfaces\IUsersService.cs" />
+    <Compile Include="MailService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsersService.cs" />
   </ItemGroup>

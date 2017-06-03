@@ -5,26 +5,47 @@ using System.Text;
 using System.Threading.Tasks;
 using GCPack.Model;
 using GCPack.Repository.Interfaces;
+using GCPack.Service.Interfaces;
 
 namespace GCPack.Service
 {
-    public class DocumentsService : Interfaces.IDocumentsService
+    public class DocumentsService : IDocumentsService
     {
         readonly IDocumentsRepository documentsRepository;
+        readonly IMailService mailService;
 
-        public DocumentsService(IDocumentsRepository documentsRepository)
+        public DocumentsService(IDocumentsRepository documentsRepository, IMailService mailService)
         {
             this.documentsRepository = documentsRepository;
+            this.mailService = mailService;
         }
-        public RizenyDokument GetDocument(int documentId)
+        public DocumentModel GetDocument(int documentId)
         {
-            return new RizenyDokument();
+            return new DocumentModel();
         }
 
 
-        public DocumentModel AddDocument(DocumentModel document)
+        public DocumentModel AddDocument(DocumentModel document, ICollection<string> files)
         {
-            // pokud je dokument ve stavu n
+            // novy dokument se vzdy uklada ve stavu rozpracovany
+            // nikdy se u tohoto dokumentu neposilaji emaily
+
+            document = documentsRepository.AddDocument(document);
+
+            // namapuji se uzivatele na dokuemnt
+
+            documentsRepository.MapUsersToDocument( document.SelectedUsers, document, null);
+
+            // ulozeni vsech souboru
+            foreach (string file in files)
+            {
+                try
+                {
+                    documentsRepository.AddFileToDb(document, file);
+                }
+                catch (Exception e)
+                { }
+            }
 
 
             return new DocumentModel();
