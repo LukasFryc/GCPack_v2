@@ -13,9 +13,11 @@ namespace GCPack.Web.Controllers
     public class DocumentsController : Controller
     {
         private readonly IDocumentsService documentService;
-        public DocumentsController(IDocumentsService documentService)
+        private readonly IUsersService userService;
+        public DocumentsController(IDocumentsService documentService, IUsersService userService)
         {
             this.documentService = documentService;
+            this.userService = userService;
         }
 
 
@@ -66,6 +68,7 @@ namespace GCPack.Web.Controllers
         public ActionResult Edit()
         {
             ViewBag.Type = "Editace dokumentu";
+            ViewBag.JobPositions = userService.GetJobPositions();
             DocumentModel document = new DocumentModel() {Title = "Dokument 1"};
             ViewBag.Documents = document;
             

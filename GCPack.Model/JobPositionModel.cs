@@ -8,5 +8,7 @@ namespace GCPack.Model
 {
     public class JobPositionModel
     {
+        public int ID { get; set; }
+        public string Name { get; set; }
     }
 }

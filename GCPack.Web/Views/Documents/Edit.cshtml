@@ -14,6 +14,7 @@
             GetUsers();
         });
 
+        GetUsers();
 
         function GetUsers()
         {
@@ -21,10 +22,18 @@
 
             timeoutHandle = setTimeout(
                 function () {
-
+                    $('#FilteredUsers').empty();
                     $.getJSON("/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val() })
-                        .done(function (json) {
-                            console.log("JSON Data: " + json[0].FirstName);
+                        .done(function (users) {
+
+                            for (var user in users)
+                            {
+                                $('#FilteredUsers').append($('<option>', {
+                                    value: users[user].ID,
+                                    text: users[user].LastName + ' ' + users[user].FirstName 
+                                }));
+                            }
+                            
                         })
                         .fail(function (jqxhr, textStatus, error) {
                             var err = textStatus + ", " + error;
@@ -67,35 +76,32 @@
         <div class="col-md-offset-2 col-md-10">
             <div style="margin-bottom:20px" >
 
+                <b>Přiřazení uživatelé k doumentu</b><br />
+                <select multiple name="SelectedUsers" class="selectBoxes">
+                </select>
+                <br />
+                <input type="button" value="Odebrat vybrané uživatele z dokumentu" class="btn btn-default" />
+                
+            </div>
+            <div>
+
                 <div class="ui-widget">
                     <label for="filter">Filtr: </label>
                     <input id="filter">
                     <label for="jobPosition">Pracovní pozice: </label>
                     <select id="jobPosition">
                         <option value="0">Všechny</option>
-                        <option value="1">Ředitel</option>
-                        <option value="2">Uklízečka</option>
-                        <option value="3">Řidič</option>
+                        @foreach (var item in ViewBag.JobPositions)
+                        {
+                            <option value="@item.ID">@item.Name</option>
+                        }
                     </select>
                 </div>
 
-                <select multiple name="SelectedUsers" class="selectBoxes">
-                    <option value="6">David</option>
-                    <option value="7">Zdenek</option>
-                    <option value="8">Patrik</option>
+                <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes">
                 </select>
                 <br />
-                <input type="button" value="Přiřadit uživatele k dokumentu" id="AddUserToList" class="btn btn-default"/>
-            </div>
-            <div>
-
-                <select multiple name="SelectedUsers" class="selectBoxes">
-                    <option value="6">zdena</option>
-                    <option value="7" disabled>olina</option>
-                    <option value="8">magda</option>
-                </select>
-                <br />
-                <input type="button" value="Odebrat uživatele z dokumentu" class="btn btn-default"/>
+                <input type="button" value="Přiřadit vybrané uživatele k dokumentu" id="AddUserToList" class="btn btn-default" />
             </div>
 
             </div>

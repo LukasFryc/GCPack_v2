@@ -15,6 +15,8 @@ namespace GCPack.Model
 
     public class UserFilter : Filter 
     {
+        public int JobPositionID { get; set; }
+        public string Name { get; set; }
     }
 
 }

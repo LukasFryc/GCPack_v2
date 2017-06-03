@@ -9,7 +9,7 @@ namespace GCPack.Service.Interfaces
         string Login(string username, string password);
 
         ICollection<UserModel> GetUsers(UserFilter filter);
-
+        ICollection<JobPositionModel> GetJobPositions();
         UserModel AddUser(UserModel user);
         void DeleteUser(int userId);
     }

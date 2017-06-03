@@ -91,11 +91,22 @@ namespace GCPack.Repository
             }
         }
 
-        public ICollection<UserModel> GetUsers(UserFilter filter)
+        public ICollection<JobPositionModel> GetJobPositions()
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                var users = db.Users.Select(u => u);
+                return Mapper.Map<ICollection<JobPositionModel>>(db.JobPositions.Select(jp => jp));
+            }
+        }
+
+            public ICollection<UserModel> GetUsers(UserFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var users = db.Users.Where(u => 
+                    (u.JobPositionID == filter.JobPositionID || filter.JobPositionID == 0) &&
+                    (u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || filter.Name == null)
+                )).Select(u => u);
 
                 switch (filter.OrderBy)
                 {

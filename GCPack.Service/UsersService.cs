@@ -49,6 +49,10 @@ namespace GCPack.Service
             usersRepository.UpdateTicket(ticket,user);
         }
 
+        public ICollection<JobPositionModel> GetJobPositions()
+        {
+            return usersRepository.GetJobPositions();
+        }
 
         public ICollection<UserModel> GetUsers(UserFilter filter)
         {
