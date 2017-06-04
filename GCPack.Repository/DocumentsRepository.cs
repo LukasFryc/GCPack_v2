@@ -15,9 +15,13 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
+                var stateID = db.States.Where(s => s.Code == "New").Select(s => s.ID).FirstOrDefault();
+                var documentType = db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID).Select(dt => dt).SingleOrDefault();
+                document.StateID = stateID;
                 var newDocument = db.Documents.Add(Mapper.Map<Document>(document));
+                newDocument.DocumentType = documentType; 
                 db.SaveChanges();
-                document.DocumentID = newDocument.ID;
+                document.ID = newDocument.ID;
                 return document;
             }
         }
@@ -27,7 +31,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ICollection<int> dbUsers = db.ReadConfirmations.Where(rc => rc.DocumentID == document.DocumentID && rc.ReadDate == null).Select(rc => rc.UserID).ToList();
+                ICollection<int> dbUsers = db.ReadConfirmations.Where(rc => rc.DocumentID == document.ID && rc.ReadDate == null).Select(rc => rc.UserID).ToList();
                 ICollection<User> deleteUsers = new HashSet<User>();
 
                 foreach (int dbUserID in dbUsers)
@@ -48,7 +52,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ICollection<int> dbUsers = db.ReadConfirmations.Where(rc => rc.DocumentID == document.DocumentID).Select(rc => rc.UserID).ToList();
+                ICollection<int> dbUsers = db.ReadConfirmations.Where(rc => rc.DocumentID == document.ID).Select(rc => rc.UserID).ToList();
                 ICollection<User> addUsers = new HashSet<User>();
                 foreach (int userID in users.Select(u => u))
                 {
@@ -69,19 +73,22 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                db.ReadConfirmations.RemoveRange(
-                    db.ReadConfirmations.Where (
-                        rc => 
-                            deleteUsers.Select(du => du).Contains(rc.ID)
-                            && rc.DocumentID == document.DocumentID
-                            )  
-                        );
-                db.SaveChanges();
+                if (deleteUsers != null)
+                {
+                    db.ReadConfirmations.RemoveRange(
+                        db.ReadConfirmations.Where(
+                            rc =>
+                                deleteUsers.Select(du => du).Contains(rc.ID)
+                                && rc.DocumentID == document.ID
+                                )
+                            );
+                    db.SaveChanges();
+                }
 
                 foreach (int userId in addUsers)
                 {
                     db.ReadConfirmations.Add(new ReadConfirmation() {
-                        DocumentID = document.DocumentID,
+                        DocumentID = document.ID,
                         UserID = userId
                     });
                     db.SaveChanges();
@@ -106,12 +113,18 @@ namespace GCPack.Repository
         }
 
         // prace se souborama prirazenyma k dokumentu
-        public void AddFileToDb(DocumentModel document, string filePath)
+        public void AddFileToDb(DocumentModel document, byte[] fileStream, string name)
         {
-
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                db.Files.Add(new File() {
+                    Name = name
+                });
+                db.SaveChanges();
+            }
         }
 
-        public void DeleteFileFromDocument(DocumentModel document, string filePath)
+        public void DeleteFileFromDocument(DocumentModel document, string fileName)
         {
 
         }

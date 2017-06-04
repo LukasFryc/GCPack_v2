@@ -53,8 +53,8 @@ namespace GCPack.Web.Controllers
                     this.Request.Files[i].SaveAs(filePath);
                 }
             }
-            
-            return View("Edit");
+            documentService.AddDocument(document,fileNames);
+            return RedirectToAction("Edit");
         }
 
 

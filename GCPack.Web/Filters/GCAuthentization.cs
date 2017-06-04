@@ -59,13 +59,25 @@ namespace GCPack.Web.Filters
                 string encTicket = authCookie.Value;
                 if (!String.IsNullOrEmpty(encTicket))
                 {
+
+                    FormsAuthenticationTicket aCookie = null;
+                    try
+                    {
+                        aCookie = FormsAuthentication.Decrypt(encTicket);
+                    }
+                    catch (Exception e)
+                    {
+                        FormsAuthentication.SignOut();
+                    }
+                    UserModel user = null;
+
+                    if (aCookie != null)
+                    {
+                        cp = new MyCustomPrincipal(authCookie.Name);
+                        cp.Id = aCookie.UserData;
+                        user = userService.GetUser(aCookie.UserData);
+                    }
                     
-                    var aCookie = FormsAuthentication.Decrypt(encTicket);
-
-
-                    cp = new MyCustomPrincipal(authCookie.Name);
-                    cp.Id = aCookie.UserData;
-                    UserModel user = userService.GetUser(aCookie.UserData);
                     
                     if (user != null)
                     {

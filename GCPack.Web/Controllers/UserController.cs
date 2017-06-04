@@ -27,10 +27,16 @@ namespace GCPack.Web.Controllers
             return View("Edit");
         }
 
-        public ActionResult GetUsers(string name, int jobPositionId, Array[] preservedUsers)
+        public ActionResult GetUsers(string name, int? jobPositionId, string preservedUsers)
         {
-
-            var users = userService.GetUsers(new UserFilter() {Name = name, JobPositionID = jobPositionId });
+            jobPositionId = (jobPositionId == null) ? 0 : jobPositionId;
+            int[] excludedUsersId = (!string.IsNullOrEmpty(preservedUsers)) ? Array.ConvertAll(preservedUsers.Split(','), int.Parse) : new int[] { };
+            
+            var users = userService.GetUsers(new UserFilter() {
+                Name = name,
+                JobPositionID = (int) jobPositionId,
+                ExcludedUsersId = excludedUsersId
+            });
 
             
             return Json(users,JsonRequestBehavior.AllowGet);

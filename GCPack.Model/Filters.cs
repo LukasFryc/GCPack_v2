@@ -17,6 +17,7 @@ namespace GCPack.Model
     {
         public int JobPositionID { get; set; }
         public string Name { get; set; }
+        public int[] ExcludedUsersId { get; set; }
     }
 
 }

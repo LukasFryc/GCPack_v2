@@ -29,7 +29,7 @@ namespace GCPack.Service
         {
             // novy dokument se vzdy uklada ve stavu rozpracovany
             // nikdy se u tohoto dokumentu neposilaji emaily
-
+            
             document = documentsRepository.AddDocument(document);
 
             // namapuji se uzivatele na dokuemnt

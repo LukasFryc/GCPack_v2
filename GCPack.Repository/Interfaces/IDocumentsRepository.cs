@@ -6,7 +6,7 @@ namespace GCPack.Repository.Interfaces
     public interface IDocumentsRepository
     {
         DocumentModel AddDocument(DocumentModel document);
-        void AddFileToDb(DocumentModel document, string filePath);
+        void AddFileToDb(DocumentModel document, byte[] fileStream, string name);
         void DeleteDocument(DocumentModel document);
         void DeleteFileFromDocument(DocumentModel document, string filePath);
         DocumentModel EditDocument(DocumentModel document);

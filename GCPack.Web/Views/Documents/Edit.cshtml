@@ -7,7 +7,11 @@
     var timeoutHandle;
     var selectedUsers = [];
     $(document).ready(function () {
-        
+
+        $("#EffeciencyDate").datepicker();
+        $("#ReviewDate").datepicker();
+        $("#NextReviewDate").datepicker();
+
         $('#filter').keyup(function () {
             GetUsers();
         });
@@ -21,6 +25,12 @@
             $("#SelectedUsers :selected").each(function () {
                 $(this).remove();
             });
+            GetUsers();
+        });
+
+        $('#saveDocument').click(function ()
+        {
+            $('#SelectedUsers option').prop('selected', true);
         });
 
         $('#AddUserToList').click(function () {
@@ -33,6 +43,26 @@
         
 
         GetUsers();
+        GetDocumentAdministrators();
+
+        function GetDocumentAdministrators()
+        {
+            $.getJSON("/GCPack.Web/user/getUsers", {})
+                .done(function (users) {
+
+                    for (var user in users) {
+                        $('#AdministratorID').append($('<option>', {
+                            value: users[user].ID,
+                            text: users[user].LastName + ' ' + users[user].FirstName
+                        }));
+                    }
+
+                })
+                .fail(function (jqxhr, textStatus, error) {
+                    var err = textStatus + ", " + error;
+                    console.log("Request Failed: " + err);
+                });
+        }
 
         function GetUsers()
         {
@@ -45,7 +75,7 @@
                         selectedUsers.push($(this).val());
                     });
                     $('#FilteredUsers').empty();
-                    $.getJSON("/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers })
+                    $.getJSON("/GCPack.Web/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
                         .done(function (users) {
 
                             for (var user in users)
@@ -69,73 +99,136 @@
     });
 
 </script>
-
+<style>
+    .row {
+        margin-bottom:10px;
+    }
+</style>
 <h2>@ViewBag.Type</h2>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-@using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
-{
-    <div class="form-group">
-        @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-            @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="file" name="file1" id="file1" value="Přidat soubor" class="btn btn-default" />
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="file" name="file2" id="file2" value="Přidat soubor" class="btn btn-default" />
-        </div>
-    </div>
-
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <div style="margin-bottom:20px" >
-
-                <b>Přiřazení uživatelé k dokumentu</b><br />
-                <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes">
-                </select>
-                <br />
-                <input type="button" value="Odebrat vybrané uživatele z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
-                
+    @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    {
+        <div class="form-group">
+            <div class="row">
+                <label class="control-label col-md-2" for="Title">Název</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
             </div>
-            <div>
-
-                <div class="ui-widget">
-                    <label for="filter">Filtr: </label>
-                    <input id="filter">
-                    <label for="jobPosition">Pracovní pozice: </label>
-                    <select id="jobPosition">
-                        <option value="0">Všechny</option>
-                        @foreach (var item in ViewBag.JobPositions)
-                        {
-                            <option value="@item.ID">@item.Name</option>
-                        }
+            <div class="row">
+                <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
+                @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2" for="Revision">Typ revize</label>
+                @Html.DropDownListFor(model => model.Revision, new List<SelectListItem>{
+                        new SelectListItem{Value = "R", Text = "R"},
+                        new SelectListItem{Value = "S", Text = "S"},
+                        new SelectListItem{Value = "D", Text = "D"},
+                    })
+                @Html.ValidationMessageFor(model => model.Revision, "", new { @class = "text-danger" })
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
+                <div class="col-md-10">
+                    <select name="DocumentTypeID">
+                        <option value="1">Příkaz ředitele</option>
+                        <option value="2">Bezpečnost práce</option>
+                        <option value="3">Požární ochrana</option>
                     </select>
                 </div>
-
-                <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes">
-                </select>
-                <br />
-                <input type="button" value="Přiřadit vybrané uživatele k dokumentu" id="AddUserToList" class="btn btn-default" />
             </div>
 
+            <div class="row">
+                <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
+                <div class="col-md-10">
+                    <input type="radio" name="DocumentAdminType" value="1" /> Vybraná osoba <select name="AdministratorID" id="AdministratorID"></select> <br />
+                    <input type="radio" name="DocumentAdminType" value="0" /> Z typu dokumentu
+                </div>
             </div>
-    </div>
+            <div class="row">
+                <label class="control-label col-md-2" for="Title">Anotace</label>
+                <div class="col-md-6">
+                    @Html.TextAreaFor(model => model.Annotation, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="row">
+                <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
 
-    <div style="clear:both;margin-bottom:10px"></div>
+            <input type="hidden" name="ID" id="ID" />
+            <div class="row">
+                <label class="control-label col-md-2" for="Title">Vybrat soubory</label>
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="file" name="file1" id="file1" value="Přidat soubor" class="btn btn-default" />
+                    <br />
+                    <input type="file" name="file2" id="file2" value="Přidat soubor" class="btn btn-default" />
+                    <br />
+                    <input type="file" name="file3" id="file3" value="Přidat soubor" class="btn btn-default" />
+                </div>
+            </div>
+            <div class="row" style="margin-top:30px">
+                <div class="col-md-offset-2 col-md-10">
+                    <div style="margin-bottom:20px">
 
-    <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Uložit" class="btn btn-default" />
+                        <b>Přiřazení uživatelé k dokumentu</b><br />
+                        <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes"></select>
+                        <br />
+                        <input type="button" value="Odebrat vybrané uživatele z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
+
+                    </div>
+                    <div>
+
+                        <div class="ui-widget">
+                            <label for="filter">Filtr: </label>
+                            <input id="filter">
+                            <label for="jobPosition">Pracovní pozice: </label>
+                            <select id="jobPosition">
+                                <option value="0">Všechny</option>
+                                @foreach (var item in ViewBag.JobPositions)
+                                {
+                                    <option value="@item.ID">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes"></select>
+                        <br />
+                        <input type="button" value="Přiřadit vybrané uživatele k dokumentu" id="AddUserToList" class="btn btn-default" />
+                    </div>
+
+                </div>
+            </div>
+
+            <div style="clear:both;margin-bottom:10px"></div>
+            <div class="row">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Uložit" id="saveDocument" class="btn btn-default" />
+                </div>
             </div>
         </div>
 
-        }
-    </div>
+    }
+                </div>

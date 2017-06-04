@@ -105,7 +105,8 @@ namespace GCPack.Repository
             {
                 var users = db.Users.Where(u => 
                     (u.JobPositionID == filter.JobPositionID || filter.JobPositionID == 0) &&
-                    (u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || filter.Name == null)
+                    ((u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || filter.Name == null)) &&
+                    (!filter.ExcludedUsersId.Contains(u.ID))
                 )).Select(u => u);
 
                 switch (filter.OrderBy)

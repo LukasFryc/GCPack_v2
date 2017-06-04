@@ -18,12 +18,14 @@
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select,
-textarea {
-    max-width: 280px;
+select
+ {
+    max-width: 250px;
+    margin-bottom:5px;
 }
 
 .selectBoxes {
-    width:600px;
-    height:500px;
+    width: 600px;
+    max-width: 600px !important;
+    height: 150px !important;
 }
