@@ -30,7 +30,6 @@ namespace GCPack.Repository
         public virtual DbSet<DivisionCategory> DivisionCategories { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
-        public virtual DbSet<File> Files { get; set; }
         public virtual DbSet<JobPosition> JobPositions { get; set; }
         public virtual DbSet<LogEvent> LogEvents { get; set; }
         public virtual DbSet<ReadConfirmation> ReadConfirmations { get; set; }
@@ -41,5 +40,6 @@ namespace GCPack.Repository
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<Login> Logins { get; set; }
+        public virtual DbSet<File> Files { get; set; }
     }
 }

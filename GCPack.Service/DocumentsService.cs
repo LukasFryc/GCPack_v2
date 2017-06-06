@@ -21,9 +21,15 @@ namespace GCPack.Service
         }
         public DocumentModel GetDocument(int documentId)
         {
-            return new DocumentModel();
+            DocumentModel document  = documentsRepository.GetDocument(documentId);
+            document.FileItems = documentsRepository.GetFiles(documentId);
+            return document;
         }
 
+        public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
+        {
+            return documentsRepository.GetDocuments(filter);
+        }
 
         public DocumentModel AddDocument(DocumentModel document, ICollection<string> files)
         {
@@ -37,16 +43,14 @@ namespace GCPack.Service
             documentsRepository.MapUsersToDocument( document.SelectedUsers, document, null);
 
             // ulozeni vsech souboru
-            foreach (string file in files)
+            if (files != null && files.Count > 0)
             {
-                try
+                foreach (string file in files)
                 {
-                    documentsRepository.AddFileToDb(document, file);
+                    System.IO.FileInfo fi = new System.IO.FileInfo(file);
+                    documentsRepository.AddFileToDb(document, System.IO.File.ReadAllBytes(file), fi.Name);
                 }
-                catch (Exception e)
-                { }
             }
-
 
             return new DocumentModel();
 

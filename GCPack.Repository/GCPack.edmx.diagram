@@ -10,7 +10,6 @@
         <EntityTypeShape EntityType="GCPack.DivisionCategory" Width="1.5" PointX="12.75" PointY="12.75" />
         <EntityTypeShape EntityType="GCPack.Document" Width="1.5" PointX="7.5" PointY="11.625" />
         <EntityTypeShape EntityType="GCPack.DocumentType" Width="1.5" PointX="5.25" PointY="12.625" />
-        <EntityTypeShape EntityType="GCPack.File" Width="1.5" PointX="9.75" PointY="25.5" />
         <EntityTypeShape EntityType="GCPack.JobPosition" Width="1.5" PointX="0.75" PointY="10.25" />
         <EntityTypeShape EntityType="GCPack.LogEvent" Width="1.5" PointX="9.75" PointY="14.125" />
         <EntityTypeShape EntityType="GCPack.ReadConfirmation" Width="1.5" PointX="9.75" PointY="20.125" />
@@ -24,7 +23,6 @@
         <AssociationConnector Association="GCPack.FK_DivisionCategory_Division" />
         <AssociationConnector Association="GCPack.FK_DivisionCategory_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_Documents_State" />
-        <AssociationConnector Association="GCPack.FK_File_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_LogEvent_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_RizeneDokumeny_DocumentType" />
@@ -38,6 +36,8 @@
         <AssociationConnector Association="GCPack.FK_UserRoles_Users" />
         <EntityTypeShape EntityType="GCPack.Login" Width="1.5" PointX="3.375" PointY="0.75" />
         <AssociationConnector Association="GCPack.FK_Login_User" />
+        <EntityTypeShape EntityType="GCPack.File" Width="1.5" PointX="9.75" PointY="23.125" />
+        <AssociationConnector Association="GCPack.FK_File_RizeneDokumeny" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -15,8 +15,9 @@ namespace GCPack.Repository
     public partial class File
     {
         public int ID { get; set; }
-        public byte[] Name { get; set; }
+        public string Name { get; set; }
         public int DocumentID { get; set; }
+        public byte[] FileBlob { get; set; }
     
         public virtual Document Document { get; set; }
     }

@@ -22,20 +22,15 @@ namespace GCPack.Web.Controllers
 
 
         // GET: Documents
-        [AuthorizeAttributeGC(Roles = "user,admin")]
-        public ActionResult Index()
+        [AuthorizeAttributeGC(Roles = "user,admin,supervisor")]
+        public ActionResult Index(string Message)
         {
-            DocumentModel dokument = documentService.GetDocument(0);
-            return View(dokument);
+            // TODO: dopsat filtrovani - pridat do filtru userId pro ktereho se vyberou pouze jeho dokumenty
+            ICollection<DocumentModel> documents = documentService.GetDocuments(new DocumentFilter());
+            ViewBag.Message = Message;
+            return View(documents);
         }
-
-        [AuthorizeAttributeGC(Roles = "user,admin")]
-        public ActionResult Documents()
-        {
-            DocumentModel dokument = documentService.GetDocument(0);
-            return View(dokument);
-        }
-
+        
 
         public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload)
         {
@@ -54,28 +49,30 @@ namespace GCPack.Web.Controllers
                 }
             }
             documentService.AddDocument(document,fileNames);
-            return RedirectToAction("Edit");
+            return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
         }
 
-
-        public ActionResult getDocs()
+        public ActionResult Add()
         {
-            ICollection<DocumentModel> documents = new HashSet<DocumentModel>();
-            documents.Add(new DocumentModel() { Title = "title 1" });
-            documents.Add(new DocumentModel() { Title = "title 2" });
-            documents.Add(new DocumentModel() { Title = "title 3" });
-            return Json(documents, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult Edit()
-        {
-            ViewBag.Type = "Editace dokumentu";
+            ViewBag.Type = "Nový řízený dokument";
             ViewBag.JobPositions = userService.GetJobPositions();
-            DocumentModel document = new DocumentModel() {Title = "Dokument 1"};
+            DocumentModel document = new DocumentModel() {Title = ""};
             ViewBag.Documents = document;
             
-            return View(document);
+            return View("edit",document);
         }
+
+        public ActionResult Edit(int documentId)
+        {
+            ViewBag.Type = "Úprava řízeného dokumentu";
+            ViewBag.JobPositions = userService.GetJobPositions();
+            DocumentModel document = documentService.GetDocument(documentId);
+            ViewBag.Documents = document;
+
+            return View("edit", document);
+        }
+
+
 
 
     }

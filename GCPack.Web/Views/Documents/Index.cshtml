@@ -1,0 +1,63 @@
+﻿@model IEnumerable<GCPack.Model.DocumentModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@if (ViewBag.Message != null)
+{
+    <script>
+        $(document).ready(function () {
+                        $('#success-alert').html('@ViewBag.Message');
+                        $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                        $("#success-alert").slideUp(500);
+                    });
+            });
+    </script>
+}
+
+<h2>Dokumenty</h2>
+<div id="success-alert" class="alert alert-success" style="display:none"></div>
+<p>
+    @Html.ActionLink("Vytvořit nový dokument", "Add")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            Název
+        </th>
+        <th>
+            Číslo dokumentu
+        </th>
+        <th>
+            Revize
+        </th>
+        <th>
+            Datum účinnosti
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.DocumentNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Revision)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EffeciencyDate)
+        </td>
+        <td>
+            @Html.ActionLink("Upravit", "Edit", new { documentId = item.ID }) |
+            @Html.ActionLink("Zobrazit", "Details", new { documentId = item.ID }) |
+            @Html.ActionLink("Smazat", "Delete", new { documentId = item.ID })
+        </td>
+    </tr>
+}
+
+</table>

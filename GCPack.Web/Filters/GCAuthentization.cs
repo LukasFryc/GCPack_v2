@@ -49,7 +49,7 @@ namespace GCPack.Web.Filters
             // pokud se pristupuje z login controlleru pak se neoveruje autentizace
             // protoze uzivatel jeste neni prihlaseny
 
-            if (context.ActionDescriptor.ControllerDescriptor.ControllerName == "Login") return;
+            if (context.ActionDescriptor.ControllerDescriptor.ControllerName == "Login") return; 
             MyCustomPrincipal cp = null;
 
             // pokud existuje autentizacni cookie, tak ji pouziji

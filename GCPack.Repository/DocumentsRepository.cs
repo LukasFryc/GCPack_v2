@@ -26,6 +26,30 @@ namespace GCPack.Repository
             }
         }
 
+        public ICollection<FileItem> GetFiles(int documentId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return Mapper.Map<ICollection<FileItem>>(db.Files.Where(d => d.DocumentID == documentId).Select(d => d));
+            }
+        }
+
+        public DocumentModel GetDocument(int documentId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return Mapper.Map<DocumentModel>(db.Documents.Where(d => d.ID == documentId).Select(d => d).SingleOrDefault());
+            }
+        }
+
+        public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                // TODO: Dopsat filtrovaci podminky
+                return Mapper.Map<ICollection<DocumentModel>>(db.Documents.Select (d => d));
+            }
+        }
         // vrati se seznam vsech uzivatelu kteri se mohou odstranit z dokumentu
         public ICollection<UserModel> GetDeletedUsersFromDocument(ICollection<int> users, DocumentModel document)
         {
@@ -85,15 +109,18 @@ namespace GCPack.Repository
                     db.SaveChanges();
                 }
 
-                foreach (int userId in addUsers)
+                if (addUsers != null)
                 {
-                    db.ReadConfirmations.Add(new ReadConfirmation() {
-                        DocumentID = document.ID,
-                        UserID = userId
-                    });
-                    db.SaveChanges();
+                    foreach (int userId in addUsers)
+                    {
+                        db.ReadConfirmations.Add(new ReadConfirmation()
+                        {
+                            DocumentID = document.ID,
+                            UserID = userId
+                        });
+                        db.SaveChanges();
+                    }
                 }
-
 
             }
         }
@@ -118,7 +145,9 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 db.Files.Add(new File() {
-                    Name = name
+                    Name = name,
+                    FileBlob = fileStream,
+                    Document = db.Documents.Where (d => d.ID == document.ID).Select(d => d).FirstOrDefault()
                 });
                 db.SaveChanges();
             }

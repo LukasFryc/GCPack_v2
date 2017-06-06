@@ -8,5 +8,6 @@ namespace GCPack.Service.Interfaces
         DocumentModel AddDocument(DocumentModel document, ICollection<string> files);
         DocumentModel EditDocument(DocumentModel document);
         DocumentModel GetDocument(int documentId);
+        ICollection<DocumentModel> GetDocuments(DocumentFilter filter);
     }
 }

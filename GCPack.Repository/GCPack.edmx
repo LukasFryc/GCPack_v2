@@ -58,8 +58,9 @@
             <PropertyRef Name="ID" />
           </Key>
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Name" Type="varbinary(max)" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="150" Nullable="false" />
           <Property Name="DocumentID" Type="int" Nullable="false" />
+          <Property Name="FileBlob" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="JobPosition">
           <Key>
@@ -457,7 +458,6 @@
           <EntitySet Name="DivisionCategories" EntityType="GCPack.DivisionCategory" />
           <EntitySet Name="Documents" EntityType="GCPack.Document" />
           <EntitySet Name="DocumentTypes" EntityType="GCPack.DocumentType" />
-          <EntitySet Name="Files" EntityType="GCPack.File" />
           <EntitySet Name="JobPositions" EntityType="GCPack.JobPosition" />
           <EntitySet Name="LogEvents" EntityType="GCPack.LogEvent" />
           <EntitySet Name="ReadConfirmations" EntityType="GCPack.ReadConfirmation" />
@@ -482,10 +482,6 @@
           <AssociationSet Name="FK_Documents_State" Association="GCPack.FK_Documents_State">
             <End Role="State" EntitySet="States" />
             <End Role="Document" EntitySet="Documents" />
-          </AssociationSet>
-          <AssociationSet Name="FK_File_RizeneDokumeny" Association="GCPack.FK_File_RizeneDokumeny">
-            <End Role="Document" EntitySet="Documents" />
-            <End Role="File" EntitySet="Files" />
           </AssociationSet>
           <AssociationSet Name="FK_LogEvent_RizeneDokumeny" Association="GCPack.FK_LogEvent_RizeneDokumeny">
             <End Role="Document" EntitySet="Documents" />
@@ -536,6 +532,11 @@
             <End Role="User" EntitySet="Users" />
             <End Role="Login" EntitySet="Logins" />
           </AssociationSet>
+          <EntitySet Name="Files" EntityType="GCPack.File" />
+          <AssociationSet Name="FK_File_RizeneDokumeny" Association="GCPack.FK_File_RizeneDokumeny">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="File" EntitySet="Files" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AppSystem">
           <Key>
@@ -578,7 +579,6 @@
           <Property Name="StateID" Type="Int32" />
           <NavigationProperty Name="DivisionCategories" Relationship="GCPack.FK_DivisionCategory_RizeneDokumeny" FromRole="Document" ToRole="DivisionCategory" />
           <NavigationProperty Name="State" Relationship="GCPack.FK_Documents_State" FromRole="Document" ToRole="State" />
-          <NavigationProperty Name="Files" Relationship="GCPack.FK_File_RizeneDokumeny" FromRole="Document" ToRole="File" />
           <NavigationProperty Name="LogEvents" Relationship="GCPack.FK_LogEvent_RizeneDokumeny" FromRole="Document" ToRole="LogEvent" />
           <NavigationProperty Name="ReadConfirmations" Relationship="GCPack.FK_ReadConfirmation_RizeneDokumeny" FromRole="Document" ToRole="ReadConfirmation" />
           <NavigationProperty Name="DocumentType" Relationship="GCPack.FK_RizeneDokumeny_DocumentType" FromRole="Document" ToRole="DocumentType" />
@@ -587,6 +587,7 @@
           <Property Name="DocumentAdminType" Type="Int32" />
           <Property Name="Annotation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Revision" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Files" Relationship="GCPack.FK_File_RizeneDokumeny" FromRole="Document" ToRole="File" />
         </EntityType>
         <EntityType Name="DocumentType">
           <Key>
@@ -598,15 +599,6 @@
           <Property Name="AuthorizinOfficerID" Type="Int32" />
           <NavigationProperty Name="Documents" Relationship="GCPack.FK_RizeneDokumeny_DocumentType" FromRole="DocumentType" ToRole="Document" />
           <NavigationProperty Name="User" Relationship="GCPack.FK_DocumentType_User" FromRole="DocumentType" ToRole="User" />
-        </EntityType>
-        <EntityType Name="File">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
-          <Property Name="DocumentID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Document" Relationship="GCPack.FK_File_RizeneDokumeny" FromRole="File" ToRole="Document" />
         </EntityType>
         <EntityType Name="JobPosition">
           <Key>
@@ -758,18 +750,6 @@
             </Principal>
             <Dependent Role="Document">
               <PropertyRef Name="StateID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_File_RizeneDokumeny">
-          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
-          <End Type="GCPack.File" Role="File" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Document">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="File">
-              <PropertyRef Name="DocumentID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -927,6 +907,28 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="File">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="DocumentID" Type="Int32" Nullable="false" />
+          <Property Name="FileBlob" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <NavigationProperty Name="Document" Relationship="GCPack.FK_File_RizeneDokumeny" FromRole="File" ToRole="Document" />
+        </EntityType>
+        <Association Name="FK_File_RizeneDokumeny">
+          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
+          <End Type="GCPack.File" Role="File" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="File">
+              <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -983,15 +985,6 @@
               <MappingFragment StoreEntitySet="DocumentType">
                 <ScalarProperty Name="AuthorizinOfficerID" ColumnName="AuthorizinOfficerID" />
                 <ScalarProperty Name="AdministratorID" ColumnName="AdministratorID" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Files">
-            <EntityTypeMapping TypeName="GCPack.File">
-              <MappingFragment StoreEntitySet="File">
-                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
@@ -1100,6 +1093,16 @@
                 <ScalarProperty Name="Hash" ColumnName="Hash" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="LoginID" ColumnName="LoginID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Files">
+            <EntityTypeMapping TypeName="GCPack.File">
+              <MappingFragment StoreEntitySet="File">
+                <ScalarProperty Name="FileBlob" ColumnName="FileBlob" />
+                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

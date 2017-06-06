@@ -20,4 +20,12 @@ namespace GCPack.Model
         public int[] ExcludedUsersId { get; set; }
     }
 
+    public class DocumentFilter : Filter
+    {
+        public int ForUserID { get; set; }
+        public string Name { get; set; }
+        public DateTime ToDateReview { get; set; } // napriklad filtrovani podle datumu revize
+        public DateTime FromDateReview { get; set; }
+    }
+
 }

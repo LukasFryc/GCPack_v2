@@ -24,8 +24,19 @@ select
     margin-bottom:5px;
 }
 
+.annotationArea {
+    width: 600px;
+    max-width: 600px !important;
+    height: 150px !important;
+}
+
 .selectBoxes {
     width: 600px;
     max-width: 600px !important;
     height: 150px !important;
+}
+
+#tabs .ui-tabs-panel {
+    height: 500px;
+    overflow: auto;
 }

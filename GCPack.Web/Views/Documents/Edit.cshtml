@@ -11,9 +11,16 @@
         $("#EffeciencyDate").datepicker();
         $("#ReviewDate").datepicker();
         $("#NextReviewDate").datepicker();
+        $("#tabs").tabs();
 
         $('#filter').keyup(function () {
             GetUsers();
+        });
+
+        $('#cancelChanges').click(function () {
+            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+            });
         });
 
         $('#jobPosition').change(function () {
@@ -109,126 +116,166 @@
 <div>
     @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
     {
-        <div class="form-group">
-            <div class="row">
-                <label class="control-label col-md-2" for="Title">Název</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+        <div id="success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>
+        <div id="tabs">
+            <ul>
+                <li><a href="#tabs-1">Dokument</a></li>
+                <li><a href="#tabs-2">Datumy</a></li>
+                <li><a href="#tabs-3">Soubory</a></li>
+                <li><a href="#tabs-4">Přiřazené osoby k dokumentu</a></li>
+            </ul>
+            <div id="tabs-1">
+                <div class="row">
+                    <label class="control-label col-md-2" for="Title">Název</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název dokumentu" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
-                @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
-            </div>
-            <div class="row">
-                <label class="control-label col-md-2" for="Revision">Typ revize</label>
-                @Html.DropDownListFor(model => model.Revision, new List<SelectListItem>{
+                <div class="row">
+                    <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název dokumentu" } })
+                        @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="control-label col-md-2" for="Revision">Typ revize</label>
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.Revision, new List<SelectListItem>{
                         new SelectListItem{Value = "R", Text = "R"},
                         new SelectListItem{Value = "S", Text = "S"},
                         new SelectListItem{Value = "D", Text = "D"},
                     })
-                @Html.ValidationMessageFor(model => model.Revision, "", new { @class = "text-danger" })
-            </div>
-            <div class="row">
-                <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
-                <div class="col-md-10">
-                    <select name="DocumentTypeID">
-                        <option value="1">Příkaz ředitele</option>
-                        <option value="2">Bezpečnost práce</option>
-                        <option value="3">Požární ochrana</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="row">
-                <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
-                <div class="col-md-10">
-                    <input type="radio" name="DocumentAdminType" value="1" /> Vybraná osoba <select name="AdministratorID" id="AdministratorID"></select> <br />
-                    <input type="radio" name="DocumentAdminType" value="0" /> Z typu dokumentu
-                </div>
-            </div>
-            <div class="row">
-                <label class="control-label col-md-2" for="Title">Anotace</label>
-                <div class="col-md-6">
-                    @Html.TextAreaFor(model => model.Annotation, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row">
-                <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row">
-                <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="row">
-                <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
-                <div class="col-md-10">
-                    @Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })
-                </div>
-            </div>
-
-            <input type="hidden" name="ID" id="ID" />
-            <div class="row">
-                <label class="control-label col-md-2" for="Title">Vybrat soubory</label>
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="file" name="file1" id="file1" value="Přidat soubor" class="btn btn-default" />
-                    <br />
-                    <input type="file" name="file2" id="file2" value="Přidat soubor" class="btn btn-default" />
-                    <br />
-                    <input type="file" name="file3" id="file3" value="Přidat soubor" class="btn btn-default" />
-                </div>
-            </div>
-            <div class="row" style="margin-top:30px">
-                <div class="col-md-offset-2 col-md-10">
-                    <div style="margin-bottom:20px">
-
-                        <b>Přiřazení uživatelé k dokumentu</b><br />
-                        <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes"></select>
-                        <br />
-                        <input type="button" value="Odebrat vybrané uživatele z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
-
+                        @Html.ValidationMessageFor(model => model.Revision, "", new { @class = "text-danger" })
                     </div>
-                    <div>
+                </div>
+                <div class="row">
+                    <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
+                    <div class="col-md-10">
+                        <select name="DocumentTypeID">
+                            <option value="1">Příkaz ředitele</option>
+                            <option value="2">Bezpečnost práce</option>
+                            <option value="3">Požární ochrana</option>
+                        </select>
+                    </div>
+                </div>
 
-                        <div class="ui-widget">
-                            <label for="filter">Filtr: </label>
-                            <input id="filter">
-                            <label for="jobPosition">Pracovní pozice: </label>
-                            <select id="jobPosition">
-                                <option value="0">Všechny</option>
-                                @foreach (var item in ViewBag.JobPositions)
-                                {
-                                    <option value="@item.ID">@item.Name</option>
-                                }
-                            </select>
+                <div class="row">
+                    <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
+                    <div class="col-md-10">
+                        <input type="radio" name="DocumentAdminType" id="selectedPerson" value="1" /> <label for="selectedPerson"> Vybraná osoba </label> &nbsp;<select name="AdministratorID" id="AdministratorID"></select> <br />
+                        <input type="radio" name="DocumentAdminType" value="0" id="fromDocument"/> <label for="fromDocument">Z typu dokumentu</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="control-label col-md-2" for="Title">Anotace</label>
+                    <div class="col-md-6">
+                        @Html.TextAreaFor(model => model.Annotation, new { @class = "form-control annotationArea", @placeholder = "Poznámka k dokumentu" })
+                        @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            <div id="tabs-2">
+                <div class="form-group">
+                    <div class="row">
+                        <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })
                         </div>
-
-                        <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes"></select>
-                        <br />
-                        <input type="button" value="Přiřadit vybrané uživatele k dokumentu" id="AddUserToList" class="btn btn-default" />
                     </div>
-
+                    <div class="row">
+                        <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div id="tabs-3">
 
+                <div class="row">
+                    <label class="control-label col-md-4" for="Title">Přiřazené soubory k dokumentu</label>
+                </div>
+                
+                @foreach (var item in @Model.FileItems)
+                {
+                    <div class="row">
+                        <div class="col-md-2">
+                            @item.Name
+                        </div>
+                        <div class="col-md-4">
+                            <a href="#" class="btn btn-default btn-sm">
+                                <span class="glyphicon glyphicon-remove"></span> Remove
+                            </a>
+                        </div>
+                    </div>
+                }
+                
+
+                <div class="row" style="margin-top:30px">
+                    <label class="control-label col-md-4" for="Title">Přidat nové soubory</label>
+                </div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <input type="file" name="file1" id="file1" value="Přidat soubor" class="btn btn-default" />
+                        <br />
+                        <input type="file" name="file2" id="file2" value="Přidat soubor" class="btn btn-default" />
+                        <br />
+                        <input type="file" name="file3" id="file3" value="Přidat soubor" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+                <div id="tabs-4">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <div style="margin-bottom:20px">
+                                <b>Přiřazení uživatelé k dokumentu</b><br />
+                                <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes"></select>
+                                <br />
+                                <input type="button" value="Odebrat osoby z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
+
+                            </div>
+                            <div>
+
+                                <div class="ui-widget">
+                                    <label for="filter">Filtr: </label>
+                                    <input id="filter">
+                                    <label for="jobPosition">Pracovní pozice: </label>
+                                    <select id="jobPosition">
+                                        <option value="0">Všechny</option>
+                                        @foreach (var item in ViewBag.JobPositions)
+                                        {
+                                            <option value="@item.ID">@item.Name</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes"></select>
+                                <br />
+                                <input type="button" value="Přiřadit osoby k dokumentu" id="AddUserToList" class="btn btn-default" />
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+        </div>
+            <input type="hidden" name="ID" id="ID" />
             <div style="clear:both;margin-bottom:10px"></div>
             <div class="row">
-                <div class="col-md-offset-2 col-md-10">
-                    <input type="submit" value="Uložit" id="saveDocument" class="btn btn-default" />
+                <div class="col-md-10">
+                    <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
+                    <input type="button" value="Zrušit změny" id="cancelChanges" class="btn btn-danger" />
                 </div>
             </div>
-        </div>
-
     }
                 </div>
