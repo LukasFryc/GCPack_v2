@@ -32,7 +32,7 @@ namespace GCPack.Web.Controllers
         }
         
 
-        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload)
+        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type)
         {
             string folderForFiles = System.Configuration.ConfigurationManager.AppSettings["FileTemp"];
             string guid = Guid.NewGuid().ToString();
@@ -48,7 +48,16 @@ namespace GCPack.Web.Controllers
                     this.Request.Files[i].SaveAs(filePath);
                 }
             }
-            documentService.AddDocument(document,fileNames);
+            switch (type)
+            {
+                case "Add":
+                    documentService.AddDocument(document, fileNames);
+                    break;
+                case "Edit":
+                    documentService.EditDocument(document, fileNames);
+                    break;
+            }
+            
             return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
         }
 
@@ -58,7 +67,7 @@ namespace GCPack.Web.Controllers
             ViewBag.JobPositions = userService.GetJobPositions();
             DocumentModel document = new DocumentModel() {Title = ""};
             ViewBag.Documents = document;
-            
+            ViewBag.Type = "Add";
             return View("edit",document);
         }
 
@@ -68,7 +77,7 @@ namespace GCPack.Web.Controllers
             ViewBag.JobPositions = userService.GetJobPositions();
             DocumentModel document = documentService.GetDocument(documentId);
             ViewBag.Documents = document;
-
+            ViewBag.Type = "Edit";
             return View("edit", document);
         }
 

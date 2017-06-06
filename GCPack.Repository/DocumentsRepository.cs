@@ -102,7 +102,7 @@ namespace GCPack.Repository
                     db.ReadConfirmations.RemoveRange(
                         db.ReadConfirmations.Where(
                             rc =>
-                                deleteUsers.Select(du => du).Contains(rc.ID)
+                                deleteUsers.Select(du => du).Contains(rc.UserID)
                                 && rc.DocumentID == document.ID
                                 )
                             );

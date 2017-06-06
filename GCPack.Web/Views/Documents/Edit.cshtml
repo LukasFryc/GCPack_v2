@@ -111,11 +111,13 @@
         margin-bottom:10px;
     }
 </style>
-<h2>@ViewBag.Type</h2>
+<h2>@ViewBag.Title</h2>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
     @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
     {
+        <input type="text" name="ID" value="@Model.ID" />
+        <input type="text" name="type" value="@ViewBag.Type" />
         <div id="success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>
         <div id="tabs">
             <ul>
@@ -135,7 +137,7 @@
                 <div class="row">
                     <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
                     <div class="col-md-10">
-                        @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název dokumentu" } })
+                        @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
                         @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
                     </div>
                 </div>

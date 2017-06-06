@@ -43,6 +43,7 @@ namespace GCPack.Model
         public Nullable<System.DateTime> ReviewDate { get; set; }
         public Nullable<System.DateTime> NextReviewDate { get; set; }
         public ICollection<FileItem> FileItems { get; set; }
+        public string DeleteFileItems { get; set; } // soubory ktere smazeme
     }
 
 
