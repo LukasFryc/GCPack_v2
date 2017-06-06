@@ -60,7 +60,7 @@ namespace GCPack.Repository
 
                 foreach (int dbUserID in dbUsers)
                 {
-                    if (!users.Select(u => u).Contains(dbUserID))
+                    if (users == null || !users.Select(u => u).Contains(dbUserID))
                         deleteUsers.Add(
                             db.Users.Where(u => u.ID == dbUserID).Select(u => u).FirstOrDefault()
                         );
@@ -135,7 +135,12 @@ namespace GCPack.Repository
         // ulozeni editovaneho dokumentu
         public DocumentModel EditDocument(DocumentModel document)
         {
-
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
+                dbDocument = Mapper.Map<Document>(document);
+                db.SaveChanges();
+            }
             return document;
         }
 
