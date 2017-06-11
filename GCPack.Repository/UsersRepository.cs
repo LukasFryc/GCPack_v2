@@ -119,6 +119,12 @@ namespace GCPack.Repository
                         users = users.OrderBy(u => u.LastName).ThenBy(u => u.FirstName);
                         break;
                 }
+
+                foreach (User user in users)
+                {
+                    string xx = user.FirstName;
+                }
+
                 return Mapper.Map<ICollection<UserModel>>(users);
             }
         }

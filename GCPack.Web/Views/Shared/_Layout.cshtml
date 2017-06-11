@@ -10,7 +10,7 @@
     @Scripts.Render("~/bundles/bootstrap")
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/jqueryui")
-
+    @Scripts.Render("~/bundles/jqueryval")
     <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
     <style>
         #nav ul{
@@ -35,7 +35,7 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("Osoby", "About", "Home")</li>
+                    <li>@Html.ActionLink("Osoby", "Index", "User")</li>
                     <li>@Html.ActionLink("Dokumenty", "Index", "Documents")</li>
                     @if (GCPack.Web.Filter.UserRoles.HasRole("SystemAdministrator"))
                     {

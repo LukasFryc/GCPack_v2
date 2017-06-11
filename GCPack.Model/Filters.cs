@@ -15,6 +15,10 @@ namespace GCPack.Model
 
     public class UserFilter : Filter 
     {
+        public UserFilter()
+        {
+            this.ExcludedUsersId = new int[] { };
+        }
         public int JobPositionID { get; set; }
         public string Name { get; set; }
         public int[] ExcludedUsersId { get; set; }
@@ -23,9 +27,13 @@ namespace GCPack.Model
     public class DocumentFilter : Filter
     {
         public int ForUserID { get; set; }
+        public int DocumentID { get; set; }
         public string Name { get; set; }
+        public string AdministratorName { get; set; }
+        public string Number { get; set; }
         public DateTime ToDateReview { get; set; } // napriklad filtrovani podle datumu revize
         public DateTime FromDateReview { get; set; }
+        public int DocumentTypeID { get; set; }
     }
 
 }

@@ -10,6 +10,7 @@ namespace GCPack.Web.Filter
     {
         private static string GetRoles()
         {
+            
             ClaimsPrincipal principal = (ClaimsPrincipal)HttpContext.Current.User;
             if (principal.Claims.Count() > 0)
             {
@@ -20,6 +21,20 @@ namespace GCPack.Web.Filter
                 return string.Empty;
             }
 
+        }
+
+        public static int GetUserId()
+        {
+            ClaimsPrincipal principal = (ClaimsPrincipal)HttpContext.Current.User;
+            if (principal.Claims.Count() > 0)
+            {
+                return System.Convert.ToInt32(principal.Claims.Where(p => p.Type.ToLower() == "userid").SingleOrDefault().Value);
+            }
+            else
+            {
+                return 0;
+            }
+            
         }
 
         public static bool HasRole(string roles)

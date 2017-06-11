@@ -1,0 +1,72 @@
+﻿@model GCPack.Model.DocumentModel
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@Model.Title</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Annotation)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Annotation)
+        </dd>
+        <dd>
+            <div>
+                @if (@Model.FileItems.Count > 0)
+                {
+                <h3>Soubory k dokumentu</h3>
+                    foreach (var file in @Model.FileItems)
+                    {
+                    <div class="row">
+                        <div class="col-md-2">
+                            @file.Name
+                        </div>
+                        <div class="col-md-4">
+                            <a href="/GCPack.Web/Documents/GetFile?FileID=@file.ID" class="btn btn-default btn-sm downloadFile">
+                                <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
+                            </a>
+                        </div>
+                    </div>
+                    }
+                }
+                else
+                {
+                    <h4>Nejsou přiřazeny žádné dokumenty</h4>
+                }
+            </div>
+        </dd>
+        @if (Model.CanConfirmRead)
+        {
+            if (Model.ReadDate != null)
+            {
+                <h1>Seznámeno s dokumentem dne @Model.ReadDate</h1>
+            }
+            else
+            {
+                <div class="row">
+                    <div class="col-md-10">
+                    @using (Html.BeginForm("Readed", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+                    {
+                        <input type="hidden" name="documentID" value="@Model.ID" />
+                        <input type="submit" value="Seznámení s dokumentem" id="readed" class="btn btn-success" />
+                    }
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div>Tento uživatel není v seznamu uživatelů dokumentu.</div>
+        }
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Zpět", "Index")
+</p>

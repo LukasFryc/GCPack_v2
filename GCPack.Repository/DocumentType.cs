@@ -24,6 +24,7 @@ namespace GCPack.Repository
         public string Name { get; set; }
         public Nullable<int> AdministratorID { get; set; }
         public Nullable<int> AuthorizinOfficerID { get; set; }
+        public Nullable<int> OrderBy { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }

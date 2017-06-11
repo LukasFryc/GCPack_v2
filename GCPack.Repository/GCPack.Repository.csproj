@@ -89,6 +89,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GCPack.edmx</DependentUpon>
     </Compile>
+    <Compile Include="GetDocuments_Result.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\IDocumentsRepository.cs" />
     <Compile Include="Interfaces\IUsersRepository.cs" />
     <Compile Include="JobPosition.cs">

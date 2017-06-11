@@ -7,57 +7,157 @@
 @if (ViewBag.Message != null)
 {
     <script>
+        //zobrazi hlasku y dokumentu
         $(document).ready(function () {
                         $('#success-alert').html('@ViewBag.Message');
                         $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
                         $("#success-alert").slideUp(500);
-                    });
+                        });
             });
     </script>
 }
+    <script>
+        var timeoutHandle;
+        var orderBy = '';
+        $(document).ready(function () {
+            GetDocuments();
+            // vsechnz talcitka na trideni jsou zalozany na  css class sortBy
+                $('.sortBy').click(
+                    function () {
+                        orderBy = $(this).attr('sortBy');
+                        GetDocuments();
+                    }
+                );
 
+                $('.filter').keyup(function () {
+                    GetDocuments();
+                });
+
+                $('#DocumentTypeID').change(function () {
+                    GetDocuments();
+                });
+
+            });
+
+        function GetDocuments() {
+                // nastaven 500mlisec spoydeni na cekani bna vlozeni vstupu z klavesnice
+                if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
+
+                timeoutHandle = setTimeout(
+                    function () {
+                        
+                        //$('table').children('.data').empty();
+                        $.getJSON("/GCPack.Web/documents/getDocuments", {
+                            name: $('#Name').val(),
+                            Number: $('#Number').val(),
+                            AdministratorName: $('#AdministratorName').val(),
+                            DocumentTypeID: $('#DocumentTypeID').val(),
+                            OrderBy: orderBy
+                        })
+                            .done(function (documents) {
+                                $('table .dataRow').remove();
+                                $.each(documents, function (index, doc) {
+                                    
+                                    var dateStr = "";
+                                    if (doc.EffeciencyDate != null)
+                                    {
+                                        var date = eval(doc.EffeciencyDate.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                        dateStr =
+                                            date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+                                    }
+
+                                    $('table').append('<tr class="dataRow">' +
+                                        '<td> ' + doc.Title + '</td>' +
+                                        '<td> ' + doc.DocumentNumber + '</td>' +
+                                        '<td> ' + dateStr + '</td>' +
+                                        '<td> ' + doc.DocumentAdministrator + '</td>' +
+                                        '<td> <A href="/GCPack.Web/Documents/Edit?documentId=' + doc.ID + '">Upravit</A> | <A href="/GCPack.Web/Documents/Details?documentId=' + doc.ID + '">Zobrazit</A> | <A href="/GCPack.Web/Documents/Delete?documentId=' + doc.ID + '">Smazat</A> </td>'
+                                    );
+                                });
+
+                            })
+                            .fail(function (jqxhr, textStatus, error) {
+                                var err = textStatus + ", " + error;
+                                console.log("Request Failed: " + err);
+                            });
+
+
+                    },
+                    500);
+            }
+    
+
+    </script>
+
+<div style="position:relative">
+    <div id="success-alert" class="alert alert-success" style="display:none;position:absolute;top:10px;right:0px"></div>
+</div>
 <h2>Dokumenty</h2>
-<div id="success-alert" class="alert alert-success" style="display:none"></div>
 <p>
     @Html.ActionLink("Vytvořit nový dokument", "Add")
 </p>
-<table class="table">
+<div class="row">
+    <div class="col-md-4">
+        <label for="Name">Název dokumentu</label>
+    </div>
+    <div class="col-md-2">
+        <input class="filter" type="text" id="Name" />
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <label for="Number">Číslo dokumentu</label>
+    </div>
+    <div class="col-md-2">
+        <input class="filter" type="text" id="Number" />
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-4">
+        <label for="AdministratorName">Administrátor dokumentu</label>
+    </div>
+    <div class="col-md-2">
+        <input class="filter" type="text" id="AdministratorName" />
+    </div>
+</div>
+<div class="row">
+
+    <div class="col-md-4">
+        <label for="DocumentTypeID">Typ dokumentu</label>
+    </div>
+    <div class="col-md-2">
+        @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"))
+    </div>
+</div>
+
+
+
+
+<table class="table" style="margin-top:20px">
     <tr>
         <th>
             Název
+            <a href="#" class="sortBy" sortBy="NameA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
+            <a href="#" class="sortBy" sortBy="NameD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
         </th>
         <th>
             Číslo dokumentu
-        </th>
-        <th>
-            Revize
+            <a href="#" class="sortBy" sortBy="NumberA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
+            <a href="#" class="sortBy" sortBy="NumberD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
         </th>
         <th>
             Datum účinnosti
+            <a href="#" class="sortBy" sortBy="RevisionA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
+            <a href="#" class="sortBy" sortBy="RevisionD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
         </th>
+        <th>
+            Správce
+            <a href="#" class="sortBy" sortBy="AdminA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
+            <a href="#" class="sortBy" sortBy="AdminD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
+        </th>
+
         <th></th>
     </tr>
-
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.DocumentNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Revision)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EffeciencyDate)
-        </td>
-        <td>
-            @Html.ActionLink("Upravit", "Edit", new { documentId = item.ID }) |
-            @Html.ActionLink("Zobrazit", "Details", new { documentId = item.ID }) |
-            @Html.ActionLink("Smazat", "Delete", new { documentId = item.ID })
-        </td>
-    </tr>
-}
-
 </table>
+</div>
