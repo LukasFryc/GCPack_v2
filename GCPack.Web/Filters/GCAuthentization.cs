@@ -84,6 +84,7 @@ namespace GCPack.Web.Filters
                         IList<Claim> listOfClaims = new List<Claim>() {
                         new Claim(ClaimTypes.Name,user.UserName),
                         new Claim("Role", user.Roles),
+                        new Claim("UserName", user.LastName + " " + user.FirstName),
                         new Claim("UserId", user.ID.ToString())};
                         ClaimsIdentity identita = new ClaimsIdentity(listOfClaims, "User identity");
                         ClaimsPrincipal claimsPrincipal = new ClaimsPrincipal(identita);

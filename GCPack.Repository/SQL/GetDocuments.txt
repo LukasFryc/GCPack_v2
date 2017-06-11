@@ -1,0 +1,96 @@
+﻿ALTER PROCEDURE GetDocuments
+	@forUserID int = null,
+	@documentID int = 0,
+	@Name varchar(50),
+	@Number varchar(50),
+	@Administrator varchar(50),
+	@OrderBy varchar(50),
+	@DocumentTypeID int,
+	@Page int,
+	@ItemsPerPage int
+AS
+
+	--	annotation se bude vrace pouze pokud se jedna o nacteni je jednoho dokumentu
+	SELECT TOP (@ItemsPerPage) * FROM (
+	SELECT ROW_NUMBER() OVER (              
+  ORDER BY 
+	(CASE @OrderBy 
+		WHEN 'NameA'
+		THEN Title 
+		WHEN 'NumberA'
+		THEN DocumentNumber
+		WHEN 'RevisionD'
+		THEN CAST (CAST (ReviewDate AS NUMERIC(10,0)) AS VARCHAR(10))
+		WHEN 'AdminA'
+		THEN 
+		CASE DocumentAdminType 
+		WHEN 0 THEN 
+			AdminDocType.LastName + ' ' + AdminDocType.FirstName
+		ELSE
+			AdminPerson.LastName + ' ' + AdminPerson.FirstName
+		END
+	END ) ASC,
+	(CASE @OrderBy 
+		WHEN 'NameD'
+		THEN Title 
+		WHEN 'NumberD'
+		THEN DocumentNumber
+		WHEN 'RevisionA'
+		THEN CAST (CAST (ReviewDate AS NUMERIC(10,0)) AS VARCHAR(10)) 
+		WHEN 'AdminD'
+		THEN 
+		CASE DocumentAdminType 
+		WHEN 0 THEN 
+			AdminDocType.LastName + ' ' + AdminDocType.FirstName
+		ELSE
+			AdminPerson.LastName + ' ' + AdminPerson.FirstName
+		END
+	END ) DESC
+  ) row ,D.*,0 CanEdit, 0 CanRevision,
+		ReadDate,
+		-- uzivatel muze potvrdit ze precetl rizeny dokument (je k nemu prirazen)
+		CASE ISNULL(RC.DocumentID,0) WHEN 0 THEN 0 ELSE 1 END CanConfirmRead, 
+		CASE DocumentAdminType 
+		WHEN 0 THEN 
+			AdminDocType.LastName + ' ' + AdminDocType.FirstName
+		ELSE
+			AdminPerson.LastName + ' ' + AdminPerson.FirstName
+		END
+		DocumentAdministrator
+	 FROM Document D
+		LEFT JOIN ReadConfirmation RC ON D.ID = RC.DocumentID AND RC.UserID = @forUserID
+		INNER JOIN DocumentType DT ON DT.ID = D.DocumentTypeID
+		LEFT JOIN [User] AdminPerson ON AdminPerson.ID = D.AdministratorID
+		LEFT JOIN [User] AdminDocType ON AdminDocType.ID = DT.AdministratorID
+	 WHERE
+		-- overeni ze uzivatel ma pristup k dokumentu
+		(
+			(@forUserID IS NULL) OR 
+			(DocumentAdminType = 0 AND DT.AdministratorID = @forUserID ) OR
+			(DocumentAdminType = 1 AND D.AdministratorID = @forUserID) OR
+			(NOT RC.ID IS NULL) -- existuje zaznam v ReadConfirmation pro tento dokument
+		) AND
+		(	-- pokud se filtruje na konkretni dokument
+			@documentID = 0 OR D.ID = @documentID
+		) AND
+		(
+			-- hledani v nazvu dokumentu
+			ISNULL(@Name,'') = '' OR D.Title LIKE '%' + @Name + '%'
+		) AND
+		(
+			--	hledani v cisle dokumentu
+			ISNULL(@Number,'') = '' OR D.DocumentNumber LIKE '%' + @Number + '%'
+		) AND
+		(
+			--	hledani v typu dokumentu
+			ISNULL(@DocumentTypeID,0) = 0 OR D.DocumentTypeID = @DocumentTypeID
+		) AND
+		(
+			--	hledani ve jmenu administratora
+			(ISNULL (@Administrator,'') = '' ) OR
+			( DocumentAdminType = 0 AND (AdminDocType.LastName + ' ' + AdminDocType.FirstName like '%' + @Administrator + '%'))  OR
+			( DocumentAdminType = 1 AND (AdminPerson.LastName + ' ' + AdminPerson.FirstName like '%' + @Administrator + '%'))  
+		)
+	) as T1
+WHERE row > @Page * @ItemsPerPage
+ORDER BY row

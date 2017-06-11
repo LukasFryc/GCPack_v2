@@ -30,13 +30,22 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("GCPack Application", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("GCPack Application " + GCPack.Web.Filter.UserRoles.UserName(), "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Úvodní stránka", "Index", "Home")</li>
                     <li>@Html.ActionLink("Osoby", "Index", "User")</li>
                     <li>@Html.ActionLink("Dokumenty", "Index", "Documents")</li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Číselníky <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Typy dokumentů</a></li>
+                            <li><a href="#">Střediska</a></li>
+                            <li><a href="#">Pracovní pozice</a></li>
+                        </ul>
+                    </li>
+
                     @if (GCPack.Web.Filter.UserRoles.HasRole("SystemAdministrator"))
                     {
                         <li>@Html.ActionLink("Administrace uživatelů", "Index", "User")</li>
@@ -49,7 +58,7 @@
                     }
                     else
                     {
-                        <li>@Html.ActionLink("Odhlaseni", "Logout", "Login")</li>
+                        <li>@Html.ActionLink("Odhlášení uživatele", "Logout", "Login")</li>
                     }
 
                     

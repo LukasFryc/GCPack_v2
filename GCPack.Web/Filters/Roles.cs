@@ -8,6 +8,7 @@ namespace GCPack.Web.Filter
 {
     public static class UserRoles
     {
+
         private static string GetRoles()
         {
             
@@ -22,6 +23,21 @@ namespace GCPack.Web.Filter
             }
 
         }
+
+        public static string UserName()
+        {
+            ClaimsPrincipal principal = (ClaimsPrincipal)HttpContext.Current.User;
+            if (principal.Claims.Count() > 0)
+            {
+                return System.Convert.ToString(principal.Claims.Where(p => p.Type.ToLower() == "username").SingleOrDefault().Value);
+            }
+            else
+            {
+                return "";
+            }
+
+        }
+
 
         public static int GetUserId()
         {
