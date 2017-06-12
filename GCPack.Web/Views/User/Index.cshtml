@@ -8,103 +8,28 @@
 <h2>Index</h2>
 
 <p>
-    @Html.ActionLink("Vytvořit uživatele", "ShowAddUserDialog")
+    @Html.ActionLink("Přidat osobu", "ShowAddUserDialog", null, new { @class = "btn btn-default btn-sm" })
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.FirstName)
+            Jméno
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UserName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email2)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Phone1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Phone2)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Active)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.ManagerID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AdministratorID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.JobPositionID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Roles)
+            Pracovní pozice
         </th>
         <th></th>
     </tr>
 
 @foreach (var item in Model) {
     <tr>
+        <td>@item.LastName @item.FirstName</td>        
         <td>
-            @Html.DisplayFor(modelItem => item.FirstName)
+            @item.JobPosition.Name
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.LastName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserNumber)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UserName)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Email2)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Phone1)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Phone2)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Active)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.ManagerID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AdministratorID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.JobPositionID)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Roles)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
-            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
-            @Html.ActionLink("Smazat uživatele", "DeleteUser", new { userId=item.ID })
+            @Html.ActionLink("Upravit osobu", "EditUser", new { userId=item.ID }, new { @class = "btn btn-default btn-sm" }) 
+            @Html.ActionLink("Smazat osobu", "DeleteUser", new { userId=item.ID }, new { @class = "btn btn-default btn-sm" })
         </td>
     </tr>
 }

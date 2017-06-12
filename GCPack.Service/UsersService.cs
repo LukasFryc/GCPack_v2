@@ -41,7 +41,7 @@ namespace GCPack.Service
 
         public UserModel GetUser(int userID)
         {
-            return new UserModel();
+            return usersRepository.GetUser(userID);
         }
 
         public void UpdateTicket(string ticket, UserModel user)

@@ -23,7 +23,9 @@ namespace GCPack.Repository.Mappers
         public ViewModelToModelMappingProfile()
         {
             CreateMap<JobPositionModel, JobPosition>().ReverseMap();
-            CreateMap<UserModel, User>().ReverseMap();
+            CreateMap<UserModel, User>()
+                .ForMember(u => u.JobPosition, m => m.MapFrom(um => um.JobPosition))
+                .ReverseMap();
             CreateMap<UserRoleModel, UserRole>().ReverseMap();
             CreateMap<RoleModel, Role>();
             CreateMap<JobPosition, JobPositionModel>().ReverseMap();

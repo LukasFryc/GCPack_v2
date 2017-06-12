@@ -32,6 +32,7 @@ namespace GCPack.Model
         public Nullable<int> ManagerID { get; set; }
         public Nullable<int> AdministratorID { get; set; }
         public Nullable<int> JobPositionID { get; set; }
+        public JobPositionModel JobPosition { get; set; }
         /*
         public virtual ICollection<DocumentTypeModel> DocumentTypes { get; set; }
         public virtual JobPositionModel JobPosition { get; set; }

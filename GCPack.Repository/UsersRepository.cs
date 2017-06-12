@@ -37,6 +37,19 @@ namespace GCPack.Repository
             }
         }
 
+        public UserModel GetUser(int userID)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var us = (from u in db.Users
+                          where u.ID == userID
+                          select u).FirstOrDefault();
+
+                UserModel user = Mapper.Map<UserModel>(us);
+                return user;
+            }
+        }
+
         public UserModel GetUser(string ticket)
         {
             using (GCPackContainer db = new GCPackContainer())

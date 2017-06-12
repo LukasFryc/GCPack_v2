@@ -287,7 +287,6 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Edit.cshtml" />
     <Content Include="Views\Documents\Edit.cshtml" />
-    <Content Include="Views\Documents\Pokus.cshtml" />
     <Content Include="Views\Documents\Index.cshtml" />
     <Content Include="Views\Documents\Details.cshtml" />
   </ItemGroup>

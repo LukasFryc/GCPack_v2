@@ -42,10 +42,25 @@ namespace GCPack.Web.Controllers
             return Json(users,JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult AddUser(UserModel user)
+        public ActionResult SaveUser(UserModel user)
         {
-            userService.AddUser(user);
             return RedirectToAction("Index");
+        }
+
+        public ActionResult AddUser()
+        {
+            UserModel user = new UserModel();
+            ViewBag.Title = "Přidat osobu";
+            ViewBag.Type = "Add";
+            return View("Edit",user);
+        }
+
+        public ActionResult EditUser(int userId)
+        {
+            ViewBag.Title = "Upravit osobu";
+            ViewBag.Type = "Edit";
+            UserModel user = userService.GetUser(userId);
+            return View("Edit",user);
         }
 
         public ActionResult DeleteUser(int userId)

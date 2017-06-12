@@ -71,7 +71,10 @@
                                         '<td> ' + doc.DocumentNumber + '</td>' +
                                         '<td> ' + dateStr + '</td>' +
                                         '<td> ' + doc.DocumentAdministrator + '</td>' +
-                                        '<td> <A href="/GCPack.Web/Documents/Edit?documentId=' + doc.ID + '">Upravit</A> | <A href="/GCPack.Web/Documents/Details?documentId=' + doc.ID + '">Zobrazit</A> | <A href="/GCPack.Web/Documents/Delete?documentId=' + doc.ID + '">Smazat</A> </td>'
+                                        '<td> <A class="btn btn-default btn-sm" href="/GCPack.Web/Documents/Edit?documentId=' + doc.ID +
+                                        '">Upravit</A> <A class="btn btn-default btn-sm" href="/GCPack.Web/Documents/Details?documentId=' + doc.ID +
+                                        '">Zobrazit</A> <A class="btn btn-default btn-sm" href="/GCPack.Web/Documents/Delete?documentId=' + doc.ID +
+                                        '">Smazat</A> </td>'
                                     );
                                 });
 
@@ -94,37 +97,31 @@
 </div>
 <h2>Dokumenty</h2>
 <p>
-    @Html.ActionLink("Vytvořit nový dokument", "Add")
+    @Html.ActionLink("Vytvořit nový dokument", "Add", null, new { @class= "btn btn-default btn-sm" })
 </p>
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2">
         <label for="Name">Název dokumentu</label>
     </div>
     <div class="col-md-2">
-        <input class="filter" type="text" id="Name" />
+        <label for="Number">Číslo dokumentu</label>
+    </div>
+    <div class="col-md-2">
+        <label for="AdministratorName">Administrátor</label>
+    </div>
+    <div class="col-md-2">
+        <label for="DocumentTypeID">Typ dokumentu</label>
     </div>
 </div>
 <div class="row">
-    <div class="col-md-4">
-        <label for="Number">Číslo dokumentu</label>
+    <div class="col-md-2">
+        <input class="filter" type="text" id="Name" />
     </div>
     <div class="col-md-2">
         <input class="filter" type="text" id="Number" />
     </div>
-</div>
-<div class="row">
-
-    <div class="col-md-4">
-        <label for="AdministratorName">Administrátor dokumentu</label>
-    </div>
     <div class="col-md-2">
         <input class="filter" type="text" id="AdministratorName" />
-    </div>
-</div>
-<div class="row">
-
-    <div class="col-md-4">
-        <label for="DocumentTypeID">Typ dokumentu</label>
     </div>
     <div class="col-md-2">
         @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"))

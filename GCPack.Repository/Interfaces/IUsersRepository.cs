@@ -11,6 +11,6 @@ namespace GCPack.Repository.Interfaces
         ICollection<UserModel> GetUsers(UserFilter filter);
         void DeleteUser(int userId);
         UserModel AddUser(UserModel user);
-
+        UserModel GetUser(int userID);
     }
 }
