@@ -27,13 +27,18 @@ namespace GCPack.Repository.Mappers
                 .ForMember(u => u.JobPosition, m => m.MapFrom(um => um.JobPosition))
                 .ReverseMap();
             CreateMap<UserRoleModel, UserRole>().ReverseMap();
-            CreateMap<RoleModel, Role>();
+            CreateMap<RoleModel, Role>().ReverseMap();
             CreateMap<JobPosition, JobPositionModel>().ReverseMap();
             CreateMap<Document, DocumentModel>().ReverseMap();
             CreateMap<File, FileItem>().ReverseMap();
             CreateMap<GetDocuments_Result, DocumentModel>().ReverseMap();
             CreateMap<DocumentType, Item>()
                 .ForMember(i => i.Value, m => m.MapFrom(dt => dt.Name));
+            CreateMap<UserModel, Item>()
+                .ForMember(i => i.Value, m => m.MapFrom(um => um.LastName + " " + um.FirstName));
+            CreateMap<RoleModel, Item>()
+                .ForMember(i => i.Value, m => m.MapFrom(r => r.RoleDescription))
+                .ForMember(i => i.ID, m => m.MapFrom(r => r.RoleId));
         }
 
 

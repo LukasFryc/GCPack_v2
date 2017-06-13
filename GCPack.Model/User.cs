@@ -16,6 +16,8 @@ namespace GCPack.Model
             this.Signatures = new HashSet<SignatureModel>();
             this.UserRoles = new HashSet<UserRoleModel>();
             */
+
+            this.RoleIDs = new HashSet<short>();
         }
 
         public int ID { get; set; }
@@ -29,6 +31,7 @@ namespace GCPack.Model
         public string Phone1 { get; set; }
         public string Phone2 { get; set; }
         public bool Active { get; set; }
+        public ICollection<short> RoleIDs { get; set; }
         public Nullable<int> ManagerID { get; set; }
         public Nullable<int> AdministratorID { get; set; }
         public Nullable<int> JobPositionID { get; set; }

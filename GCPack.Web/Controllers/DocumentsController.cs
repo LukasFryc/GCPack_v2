@@ -127,7 +127,7 @@ namespace GCPack.Web.Controllers
             ViewBag.JobPositions = userService.GetJobPositions();
             DocumentModel document = documentService.GetDocument(documentId, userId);
             ViewBag.Documents = document;
-            ViewBag.Administrators = userService.GetUsers(new UserFilter() { });
+            ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             ViewBag.Type = "Edit";
             return View("edit", document);
         }

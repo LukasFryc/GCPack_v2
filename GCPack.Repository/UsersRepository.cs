@@ -46,6 +46,7 @@ namespace GCPack.Repository
                           select u).FirstOrDefault();
 
                 UserModel user = Mapper.Map<UserModel>(us);
+                user.RoleIDs = us.UserRoles.Select(ur => ur.RoleId).ToList<short>();
                 return user;
             }
         }
@@ -112,6 +113,48 @@ namespace GCPack.Repository
             }
         }
 
+        public ICollection<RoleModel> GetRoles()
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var roles = db.Roles.Select(r => r).ToList();
+                return Mapper.Map<ICollection<RoleModel>>(roles);
+            }
+        }
+
+        public UserModel SaveUser(UserModel user)
+        {
+
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                if (user.ID != 0)
+                {
+
+                    db.UserRoles.RemoveRange(db.UserRoles.Where(ur => ur.UserID == user.ID));
+                    db.SaveChanges();
+                    foreach (short roleId in user.RoleIDs)
+                    {
+                        db.UserRoles.Add(new UserRole() { UserID = user.ID, RoleId = roleId });
+                    }
+                    db.SaveChanges();
+
+                    var dbUser = db.Users.Where(u => u.ID == user.ID).Select(u => u).FirstOrDefault();
+                    Mapper.Map(user, dbUser);
+                    db.SaveChanges();
+                }
+                else
+                {
+                    var dbUser = db.Users.Add(Mapper.Map<User>(user));
+                    db.SaveChanges();
+                    user.ID = dbUser.ID;
+                }
+
+
+
+            }
+
+            return user;
+        }
             public ICollection<UserModel> GetUsers(UserFilter filter)
         {
             using (GCPackContainer db = new GCPackContainer())

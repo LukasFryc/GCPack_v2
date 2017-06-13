@@ -44,6 +44,7 @@ namespace GCPack.Web.Controllers
 
         public ActionResult SaveUser(UserModel user)
         {
+            userService.SaveUser(user);
             return RedirectToAction("Index");
         }
 
@@ -52,6 +53,9 @@ namespace GCPack.Web.Controllers
             UserModel user = new UserModel();
             ViewBag.Title = "Přidat osobu";
             ViewBag.Type = "Add";
+            ViewBag.JobPositions = userService.GetJobPositions();
+            ViewBag.Roles = userService.GetRoles();
+            ViewBag.Users = userService.GetUserList(new UserFilter());
             return View("Edit",user);
         }
 
@@ -59,6 +63,9 @@ namespace GCPack.Web.Controllers
         {
             ViewBag.Title = "Upravit osobu";
             ViewBag.Type = "Edit";
+            ViewBag.Users = userService.GetUserList(new UserFilter());
+            ViewBag.JobPositions = userService.GetJobPositions();
+            ViewBag.Roles = userService.GetRoles();
             UserModel user = userService.GetUser(userId);
             return View("Edit",user);
         }

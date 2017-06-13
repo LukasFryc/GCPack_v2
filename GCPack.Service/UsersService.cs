@@ -38,6 +38,10 @@ namespace GCPack.Service
             return usersRepository.GetUser(ticket);
         }
 
+        public UserModel SaveUser(UserModel user)
+        {
+            return usersRepository.SaveUser(user);
+        }
 
         public UserModel GetUser(int userID)
         {
@@ -52,6 +56,17 @@ namespace GCPack.Service
         public ICollection<JobPositionModel> GetJobPositions()
         {
             return usersRepository.GetJobPositions();
+        }
+
+        // vraci se jednoducha kolekce uzivatelu - ID , Value
+        public ICollection<Item> GetUserList(UserFilter filter)
+        {
+            return Mapper.Map<ICollection<Item>>(GetUsers(filter));
+        }
+
+        public ICollection<Item> GetRoles()
+        {
+            return Mapper.Map<ICollection<Item>>(usersRepository.GetRoles());
         }
 
         public ICollection<UserModel> GetUsers(UserFilter filter)

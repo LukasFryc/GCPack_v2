@@ -174,7 +174,7 @@
                         @Html.RadioButtonFor(m => m.DocumentAdminType, GCPack.Model.DocumentAdminType.User) Vybraná osoba &nbsp;
                         @Html.RadioButtonFor(m => m.DocumentAdminType, GCPack.Model.DocumentAdminType.FromDocumentType) Z typu dokumentu
                         <br />
-                        @Html.DropDownListFor(m => m.AdministratorID, new SelectList (ViewBag.Administrators, "ID", "FirstName"))
+                        @Html.DropDownListFor(m => m.AdministratorID, new SelectList (ViewBag.Administrators, "ID", "Value"))
                     </div>
                 </div>
                 <div class="row">

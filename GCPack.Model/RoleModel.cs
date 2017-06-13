@@ -10,13 +10,13 @@ namespace GCPack.Model
     {
         public RoleModel()
         {
-            this.UserRoles = new HashSet<UserRoleModel>();
+            //this.UserRoles = new HashSet<UserRoleModel>();
         }
-
         public short RoleId { get; set; }
         public string RoleName { get; set; }
         public string RoleCode { get; set; }
         public string RoleDescription { get; set; }
-        public virtual ICollection<UserRoleModel> UserRoles { get; set; }
+        public string ApplicationCode { get; set; }
+        //public virtual ICollection<UserRoleModel> UserRoles { get; set; }
     }
 }

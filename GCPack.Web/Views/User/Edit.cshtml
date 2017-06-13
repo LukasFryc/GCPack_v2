@@ -104,45 +104,40 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ManagerID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-2">
+                <b>Nadřízený</b>
+            </div>
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ManagerID, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(m => m.ManagerID, new SelectList(ViewBag.Users, "ID", "Value"))
                 @Html.ValidationMessageFor(model => model.ManagerID, "", new { @class = "text-danger" })
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.AdministratorID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.AdministratorID, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.AdministratorID, "", new { @class = "text-danger" })
+            <div class="col-md-2">
+                <b>Pracovní pozice</b>
             </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.JobPositionID, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.JobPositionID, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.JobPositionID, new SelectList(ViewBag.JobPositions, "ID", "Name"))
                 @Html.ValidationMessageFor(model => model.JobPositionID, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Roles, new { htmlAttributes = new { @class = "form-control" } })
+            <div class="col-md-2">
+                <b>Role</b>
+            </div>
+            <div class="col-md-2">
+                @Html.ListBoxFor(m => m.RoleIDs, new SelectList(ViewBag.Roles, "ID", "Value"), new {@class="selectpicker"})
                 @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
+                <input type="submit" value="Uložit" class="btn btn-default" />
             </div>
         </div>
     </div>
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Zpět", "Index")
 </div>
