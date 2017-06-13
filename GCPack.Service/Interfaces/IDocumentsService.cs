@@ -15,6 +15,8 @@ namespace GCPack.Service.Interfaces
         ICollection<Item> GetDocumentTypes();
         DocumentTypeModel GetDocumentType(int ID);
         DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType);
+        void ChangeDocumentState(DocumentModel document, string state);
+        void ChangeDocumentState(int documentID, string state);
 
     }
 }

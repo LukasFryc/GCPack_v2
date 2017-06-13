@@ -49,6 +49,11 @@ namespace GCPack.Web.Controllers
             return View(documentService.GetDocument(documentId, userId));
         }
 
+        public ActionResult Registered(int documentID)
+        {
+            documentService.ChangeDocumentState(documentID, "Registered");
+            return View();
+        }
 
         public ActionResult GetDocuments(DocumentFilter filter)
         {

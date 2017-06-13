@@ -86,6 +86,17 @@ namespace GCPack.Service
             documentsRepository.DeleteDocument(documentId);
         }
 
+        public void ChangeDocumentState(DocumentModel document, string state)
+        {
+            documentsRepository.ChangeDocumentState(document, state);
+        }
+
+        void ChangeDocumentState(int documentID, string state)
+        {
+            documentsRepository.ChangeDocumentState(documentID, state);
+        }
+
+
         public DocumentModel EditDocument(DocumentModel document, ICollection<string> files)
         {
             // zjistit v jakem stavu je dokument pro posilani emailu pridanym nebo odstranenym uzivatelum

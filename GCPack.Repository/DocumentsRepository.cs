@@ -276,6 +276,21 @@ namespace GCPack.Repository
             }
         }
 
+        public void ChangeDocumentState(DocumentModel document, string state)
+        {
+            ChangeDocumentState(document.ID, state);
+        }
+
+        public void ChangeDocumentState(int documentId, string state)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                int stateID = db.States.Where(s => s.Code == state).Select(s => s.ID).FirstOrDefault();
+                db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().StateID = stateID;
+                db.SaveChanges();
+            }
+        }
+
         public void DeleteFilesFromDocument(DocumentModel document)
         {
             if (document.DeleteFileItems != null)
