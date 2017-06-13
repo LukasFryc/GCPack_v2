@@ -13,5 +13,8 @@ namespace GCPack.Service.Interfaces
         FileItem GetFile(int fileID);
         void Readed(int documentID, int userID);
         ICollection<Item> GetDocumentTypes();
+        DocumentTypeModel GetDocumentType(int ID);
+        DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType);
+
     }
 }

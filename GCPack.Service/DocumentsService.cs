@@ -19,6 +19,17 @@ namespace GCPack.Service
             this.documentsRepository = documentsRepository;
             this.mailService = mailService;
         }
+
+        public DocumentTypeModel GetDocumentType(int ID)
+        {
+            return documentsRepository.GetDocumentType(ID);
+        }
+
+        public DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType)
+        {
+            return documentsRepository.SaveDocumentType(documentType);
+        }
+
         public DocumentModel GetDocument(int documentId, int userID)
         {
             DocumentModel document = documentsRepository.GetDocument(documentId, userID);

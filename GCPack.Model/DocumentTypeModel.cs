@@ -18,6 +18,7 @@ namespace GCPack.Model
         public Nullable<int> AdministratorID { get; set; }
         public Nullable<int> AuthorizinOfficerID { get; set; }
         public virtual ICollection<DocumentModel> Documents { get; set; }
-        public virtual UserModel User { get; set; }
+        public string AdministratorName { get; set; }
+        public int? OrderBy { get; set; }
     }
 }

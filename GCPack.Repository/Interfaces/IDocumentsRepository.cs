@@ -21,5 +21,7 @@ namespace GCPack.Repository.Interfaces
         void Readed(int documentID, int userID);
         bool ReadAccessToDocument(DocumentModel document, int userID);
         ICollection<Item> GetDocumentTypes();
+        DocumentTypeModel GetDocumentType(int ID);
+        DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType);
     }
 }

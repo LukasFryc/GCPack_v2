@@ -1,0 +1,32 @@
+﻿@model IEnumerable<GCPack.Model.Item>
+@{
+    ViewBag.Title = "CodeListsController";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Typy dokumentů</h2>
+
+<A class="btn btn-default btn-sm" href="/GCPack.Web/CodeLists/DocumentTypesAdd">Přidat</A>
+<div class="row">
+    <div class="col-md-6">
+        <table class="table" style="margin-top:20px">
+            <tr>
+                <th>
+                    Název
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var documentType in @Model)
+            {
+                <tr>
+                    <td>@documentType.Value</td>
+                    <td>
+                        <A class="btn btn-default btn-sm" href="/GCPack.Web/CodeLists/DocumentTypesEdit?ID=@documentType.ID">Upravit </A>
+                        <A class="btn btn-default btn-sm" href="/GCPack.Web/CodeLists/DocumentTypesDelete?ID=@documentType.ID">Smazat </A>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

@@ -30,6 +30,7 @@ namespace GCPack.Repository.Mappers
             CreateMap<RoleModel, Role>().ReverseMap();
             CreateMap<JobPosition, JobPositionModel>().ReverseMap();
             CreateMap<Document, DocumentModel>().ReverseMap();
+            CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
             CreateMap<File, FileItem>().ReverseMap();
             CreateMap<GetDocuments_Result, DocumentModel>().ReverseMap();
             CreateMap<DocumentType, Item>()

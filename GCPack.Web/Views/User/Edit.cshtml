@@ -108,14 +108,14 @@
                 <b>Nadřízený</b>
             </div>
             <div class="col-md-10">
-                @Html.DropDownListFor(m => m.ManagerID, new SelectList(ViewBag.Users, "ID", "Value"))
+                @Html.DropDownListFor(m => m.ManagerID, new SelectList(ViewBag.Users, "ID", "Value"), new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.ManagerID, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-2">
                 <b>Pracovní pozice</b>
             </div>
-            <div class="col-md-2">
-                @Html.DropDownListFor(m => m.JobPositionID, new SelectList(ViewBag.JobPositions, "ID", "Name"))
+            <div class="col-md-10">
+                @Html.DropDownListFor(m => m.JobPositionID, new SelectList(ViewBag.JobPositions, "ID", "Name"), new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.JobPositionID, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -124,8 +124,8 @@
             <div class="col-md-2">
                 <b>Role</b>
             </div>
-            <div class="col-md-2">
-                @Html.ListBoxFor(m => m.RoleIDs, new SelectList(ViewBag.Roles, "ID", "Value"), new {@class="selectpicker"})
+            <div class="col-md-10">
+                @Html.ListBoxFor(m => m.RoleIDs, new SelectList(ViewBag.Roles, "ID", "Value"), new { @class = "form-control", style="height:120px" })
                 @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
             </div>
         </div>

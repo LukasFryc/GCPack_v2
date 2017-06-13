@@ -26,6 +26,13 @@ namespace GCPack.Repository
             }
         }
 
+        public DocumentTypeModel GetDocumentType(int ID)
+        {
+            using (GCPackContainer db = new GCPackContainer()) {
+                return Mapper.Map<DocumentTypeModel>(db.DocumentTypes.Where(dt => dt.ID == ID).Select(dt => dt).FirstOrDefault());
+            }
+        }
+
         public bool ReadAccessToDocument(DocumentModel document, int userID)
         {
             return true;
@@ -37,6 +44,26 @@ namespace GCPack.Repository
             {
                 return Mapper.Map<ICollection<FileItem>>(db.Files.Where(d => d.DocumentID == documentId).Select(d => d));
             }
+        }
+
+        public DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                if (documentType.ID == 0)
+                {
+                    var dbDocumentType = db.DocumentTypes.Add(Mapper.Map<DocumentType>(documentType));
+                    db.SaveChanges();
+                    documentType.ID = dbDocumentType.ID;
+                }
+                else
+                {
+                    var dbDocumentType = db.DocumentTypes.Where(dt => dt.ID == documentType.ID).FirstOrDefault();
+                    Mapper.Map(documentType, dbDocumentType);
+                    db.SaveChanges();
+                }
+            }
+            return documentType;
         }
 
         public ICollection<UserModel> GetUsersForDocument(int documentId)
