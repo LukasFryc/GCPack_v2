@@ -59,7 +59,10 @@ namespace GCPack.Repository
                 else
                 {
                     var dbDocumentType = db.DocumentTypes.Where(dt => dt.ID == documentType.ID).FirstOrDefault();
-                    Mapper.Map(documentType, dbDocumentType);
+                    dbDocumentType.AdministratorID = documentType.AdministratorID;
+                    dbDocumentType.OrderBy = documentType.OrderBy;
+                    dbDocumentType.Name = documentType.Name;
+                    
                     db.SaveChanges();
                 }
             }

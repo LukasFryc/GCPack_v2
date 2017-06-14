@@ -5,8 +5,7 @@
 }
 
 <h2>Typy dokumentů</h2>
-
-<A class="btn btn-default btn-sm" href="/GCPack.Web/CodeLists/DocumentTypesAdd">Přidat</A>
+@Html.ActionLink("Přidat", "DocumentTypesAdd", "CodeLists", new { @class = "btn btn-default btn-sm" })
 <div class="row">
     <div class="col-md-6">
         <table class="table" style="margin-top:20px">
@@ -22,8 +21,8 @@
                 <tr>
                     <td>@documentType.Value</td>
                     <td>
-                        <A class="btn btn-default btn-sm" href="/GCPack.Web/CodeLists/DocumentTypesEdit?ID=@documentType.ID">Upravit </A>
-                        <A class="btn btn-default btn-sm" href="/GCPack.Web/CodeLists/DocumentTypesDelete?ID=@documentType.ID">Smazat </A>
+                        @Html.ActionLink("Upravit", "DocumentTypesEdit", "CodeLists", new { ID = documentType.ID }, new { @class = "btn btn-default btn-sm" })
+                        @Html.ActionLink("Smazat", "DocumentTypesDelete", "CodeLists", new { ID = documentType.ID }, new { @class = "btn btn-default btn-sm" })
                     </td>
                 </tr>
             }

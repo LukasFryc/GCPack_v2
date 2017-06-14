@@ -38,6 +38,15 @@ namespace GCPack.Service
             return document;
         }
 
+        public void ChangeDocumentState(DocumentModel document, string state)
+        {
+            documentsRepository.ChangeDocumentState(document, state);
+        }
+        public void ChangeDocumentState(int documentID, string state)
+        {
+            documentsRepository.ChangeDocumentState(documentID, state);
+        }
+
         public FileItem GetFile(int fileID)
         {
             return documentsRepository.GetFile(fileID);
@@ -84,16 +93,6 @@ namespace GCPack.Service
         public void DeleteDocument(int documentId)
         {
             documentsRepository.DeleteDocument(documentId);
-        }
-
-        public void ChangeDocumentState(DocumentModel document, string state)
-        {
-            documentsRepository.ChangeDocumentState(document, state);
-        }
-
-        void ChangeDocumentState(int documentID, string state)
-        {
-            documentsRepository.ChangeDocumentState(documentID, state);
         }
 
 

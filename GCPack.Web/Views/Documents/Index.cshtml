@@ -47,7 +47,7 @@
                     function () {
                         
                         //$('table').children('.data').empty();
-                        $.getJSON("/GCPack.Web/documents/getDocuments", {
+                        $.getJSON(AppRoot + "/documents/getDocuments", {
                             name: $('#Name').val(),
                             Number: $('#Number').val(),
                             AdministratorName: $('#AdministratorName').val(),
@@ -71,9 +71,9 @@
                                         '<td> ' + doc.DocumentNumber + '</td>' +
                                         '<td> ' + dateStr + '</td>' +
                                         '<td> ' + doc.DocumentAdministrator + '</td>' +
-                                        '<td> <A class="btn btn-default btn-sm" href="/GCPack.Web/Documents/Edit?documentId=' + doc.ID +
-                                        '">Upravit</A> <A class="btn btn-default btn-sm" href="/GCPack.Web/Documents/Details?documentId=' + doc.ID +
-                                        '">Zobrazit</A> <A class="btn btn-default btn-sm" href="/GCPack.Web/Documents/Delete?documentId=' + doc.ID +
+                                        '<td> <A class="btn btn-default btn-sm" href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
+                                        '">Upravit</A> <A class="btn btn-default btn-sm" href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID +
+                                        '">Zobrazit</A> <A class="btn btn-default btn-sm" href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
                                         '">Smazat</A> </td>'
                                     );
                                 });
