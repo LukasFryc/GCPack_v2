@@ -13,11 +13,24 @@ namespace GCPack.Service
     {
         readonly IDocumentsRepository documentsRepository;
         readonly IMailService mailService;
+        readonly IUsersService userService;
 
-        public DocumentsService(IDocumentsRepository documentsRepository, IMailService mailService)
+        public DocumentsService(IDocumentsRepository documentsRepository, IMailService mailService, IUsersService userService)
         {
             this.documentsRepository = documentsRepository;
             this.mailService = mailService;
+            this.userService = userService;
+        }
+         
+        public void SendEmail()
+        {
+            // metoda pro otestovani odesilani emailu
+            int userId = 6;
+            UserModel user = userService.GetUser(userId);
+            DocumentModel document = documentsRepository.GetDocument(6013,userId);
+            document.EffeciencyDate = DateTime.Now;
+
+            mailService.SendEmail("TestovaciEmail", "Odeslani testovaciho emailu", user, document);
         }
 
         public DocumentTypeModel GetDocumentType(int ID)

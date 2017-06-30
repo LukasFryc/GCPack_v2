@@ -1,0 +1,30 @@
+﻿<style>
+	body
+	{
+		font-family:arial;
+	}
+</style>
+<h2> Testovaci email </h2>
+<h3 style="color:red"> [DocumentTitle] </h3>
+<h3> Číslo dokumentu: [DocumentNumber] </h3>
+<h3> Účinnost dokumentu od: [EffeciencyDate] </h3>
+Pro uživatele <b>[UserFirstName] [UserLastName]</b> </br></br>
+
+<h1>Lorem Ipsum</h1>
+<h4>"Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."</h4>
+<h5>"Nikdo nemiluje bolest samu, nevyhledává ji, ani ji nechce získat, protože bolest..."</h5>
+<hr>
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque facilisis imperdiet risus at volutpat. 
+Integer commodo vel tellus nec euismod. Vestibulum sed ullamcorper neque, at convallis turpis. Nunc condimentum, 
+ligula eu efficitur convallis, nulla dolor pulvinar odio, eget varius orci lacus sed arcu. Donec eu mauris posuere sapien eleifend finibus. 
+Aenean auctor ligula at dapibus vestibulum. In sodales ornare augue in mattis. Morbi tincidunt mollis turpis, viverra imperdiet mauris lobortis in. 
+Duis euismod nulla a ornare molestie. Integer sit amet egestas nisi. Vivamus ut ex eget leo ullamcorper commodo a ac ipsum. Nunc eget magna tempus, 
+imperdiet ipsum eu, consectetur sapien. Nunc dapibus ex eget gravida pharetra.
+<div style="border: 1px silver solid;margin-top:30px;padding: 10px">
+	<a href="[DocumentLink]">Odkaz na dokument</a>
+</div>
+
+
+<div style="margin-top:30px">
+	<img src="https://www.gcsystem.cz/mod-front/17/img/logo.png">
+</div>

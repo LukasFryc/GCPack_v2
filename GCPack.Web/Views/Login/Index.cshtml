@@ -7,7 +7,8 @@
         <div>
             <h2>Prihlaseni</h2>
             Jmeno: <input name="UserName" value="@Model.UserName" />
-            Heslo: <input name="Password" value="@Model.Password"/>
+            Heslo: <input name="Password" type="password" value="@Model.Password"/>
+            <input type="hidden" name="RawUrl" value="@ViewBag.RawUrl" />
             <input type="submit" value="Prihlasit" />
         </div>
         

@@ -1,0 +1,2 @@
+﻿alter table [user] drop constraint FK_JobPositionUser_User; 
+alter table [user] drop column JobPositionID 

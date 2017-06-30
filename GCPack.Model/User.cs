@@ -32,9 +32,11 @@ namespace GCPack.Model
         public string Phone2 { get; set; }
         public bool Active { get; set; }
         public ICollection<short> RoleIDs { get; set; }
+
+        // nadrizeny
         public Nullable<int> ManagerID { get; set; }
         public Nullable<int> AdministratorID { get; set; }
-        public Nullable<int> JobPositionID { get; set; }
+        public Nullable<int> JobPositionID { get; set; } // pracovni pozice ve firme
         public JobPositionModel JobPosition { get; set; }
         /*
         public virtual ICollection<DocumentTypeModel> DocumentTypes { get; set; }

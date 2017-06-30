@@ -14,7 +14,7 @@ namespace GCPack.Web.Filters
         {
             // nactou se z atributu vsechny role pro ktere je tato akce urcena
             string urcenoProRole = "," + this.Roles + ",";
-
+            
             ClaimsPrincipal principal = (ClaimsPrincipal)HttpContext.Current.User;
             string Roles = System.Convert.ToString(principal.Claims.SingleOrDefault(c => c.Type == "Role").Value);
 

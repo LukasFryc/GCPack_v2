@@ -109,8 +109,8 @@ namespace GCPack.Web.Filters
                 context.Result = new RedirectToRouteResult("Default",
                 new System.Web.Routing.RouteValueDictionary{
                 {"controller", "Login"},
-                {"action", "LoggedOut"},
-                { "message", "Nedostatecne opravneni pro tuto akci." }
+                {"action", "Login"},
+                { "rawUrl", context.HttpContext.Request.RequestContext.HttpContext.Request.RawUrl }
                 });
             }
         }

@@ -36,6 +36,37 @@ namespace GCPack.Web.Controllers
             return View(documents);
         }
 
+        public void SendMail()
+        {
+            string x = System.Configuration.ConfigurationManager.AppSettings[""];
+
+            /* 
+              
+             email se odesila na tyto akce:
+             1.) evidence rizeneho dokumentu - odesle se email vsem kteri se maji s dokumentem seznamit
+                - emailova adresa se pouzije: user.email1
+             2.) posilani posty spravci ze ma dokument prezkoumat - nekolik dni (v configu) pred terminem pristiho prezkoumani nextRevision
+             3.) posilani emailu spravci kdyz se bude blizit (v configu pocet dni) termin platnosti EndDate - do kdy to plati
+                 datum ucinnosti je EffeciencyDate - od kdy to plati
+             4.) kdyz se prida osobe funkce, pak se prida do rozdelovniku vsech dokumentu kde je uvedena tato funkce 
+                a prijde mu seznam vsech dokumentu s linkama ktere ma precist (seznamit se)
+                - zaroven se zapise datum kdy byl uzivatel pridan do rozdelovniku
+                
+             5.) v tabulce typ rizeneho dokumentu se doplni novy sloupec pocet dni do kdy se ma seznamit uzivatel s dokumentem
+                - pokud se neseznami do datumu seznameni se a zaroven datum seznameni se je mensi nez datum kdy byl uzivatel pridan 
+                do rozdelovniku, pak mu prijde po tomto terminu vzdy kazdy den a posle se email ve kterem bude seznam vsech
+
+
+             6.) uzivatel muze mit vice pracovnich pozic - nova tabulka JobUserMap - v editaci uzivatele pak moznost zaradit uzivatele do
+                vice pracovnich pozic
+
+             7.) vytvori se novy rozdelovnik pro funkce - rozsirit 
+
+             */
+
+            documentService.SendEmail();
+        }
+
         public ActionResult GetFile(int fileID)
         {
             FileItem fileItem = documentService.GetFile(fileID);

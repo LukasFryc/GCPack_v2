@@ -1,4 +1,4 @@
-﻿ALTER PROCEDURE GetDocuments
+﻿CREATE PROCEDURE [dbo].[GetDocuments]
 	@forUserID int = null,
 	@documentID int = 0,
 	@Name varchar(50),
@@ -46,7 +46,7 @@ AS
 			AdminPerson.LastName + ' ' + AdminPerson.FirstName
 		END
 	END ) DESC
-  ) row ,D.*,0 CanEdit, 0 CanRevision,
+  ) row ,D.*, 0 CanEdit, 0 CanRevision,
 		ReadDate,
 		-- uzivatel muze potvrdit ze precetl rizeny dokument (je k nemu prirazen)
 		CASE ISNULL(RC.DocumentID,0) WHEN 0 THEN 0 ELSE 1 END CanConfirmRead, 

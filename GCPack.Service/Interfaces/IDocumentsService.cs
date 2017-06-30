@@ -17,6 +17,7 @@ namespace GCPack.Service.Interfaces
         DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType);
         void ChangeDocumentState(DocumentModel document, string state);
         void ChangeDocumentState(int documentID, string state);
+        void SendEmail();
 
     }
 }

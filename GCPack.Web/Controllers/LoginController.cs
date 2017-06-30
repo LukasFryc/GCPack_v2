@@ -35,12 +35,12 @@ namespace GCPack.Web.Controllers
             return View("LoggedOut");
         }
 
-        public ActionResult Login(UserModel model)
+        public ActionResult Login(UserModel model, string rawUrl)
         {
 
             string token = usersService.Login(model.UserName, model.Password);
 
-            if (token != null)
+            if (!string.IsNullOrEmpty (token))
             {
                 
                 // TODO - servisni vrstva overi login a pwd a vygeneruje se token a prida 
@@ -61,11 +61,21 @@ namespace GCPack.Web.Controllers
 
                 // Create the cookie.
                 Response.Cookies.Add(new HttpCookie(FormsAuthentication.FormsCookieName, encTicket));
-                return this.RedirectToAction("Index", "Home");
+
+                if (!string.IsNullOrEmpty(rawUrl))
+                {
+                    return this.Redirect(rawUrl);
+                }
+                {
+                    return this.RedirectToAction("Index", "Home");
+                }
             }
 
+            ViewBag.RawUrl = rawUrl;
 
-            return this.RedirectToAction("LoggedOut", "Login", new { Message = "Spatny login nebo heslo." } );
+            return View("Index", new UserModel());
+
+            //return this.RedirectToAction("Login", "Login", new { Message = "Spatny login nebo heslo." } );
 
         }
 

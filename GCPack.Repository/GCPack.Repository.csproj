@@ -161,6 +161,8 @@
     </Content>
     <Content Include="SQL\GetDocuments.txt" />
     <Content Include="SQL\initDb.txt" />
+    <Content Include="SQL\JobPostionUser.txt" />
+    <Content Include="SQL\remove_column_jobpositionID_in_users.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
