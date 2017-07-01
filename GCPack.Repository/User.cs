@@ -18,10 +18,11 @@ namespace GCPack.Repository
         public User()
         {
             this.DocumentTypes = new HashSet<DocumentType>();
+            this.JobPositionUsers = new HashSet<JobPositionUser>();
             this.LogEvents = new HashSet<LogEvent>();
+            this.Logins = new HashSet<Login>();
             this.Signatures = new HashSet<Signature>();
             this.UserRoles = new HashSet<UserRole>();
-            this.Logins = new HashSet<Login>();
         }
     
         public int ID { get; set; }
@@ -37,18 +38,18 @@ namespace GCPack.Repository
         public bool Active { get; set; }
         public Nullable<int> ManagerID { get; set; }
         public Nullable<int> AdministratorID { get; set; }
-        public Nullable<int> JobPositionID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DocumentType> DocumentTypes { get; set; }
-        public virtual JobPosition JobPosition { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<JobPositionUser> JobPositionUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogEvent> LogEvents { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Login> Logins { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Signature> Signatures { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRole> UserRoles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Login> Logins { get; set; }
     }
 }

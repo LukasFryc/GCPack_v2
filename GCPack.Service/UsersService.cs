@@ -35,17 +35,24 @@ namespace GCPack.Service
 
         public UserModel GetUser(string ticket)
         {
-            return usersRepository.GetUser(ticket);
+            var user = usersRepository.GetUser(ticket);
+            return user;
         }
 
         public UserModel SaveUser(UserModel user)
         {
+            // TODO: zjisti se vsechny nove pracovni pozice
+            // do kterych byl uzivatel prirazen a pokud jsou nektere
+            // nove, tak se odesle email
+
             return usersRepository.SaveUser(user);
         }
 
         public UserModel GetUser(int userID)
         {
-            return usersRepository.GetUser(userID);
+            var user = usersRepository.GetUser(userID);
+            user.JobPositions = usersRepository.GetJobPositionIDs(userID);
+            return user;
         }
 
         public void UpdateTicket(string ticket, UserModel user)

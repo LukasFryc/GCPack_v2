@@ -227,6 +227,21 @@
                     <div class="row">
                         <div class="col-md-10">
                             <div style="margin-bottom:20px">
+
+                                <div class="col-md-2">
+                                    <b>Pracovní pozice</b>
+                                </div>
+                                <div class="col-md-10">
+                                    @foreach (GCPack.Model.JobPositionModel job in ViewBag.JobPositions)
+                {
+                                        string isChecked = (Model.JobPositionIDs.Contains(job.ID)) ? "checked" : "";
+                                        <div>
+                                            <input type="checkbox" name="JobPositionIDs" value="@job.ID" @isChecked /> @job.Name
+                                        </div>
+                                    }
+                                </div>
+
+
                                 <b>Přiřazení uživatelé k dokumentu</b><br />
                                 <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes">
                                 @if (@Model.Users != null)

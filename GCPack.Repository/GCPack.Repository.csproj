@@ -97,6 +97,12 @@
     <Compile Include="JobPosition.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="JobPositionDocument.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
+    <Compile Include="JobPositionUser.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
     <Compile Include="LogEvent.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
@@ -161,6 +167,7 @@
     </Content>
     <Content Include="SQL\GetDocuments.txt" />
     <Content Include="SQL\initDb.txt" />
+    <Content Include="SQL\JobPositionDocument.txt" />
     <Content Include="SQL\JobPostionUser.txt" />
     <Content Include="SQL\remove_column_jobpositionID_in_users.txt" />
   </ItemGroup>

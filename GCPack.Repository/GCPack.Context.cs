@@ -39,10 +39,12 @@ namespace GCPack.Repository
         public virtual DbSet<Signature> Signatures { get; set; }
         public virtual DbSet<State> States { get; set; }
         public virtual DbSet<SystemCategory> SystemCategories { get; set; }
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<Login> Logins { get; set; }
         public virtual DbSet<File> Files { get; set; }
+        public virtual DbSet<JobPositionUser> JobPositionUsers { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<JobPositionDocument> JobPositionDocuments { get; set; }
     
         public virtual ObjectResult<GetDocuments_Result> GetDocuments(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage)
         {

@@ -48,6 +48,7 @@ namespace GCPack.Service
             DocumentModel document = documentsRepository.GetDocument(documentId, userID);
             document.Users = documentsRepository.GetUsersForDocument(documentId);
             document.FileItems = documentsRepository.GetFiles(documentId);
+            document.JobPositionIDs = documentsRepository.GetJobPositionsFromDocument(documentId);
             return document;
         }
 
@@ -120,6 +121,8 @@ namespace GCPack.Service
 
             ICollection<UserModel> addedUsers = documentsRepository.GetAddedUsersToDocument(document.SelectedUsers, document);
 
+            // TODO: nacist vsechny soucasne jobpositions a porovnat ktere byly pridany
+            // tem ktere byly pridany je potreba zaslat email
 
             documentsRepository.MapUsersToDocument(addedUsers.Select(au => au.ID).ToList(), document, deletedUsers.Select (u => u.ID).ToList<int>());
             documentsRepository.DeleteFilesFromDocument(document);

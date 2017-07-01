@@ -36,8 +36,8 @@ namespace GCPack.Model
         // nadrizeny
         public Nullable<int> ManagerID { get; set; }
         public Nullable<int> AdministratorID { get; set; }
-        public Nullable<int> JobPositionID { get; set; } // pracovni pozice ve firme
-        public JobPositionModel JobPosition { get; set; }
+        public ICollection<int> JobPositionIDs { get; set; } // pracovni pozice ve firme
+        public ICollection<int> JobPositions { get; set; }
         /*
         public virtual ICollection<DocumentTypeModel> DocumentTypes { get; set; }
         public virtual JobPositionModel JobPosition { get; set; }

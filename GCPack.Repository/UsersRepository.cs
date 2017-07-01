@@ -51,6 +51,17 @@ namespace GCPack.Repository
             }
         }
 
+        public ICollection<int> GetJobPositionIDs(int userID)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var jobPositionIDs = (from u in db.JobPositionUsers
+                          where u.UserId == userID
+                          select u.JobPositionId).ToList();
+                return jobPositionIDs;
+            }
+        }
+
         public UserModel GetUser(string ticket)
         {
             using (GCPackContainer db = new GCPackContainer())
@@ -129,6 +140,14 @@ namespace GCPack.Repository
             {
                 if (user.ID != 0)
                 {
+                    db.JobPositionUsers.RemoveRange(db.JobPositionUsers.Where(jpu => jpu.User.ID == user.ID));
+                    db.SaveChanges();
+                    foreach (var jobID in user.JobPositionIDs)
+                    {
+                        db.JobPositionUsers.Add(new JobPositionUser() { UserId = user.ID, JobPositionId = jobID, Created = DateTime.Now });
+                    }
+
+                    db.SaveChanges();
 
                     db.UserRoles.RemoveRange(db.UserRoles.Where(ur => ur.UserID == user.ID));
                     db.SaveChanges();
@@ -159,11 +178,21 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                var users = db.Users.Where(u => 
-                    (u.JobPositionID == filter.JobPositionID || filter.JobPositionID == 0) &&
-                    ((u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || filter.Name == null)) &&
-                    (!filter.ExcludedUsersId.Contains(u.ID))
-                )).Select(u => u);
+                //var users = db.Users.Where(u => 
+                //    ((u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || filter.Name == null)) &&
+                //    (!filter.ExcludedUsersId.Contains(u.ID))
+                //)).Select(u => u);
+
+                var jpus = from jpu in db.JobPositionUsers where filter.JobPositionIDs.Contains(jpu.JobPositionId) select jpu;
+
+                var users = from u in db.Users
+                        where
+                            (
+                                (u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || string.IsNullOrEmpty (filter.Name))) &&
+                                (!filter.ExcludedUsersId.Contains(u.ID))  &&
+                                (filter.JobPositionIDs.FirstOrDefault() == 0 || jpus.Select(j => j.UserId).Contains(u.ID))
+                            )
+                        select u;
 
                 switch (filter.OrderBy)
                 {

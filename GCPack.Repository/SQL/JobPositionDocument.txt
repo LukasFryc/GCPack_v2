@@ -1,0 +1,21 @@
+﻿CREATE TABLE [dbo].[JobPositionDocument](
+	[JobPositionDocumentId] [int] IDENTITY(1,1) NOT NULL,
+	[DocumentId] [int] NOT NULL,
+	[JobPositionId] [int] NOT NULL,
+	[Created] [datetime] NOT NULL,
+ CONSTRAINT [PK_JobPositionDocument] PRIMARY KEY CLUSTERED 
+(
+	[JobPositionDocumentId] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[JobPositionDocument]  WITH CHECK ADD  CONSTRAINT [FK_JobPositionDocument_JobPosition] FOREIGN KEY([JobPositionId])
+REFERENCES [dbo].[JobPosition] ([ID])
+GO
+
+ALTER TABLE [dbo].[JobPositionDocument]  WITH CHECK ADD  CONSTRAINT [FK_JobPositionDocument_Document] FOREIGN KEY([DocumentId])
+REFERENCES [dbo].[Document] ([ID])
+GO
+

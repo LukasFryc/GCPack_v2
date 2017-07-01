@@ -127,6 +127,16 @@ namespace GCPack.Repository
             }
         }
 
+        // seznam vsech pracovnich pozic (funkci) pridelenych k dokumentu
+        public ICollection<int> GetJobPositionsFromDocument(int documentId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return db.JobPositionDocuments.Where(jpd => jpd.DocumentId == documentId).Select(jpd => jpd.JobPositionId).ToList();
+            }
+        }
+
+
         // vrati se seznam vsech uzivatelu kteri se pridaji do dokumentu
         public ICollection<UserModel> GetAddedUsersToDocument(ICollection<int> users, DocumentModel document)
         {
@@ -261,6 +271,15 @@ namespace GCPack.Repository
                 Mapper.Map(document, dbDocument);
                 dbDocument.StateID = stateID;
                 db.SaveChanges();
+
+                db.JobPositionDocuments.RemoveRange(db.JobPositionDocuments.Where(jpd => jpd.DocumentId == document.ID));
+                db.SaveChanges();
+                foreach (int jobPositionID in document.JobPositionIDs)
+                {
+                    db.JobPositionDocuments.Add(new JobPositionDocument() { DocumentId = document.ID, JobPositionId = jobPositionID, Created = DateTime.Now });
+                }
+                db.SaveChanges();
+
             }
             return document;
         }

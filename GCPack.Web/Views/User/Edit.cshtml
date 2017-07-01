@@ -115,8 +115,14 @@
                 <b>Pracovní pozice</b>
             </div>
             <div class="col-md-10">
-                @Html.DropDownListFor(m => m.JobPositionID, new SelectList(ViewBag.JobPositions, "ID", "Name"), new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.JobPositionID, "", new { @class = "text-danger" })
+                @foreach (GCPack.Model.JobPositionModel job in ViewBag.JobPositions)
+                {
+                    string isChecked = (Model.JobPositions.Contains(job.ID)) ? "checked" : "";
+                    <div>
+                        
+                        <input type="checkbox" name="JobPositionIDs" value="@job.ID" @isChecked /> @job.Name
+                    </div>
+                }
             </div>
         </div>
 

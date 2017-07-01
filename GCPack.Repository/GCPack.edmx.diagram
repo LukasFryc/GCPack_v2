@@ -17,7 +17,6 @@
         <EntityTypeShape EntityType="GCPack.Signature" Width="1.5" PointX="9.75" PointY="11.25" />
         <EntityTypeShape EntityType="GCPack.State" Width="1.5" PointX="3.625" PointY="15.875" />
         <EntityTypeShape EntityType="GCPack.SystemCategory" Width="1.5" PointX="12.75" PointY="9.75" />
-        <EntityTypeShape EntityType="GCPack.User" Width="1.5" PointX="3" PointY="8.75" />
         <EntityTypeShape EntityType="GCPack.UserRole" Width="1.5" PointX="5.25" PointY="9" />
         <AssociationConnector Association="GCPack.FK_SystemCategory_System" />
         <AssociationConnector Association="GCPack.FK_DivisionCategory_Division" />
@@ -28,34 +27,22 @@
         <AssociationConnector Association="GCPack.FK_RizeneDokumeny_DocumentType" />
         <AssociationConnector Association="GCPack.FK_Signature_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_SystemCategory_RizeneDokumeny" />
-        <AssociationConnector Association="GCPack.FK_DocumentType_User" />
-        <AssociationConnector Association="GCPack.FK_User_JobPosition" />
-        <AssociationConnector Association="GCPack.FK_LogEvent_User" ManuallyRouted="true" >
-          <ConnectorPoint PointX="3.75" PointY="13.614807942708334" />
-          <ConnectorPoint PointX="3.75" PointY="15.307444661458334" />
-          <ConnectorPoint PointX="6.5625" PointY="15.307444661458334" />
-          <ConnectorPoint PointX="6.5625" PointY="17.521057942708335" />
-          <ConnectorPoint PointX="8.1666666666666661" PointY="17.521057942708335" />
-          <ConnectorPoint PointX="8.3333333333333339" PointY="17.521057942708335" />
-          <ConnectorPoint PointX="8.5729191666666669" PointY="17.521057942708335" />
-          <ConnectorPoint PointX="8.7395858333333347" PointY="17.521057942708335" />
-          <ConnectorPoint PointX="9.375" PointY="17.521057942708335" />
-          <ConnectorPoint PointX="9.375" PointY="15.929898647135417" />
-          <ConnectorPoint PointX="9.75" PointY="15.929898647135417" />
-        </AssociationConnector>
         <AssociationConnector Association="GCPack.FK_UserRoles_Roles" />
-        <AssociationConnector Association="GCPack.FK_Signature_User" />
-        <AssociationConnector Association="GCPack.FK_UserRoles_Users" />
         <EntityTypeShape EntityType="GCPack.Login" Width="1.5" PointX="3.375" PointY="0.75" />
-        <AssociationConnector Association="GCPack.FK_Login_User" ManuallyRouted="true" >
-          <ConnectorPoint PointX="3.75" PointY="8.75" />
-          <ConnectorPoint PointX="3.75" PointY="7.422587890625" />
-          <ConnectorPoint PointX="5.125" PointY="7.422587890625" />
-          <ConnectorPoint PointX="5.125" PointY="2.0123469629329005" />
-          <ConnectorPoint PointX="4.875" PointY="2.0123469629329005" />
-        </AssociationConnector>
         <EntityTypeShape EntityType="GCPack.File" Width="1.5" PointX="9.75" PointY="23.125" />
         <AssociationConnector Association="GCPack.FK_File_RizeneDokumeny" />
+        <EntityTypeShape EntityType="GCPack.JobPositionUser" Width="1.5" PointX="3.625" PointY="8" />
+        <EntityTypeShape EntityType="GCPack.User" Width="1.5" PointX="0.75" PointY="4.25" />
+        <AssociationConnector Association="GCPack.FK_DocumentType_User" />
+        <AssociationConnector Association="GCPack.FK_JobPositionUser_JobPosition" />
+        <AssociationConnector Association="GCPack.FK_JobPositionUser_User" />
+        <AssociationConnector Association="GCPack.FK_LogEvent_User" />
+        <AssociationConnector Association="GCPack.FK_Login_User" />
+        <AssociationConnector Association="GCPack.FK_Signature_User" />
+        <AssociationConnector Association="GCPack.FK_UserRoles_Users" />
+        <EntityTypeShape EntityType="GCPack.JobPositionDocument" Width="1.5" PointX="12.75" PointY="15.5" />
+        <AssociationConnector Association="GCPack.FK_JobPositionDocument_Document" />
+        <AssociationConnector Association="GCPack.FK_JobPositionDocument_JobPosition" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -24,7 +24,6 @@ namespace GCPack.Repository.Mappers
         {
             CreateMap<JobPositionModel, JobPosition>().ReverseMap();
             CreateMap<UserModel, User>()
-                .ForMember(u => u.JobPosition, m => m.MapFrom(um => um.JobPosition))
                 .ReverseMap();
             CreateMap<UserRoleModel, UserRole>().ReverseMap();
             CreateMap<RoleModel, Role>().ReverseMap();

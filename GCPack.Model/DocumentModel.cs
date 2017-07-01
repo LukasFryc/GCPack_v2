@@ -52,6 +52,7 @@ namespace GCPack.Model
         public string DeleteFileItems { get; set; } // soubory ktere smazeme
         public ICollection<UserModel> Users { get; set; }
         public DateTime? ReadDate { get; set; } // datum seznameni s dokumentem
+        public ICollection<int> JobPositionIDs { get; set; }
     }
 
 

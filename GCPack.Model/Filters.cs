@@ -18,8 +18,9 @@ namespace GCPack.Model
         public UserFilter()
         {
             this.ExcludedUsersId = new int[] { };
+            this.JobPositionIDs = new HashSet<int>();
         }
-        public int JobPositionID { get; set; }
+        public ICollection<int> JobPositionIDs { get; set; }
         public string Name { get; set; }
         public int[] ExcludedUsersId { get; set; }
     }

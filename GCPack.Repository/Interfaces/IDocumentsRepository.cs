@@ -25,5 +25,6 @@ namespace GCPack.Repository.Interfaces
         DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType);
         void ChangeDocumentState(DocumentModel document, string state);
         void ChangeDocumentState(int documentID, string state);
+        ICollection<int> GetJobPositionsFromDocument(int documentId);
     }
 }
