@@ -78,12 +78,7 @@ namespace GCPack.Service
 
         public void Readed(int documentID, int userID)
         {
-            DocumentModel document = documentsRepository.GetDocument(documentID, userID);
-            if (documentsRepository.ReadAccessToDocument(document, userID))
-            {
-                documentsRepository.Readed(document.ID, userID);
-            }
-            
+                documentsRepository.Readed(documentID, userID);
         }
 
         public DocumentModel AddDocument(DocumentModel document, ICollection<string> files)

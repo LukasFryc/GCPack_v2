@@ -45,6 +45,7 @@ namespace GCPack.Repository
         public virtual DbSet<JobPositionUser> JobPositionUsers { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<JobPositionDocument> JobPositionDocuments { get; set; }
+        public virtual DbSet<UserDocument> UserDocuments { get; set; }
     
         public virtual ObjectResult<GetDocuments_Result> GetDocuments(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage)
         {

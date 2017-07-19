@@ -26,8 +26,10 @@ namespace GCPack.Repository
         public Nullable<int> DocumentAdminType { get; set; }
         public string Annotation { get; set; }
         public string Revision { get; set; }
+        public Nullable<System.DateTime> EndDate { get; set; }
         public int CanEdit { get; set; }
         public int CanRevision { get; set; }
+        public Nullable<System.DateTime> Created { get; set; }
         public Nullable<System.DateTime> ReadDate { get; set; }
         public int CanConfirmRead { get; set; }
         public string DocumentAdministrator { get; set; }

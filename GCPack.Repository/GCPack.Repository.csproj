@@ -129,6 +129,9 @@
     <Compile Include="User.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="UserDocument.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
     <Compile Include="UserRole.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>

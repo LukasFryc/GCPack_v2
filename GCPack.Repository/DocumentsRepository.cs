@@ -75,8 +75,8 @@ namespace GCPack.Repository
             {
                 return Mapper.Map<ICollection<UserModel>>(
                     from u in db.Users
-                    from rc in db.ReadConfirmations
-                    where u.ID == rc.UserID && rc.DocumentID == documentId
+                    from rc in db.UserDocuments
+                    where u.ID == rc.UserId && rc.DocumentId == documentId
                     select u
                     );
             }
@@ -111,7 +111,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ICollection<int> dbUsers = db.ReadConfirmations.Where(rc => rc.DocumentID == document.ID && rc.ReadDate == null).Select(rc => rc.UserID).ToList();
+                ICollection<int> dbUsers = db.UserDocuments.Where(rc => rc.DocumentId == document.ID).Select(rc => rc.UserId).ToList();
                 ICollection<User> deleteUsers = new HashSet<User>();
 
                 foreach (int dbUserID in dbUsers)
@@ -142,7 +142,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ICollection<int> dbUsers = db.ReadConfirmations.Where(rc => rc.DocumentID == document.ID).Select(rc => rc.UserID).ToList();
+                ICollection<int> dbUsers = db.UserDocuments.Where(rc => rc.DocumentId == document.ID).Select(rc => rc.UserId).ToList();
                 ICollection<User> addUsers = new HashSet<User>();
                 if (users != null)
                 {
@@ -167,11 +167,11 @@ namespace GCPack.Repository
             {
                 if (deleteUsers != null)
                 {
-                    db.ReadConfirmations.RemoveRange(
-                        db.ReadConfirmations.Where(
+                    db.UserDocuments.RemoveRange(
+                        db.UserDocuments.Where(
                             rc =>
-                                deleteUsers.Select(du => du).Contains(rc.UserID)
-                                && rc.DocumentID == document.ID
+                                deleteUsers.Select(du => du).Contains(rc.UserId)
+                                && rc.DocumentId == document.ID
                                 )
                             );
                     db.SaveChanges();
@@ -181,10 +181,11 @@ namespace GCPack.Repository
                 {
                     foreach (int userId in addUsers)
                     {
-                        db.ReadConfirmations.Add(new ReadConfirmation()
+                        db.UserDocuments.Add(new UserDocument()
                         {
-                            DocumentID = document.ID,
-                            UserID = userId
+                            DocumentId = document.ID,
+                            UserId = userId,
+                            Created = DateTime.Now
                         });
                         db.SaveChanges();
                     }
@@ -201,6 +202,10 @@ namespace GCPack.Repository
             {
                 db.ReadConfirmations.RemoveRange(db.ReadConfirmations.Where(rc => rc.DocumentID == documentId));
                 db.SaveChanges();
+
+                db.UserDocuments.RemoveRange(db.UserDocuments.Where(rc => rc.DocumentId == documentId));
+                db.SaveChanges();
+
                 db.Files.RemoveRange(db.Files.Where(f => f.DocumentID == documentId));
                 db.SaveChanges();
                 db.Documents.Remove(db.Documents.Where(d => d.ID == documentId).SingleOrDefault());
@@ -227,7 +232,8 @@ namespace GCPack.Repository
             bool result = false;
             using (GCPackContainer db = new GCPackContainer())
             {
-                result = (db.ReadConfirmations.Where(rc => rc.DocumentID == document.ID && rc.UserID == userID).Count() > 0);
+                // TODO: upravit na overeni uzivatele dokumentu oproti jobpositions
+                result = (db.UserDocuments.Where(rc => rc.DocumentId == document.ID && rc.UserId == userID).Count() > 0);
                 // pokud neni uzivatel prirazen k dokumentu, pak se jeste overi
                 // zda neni administratorem dokumentu
                 if (!result)
@@ -252,12 +258,12 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                var confirm = db.ReadConfirmations.Where(rc => rc.DocumentID == documentID && rc.UserID == userID).FirstOrDefault();
-                if (confirm != null)
-                {
-                    confirm.ReadDate = DateTime.Now;
-                    db.SaveChanges();
-                }
+                db.ReadConfirmations.Add(new ReadConfirmation() {
+                    DocumentID = documentID,
+                    UserID = userID,
+                    ReadDate = DateTime.Now
+                });
+                db.SaveChanges();
             }
         }
 

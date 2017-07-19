@@ -43,6 +43,9 @@
         <EntityTypeShape EntityType="GCPack.JobPositionDocument" Width="1.5" PointX="12.75" PointY="15.5" />
         <AssociationConnector Association="GCPack.FK_JobPositionDocument_Document" />
         <AssociationConnector Association="GCPack.FK_JobPositionDocument_JobPosition" />
+        <EntityTypeShape EntityType="GCPack.UserDocument" Width="1.5" PointX="12.75" PointY="6.625" />
+        <AssociationConnector Association="GCPack.FK_UserDocument_Document" />
+        <AssociationConnector Association="GCPack.FK_UserDocument_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

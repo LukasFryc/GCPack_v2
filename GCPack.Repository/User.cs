@@ -23,6 +23,7 @@ namespace GCPack.Repository
             this.Logins = new HashSet<Login>();
             this.Signatures = new HashSet<Signature>();
             this.UserRoles = new HashSet<UserRole>();
+            this.UserDocuments = new HashSet<UserDocument>();
         }
     
         public int ID { get; set; }
@@ -51,5 +52,7 @@ namespace GCPack.Repository
         public virtual ICollection<Signature> Signatures { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserRole> UserRoles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserDocument> UserDocuments { get; set; }
     }
 }

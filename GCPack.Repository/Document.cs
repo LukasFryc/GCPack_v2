@@ -24,6 +24,7 @@ namespace GCPack.Repository
             this.SystemCategories = new HashSet<SystemCategory>();
             this.Files = new HashSet<File>();
             this.JobPositionDocuments = new HashSet<JobPositionDocument>();
+            this.UserDocuments = new HashSet<UserDocument>();
         }
     
         public int ID { get; set; }
@@ -56,5 +57,7 @@ namespace GCPack.Repository
         public virtual ICollection<File> Files { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobPositionDocument> JobPositionDocuments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserDocument> UserDocuments { get; set; }
     }
 }
