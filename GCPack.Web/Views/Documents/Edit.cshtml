@@ -79,7 +79,7 @@
                         selectedUsers.push($(this).val());
                     });
                     $('#FilteredUsers').empty();
-                    $.getJSON("/GCPack.Web/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
+                    $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
                         .done(function (users) {
 
                             for (var user in users)
