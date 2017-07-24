@@ -26,6 +26,16 @@ namespace GCPack.Repository
             }
         }
 
+        // priklad paging 
+        public ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var q = db.Documents.Where(d => d.EffeciencyDate == DateTime.Now).OrderBy(d => d.EffeciencyDate).Skip(filter.Page * filter.ItemPerPage).Take(filter.ItemPerPage).Select(d => d);
+                return Mapper.Map<ICollection<DocumentModel>>(q);
+            }
+
+         }
         public DocumentTypeModel GetDocumentType(int ID)
         {
             using (GCPackContainer db = new GCPackContainer()) {

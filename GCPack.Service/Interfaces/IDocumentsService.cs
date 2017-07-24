@@ -18,6 +18,7 @@ namespace GCPack.Service.Interfaces
         void ChangeDocumentState(DocumentModel document, string state);
         void ChangeDocumentState(int documentID, string state);
         void SendEmail();
+        ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter)
 
     }
 }

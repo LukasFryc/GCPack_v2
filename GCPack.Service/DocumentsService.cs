@@ -33,6 +33,12 @@ namespace GCPack.Service
             mailService.SendEmail("TestovaciEmail", "Odeslani testovaciho emailu", user, document);
         }
 
+
+        public ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter)
+        {
+            return documentsRepository.GetDocuments_priklad(filter);
+        }
+
         public DocumentTypeModel GetDocumentType(int ID)
         {
             return documentsRepository.GetDocumentType(ID);
