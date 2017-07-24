@@ -15,6 +15,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
+                //ahoj
                 return Mapper.Map<UserModel>(db.Users.Where(u => u.UserName == username && u.Password == password).Select(u => u).SingleOrDefault());
             }
         }
