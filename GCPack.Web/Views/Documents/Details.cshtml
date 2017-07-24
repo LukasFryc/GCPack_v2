@@ -29,7 +29,7 @@
                             @file.Name
                         </div>
                         <div class="col-md-4">
-                            <a href="/GCPack.Web/Documents/GetFile?FileID=@file.ID" class="btn btn-default btn-sm downloadFile">
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@file.ID" class="btn btn-default btn-sm downloadFile">
                                 <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
                             </a>
                         </div>
