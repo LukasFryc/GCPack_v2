@@ -13,7 +13,7 @@ namespace GCPack.Web
     {
         protected void Application_Start()
         {
-            AreaRegistration.RegisterAllAreas();
+            AreaRegistration.RegisterAllAreas(); 
             Bootstrapper.Configure();
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
