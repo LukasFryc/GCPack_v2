@@ -53,7 +53,7 @@ namespace GCPack.Web.Controllers
 
         public ActionResult AddUser()
         {
-            UserModel user = new UserModel();
+            UserModel user = new UserModel() {JobPositions = new HashSet<int>(), JobPositionIDs = new HashSet<int>() };
             ViewBag.Title = "Přidat osobu";
             ViewBag.Type = "Add";
             ViewBag.JobPositions = userService.GetJobPositions();

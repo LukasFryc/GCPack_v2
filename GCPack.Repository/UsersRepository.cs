@@ -143,12 +143,15 @@ namespace GCPack.Repository
                 {
                     db.JobPositionUsers.RemoveRange(db.JobPositionUsers.Where(jpu => jpu.User.ID == user.ID));
                     db.SaveChanges();
-                    foreach (var jobID in user.JobPositionIDs)
+                    if (user.JobPositionIDs != null)
                     {
-                        db.JobPositionUsers.Add(new JobPositionUser() { UserId = user.ID, JobPositionId = jobID, Created = DateTime.Now });
-                    }
+                        foreach (var jobID in user.JobPositionIDs)
+                        {
+                            db.JobPositionUsers.Add(new JobPositionUser() { UserId = user.ID, JobPositionId = jobID, Created = DateTime.Now });
+                        }
 
-                    db.SaveChanges();
+                        db.SaveChanges();
+                    }
 
                     db.UserRoles.RemoveRange(db.UserRoles.Where(ur => ur.UserID == user.ID));
                     db.SaveChanges();
@@ -160,11 +163,13 @@ namespace GCPack.Repository
 
                     var dbUser = db.Users.Where(u => u.ID == user.ID).Select(u => u).FirstOrDefault();
                     Mapper.Map(user, dbUser);
+                    dbUser.UserNumber = (dbUser.UserNumber == null) ? string.Empty : dbUser.UserNumber;
                     db.SaveChanges();
                 }
                 else
                 {
                     var dbUser = db.Users.Add(Mapper.Map<User>(user));
+                    dbUser.UserNumber = (dbUser.UserNumber == null) ? string.Empty : dbUser.UserNumber;
                     db.SaveChanges();
                     user.ID = dbUser.ID;
                 }

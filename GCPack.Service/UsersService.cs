@@ -52,6 +52,7 @@ namespace GCPack.Service
         {
             var user = usersRepository.GetUser(userID);
             user.JobPositions = usersRepository.GetJobPositionIDs(userID);
+            user.JobPositions = (user.JobPositions == null) ? new HashSet<int>() : user.JobPositions;
             return user;
         }
 
