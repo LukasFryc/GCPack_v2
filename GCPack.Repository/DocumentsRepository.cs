@@ -221,6 +221,10 @@ namespace GCPack.Repository
 
                 db.Files.RemoveRange(db.Files.Where(f => f.DocumentID == documentId));
                 db.SaveChanges();
+
+                db.JobPositionDocuments.RemoveRange(db.JobPositionDocuments.Where(jpd => jpd.DocumentId == documentId));
+                db.SaveChanges();
+
                 db.Documents.Remove(db.Documents.Where(d => d.ID == documentId).SingleOrDefault());
                 db.SaveChanges();
             }
