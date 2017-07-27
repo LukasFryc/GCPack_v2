@@ -15,6 +15,9 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
+                document.Title = (document.Title == null) ? string.Empty : document.Title;
+                document.DocumentNumber = (document.DocumentNumber == null) ? string.Empty : document.DocumentNumber;
+
                 var stateID = db.States.Where(s => s.Code == "New").Select(s => s.ID).FirstOrDefault();
                 var documentType = db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID).Select(dt => dt).SingleOrDefault();
                 document.StateID = stateID;

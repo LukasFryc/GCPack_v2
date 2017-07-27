@@ -234,7 +234,7 @@
                                 <div class="col-md-10">
                                     @foreach (GCPack.Model.JobPositionModel job in ViewBag.JobPositions)
                 {
-                                        string isChecked = (Model.JobPositionIDs.Contains(job.ID)) ? "checked" : "";
+                                        string isChecked = (Model.JobPositionIDs != null && Model.JobPositionIDs.Contains(job.ID)) ? "checked" : "";
                                         <div>
                                             <input type="checkbox" name="JobPositionIDs" value="@job.ID" @isChecked /> @job.Name
                                         </div>

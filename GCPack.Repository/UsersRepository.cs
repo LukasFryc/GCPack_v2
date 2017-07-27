@@ -139,39 +139,41 @@ namespace GCPack.Repository
 
             using (GCPackContainer db = new GCPackContainer())
             {
+                user.UserNumber = (user.UserNumber == null) ? string.Empty : user.UserNumber;
+
                 if (user.ID != 0)
                 {
                     db.JobPositionUsers.RemoveRange(db.JobPositionUsers.Where(jpu => jpu.User.ID == user.ID));
                     db.SaveChanges();
-                    if (user.JobPositionIDs != null)
-                    {
-                        foreach (var jobID in user.JobPositionIDs)
-                        {
-                            db.JobPositionUsers.Add(new JobPositionUser() { UserId = user.ID, JobPositionId = jobID, Created = DateTime.Now });
-                        }
-
-                        db.SaveChanges();
-                    }
-
+                    
                     db.UserRoles.RemoveRange(db.UserRoles.Where(ur => ur.UserID == user.ID));
                     db.SaveChanges();
-                    foreach (short roleId in user.RoleIDs)
-                    {
-                        db.UserRoles.Add(new UserRole() { UserID = user.ID, RoleId = roleId });
-                    }
-                    db.SaveChanges();
-
+                    
                     var dbUser = db.Users.Where(u => u.ID == user.ID).Select(u => u).FirstOrDefault();
                     Mapper.Map(user, dbUser);
-                    dbUser.UserNumber = (dbUser.UserNumber == null) ? string.Empty : dbUser.UserNumber;
                     db.SaveChanges();
                 }
                 else
                 {
                     var dbUser = db.Users.Add(Mapper.Map<User>(user));
-                    dbUser.UserNumber = (dbUser.UserNumber == null) ? string.Empty : dbUser.UserNumber;
                     db.SaveChanges();
                     user.ID = dbUser.ID;
+                }
+
+                foreach (short roleId in user.RoleIDs)
+                {
+                    db.UserRoles.Add(new UserRole() { UserID = user.ID, RoleId = roleId });
+                }
+                db.SaveChanges();
+
+                if (user.JobPositionIDs != null)
+                {
+                    foreach (var jobID in user.JobPositionIDs)
+                    {
+                        db.JobPositionUsers.Add(new JobPositionUser() { UserId = user.ID, JobPositionId = jobID, Created = DateTime.Now });
+                    }
+
+                    db.SaveChanges();
                 }
 
 
