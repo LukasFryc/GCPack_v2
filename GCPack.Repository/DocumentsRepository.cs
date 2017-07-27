@@ -297,12 +297,15 @@ namespace GCPack.Repository
 
                 db.JobPositionDocuments.RemoveRange(db.JobPositionDocuments.Where(jpd => jpd.DocumentId == document.ID));
                 db.SaveChanges();
-                foreach (int jobPositionID in document.JobPositionIDs)
-                {
-                    db.JobPositionDocuments.Add(new JobPositionDocument() { DocumentId = document.ID, JobPositionId = jobPositionID, Created = DateTime.Now });
-                }
-                db.SaveChanges();
 
+                if (document.JobPositionIDs != null)
+                {
+                    foreach (int jobPositionID in document.JobPositionIDs)
+                    {
+                        db.JobPositionDocuments.Add(new JobPositionDocument() { DocumentId = document.ID, JobPositionId = jobPositionID, Created = DateTime.Now });
+                    }
+                    db.SaveChanges();
+                }
             }
             return document;
         }
