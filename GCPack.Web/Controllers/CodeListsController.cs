@@ -28,7 +28,12 @@ namespace GCPack.Web.Controllers
         public ActionResult DocumentTypesEdit(int ID)
         {
             ViewBag.Title = "Editace typu dokumentu";
-            ViewBag.Users = usersService.GetUserList(new UserFilter());
+            ICollection<Item> Users = new HashSet<Item>();
+
+            Users = usersService.GetUserList(new UserFilter());
+            Users.Add(new Item() { ID = 0, Value = "---------------", OrderBy = 0 });
+            Users = Users.OrderBy(u => u.ID).ToList();
+            ViewBag.Users = Users;
             DocumentTypeModel documentType = documentsService.GetDocumentType(ID);
             return View(documentType);
         }
@@ -36,7 +41,14 @@ namespace GCPack.Web.Controllers
         public ActionResult DocumentTypesAdd()
         {
             ViewBag.Title = "Nový typu dokumentu";
-            ViewBag.Users = usersService.GetUserList(new UserFilter());
+
+
+            ICollection<Item> Users = new HashSet<Item>();
+            
+            Users = usersService.GetUserList(new UserFilter());
+            Users.Add(new Item() { ID = 0, Value = "---------------", OrderBy = 0 });
+            Users = Users.OrderBy(u => u.ID).ToList();
+            ViewBag.Users = Users;
             return View("DocumentTypesEdit",new DocumentTypeModel());
         }
 

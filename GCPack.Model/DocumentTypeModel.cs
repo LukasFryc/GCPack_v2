@@ -20,5 +20,12 @@ namespace GCPack.Model
         public virtual ICollection<DocumentModel> Documents { get; set; }
         public string AdministratorName { get; set; }
         public int? OrderBy { get; set; }
+        public int ValidityInYears { get; set; }
+        public bool IsRequiredFillListOfPersons { get; set; }
+        public bool AutomaticNumberingOfDocuments { get; set; }
+        public string NumberingOfDocumentPrefix { get; set; }
+        public string NumberingOfDocumentSeparator { get; set; }
+        public int NumberingOfDocumentLength { get; set; }
+        public int LastNumberOfDocument { get; set; }
     }
 }

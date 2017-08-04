@@ -136,7 +136,7 @@ namespace GCPack.Web.Controllers
             return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
         }
 
-        public ActionResult Add()
+        public ActionResult Add(int documentTypeID)
         {
             ViewBag.DocumentTypes = documentService.GetDocumentTypes();
             ViewBag.Type = "Nový řízený dokument";
@@ -147,6 +147,8 @@ namespace GCPack.Web.Controllers
             // opraveno Lukas a Jane 25.7.2017
             ViewBag.JobPositions = userService.GetJobPositions();
             ViewBag.Type = "Add";
+            document.DocumentTypeID = documentTypeID;
+            document.DocumentNumber = documentService.GenNumberOfDocument(documentTypeID);
             return View("edit",document);
         }
 

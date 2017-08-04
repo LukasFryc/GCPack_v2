@@ -82,10 +82,8 @@ namespace GCPack.Repository
                 else
                 {
                     var dbDocumentType = db.DocumentTypes.Where(dt => dt.ID == documentType.ID).FirstOrDefault();
-                    dbDocumentType.AdministratorID = documentType.AdministratorID;
-                    dbDocumentType.OrderBy = documentType.OrderBy;
-                    dbDocumentType.Name = documentType.Name;
-                    
+                    Mapper.Map(documentType,dbDocumentType);
+                    dbDocumentType.AuthorizinOfficerID = 0;
                     db.SaveChanges();
                 }
             }
@@ -361,6 +359,17 @@ namespace GCPack.Repository
                     db.SaveChanges();
                 }
             }
+        }
+
+        public string GenNumberOfDocument(int documentTypeID)
+        {
+            string numberOfDocument = "";
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var documentType = db.DocumentTypes.Where(dt => dt.ID == documentTypeID).Select(dt => dt).FirstOrDefault();
+                numberOfDocument = documentType.NumberingOfDocumentPrefix + documentType.NumberingOfDocumentSeparator + documentType.LastNumberOfDocument.ToString().PadLeft(System.Convert.ToInt32(documentType.NumberingOfDocumentLength),'0');
+            }
+                return numberOfDocument;
         }
 
 

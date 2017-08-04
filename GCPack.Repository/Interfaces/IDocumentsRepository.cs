@@ -27,5 +27,6 @@ namespace GCPack.Repository.Interfaces
         void ChangeDocumentState(int documentID, string state);
         ICollection<int> GetJobPositionsFromDocument(int documentId);
         ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter);
+        string GenNumberOfDocument(int documentTypeID);
     }
 }

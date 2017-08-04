@@ -9,7 +9,6 @@
         <EntityTypeShape EntityType="GCPack.Division" Width="1.5" PointX="10.5" PointY="6" />
         <EntityTypeShape EntityType="GCPack.DivisionCategory" Width="1.5" PointX="12.75" PointY="12.75" />
         <EntityTypeShape EntityType="GCPack.Document" Width="1.5" PointX="7.5" PointY="11.625" />
-        <EntityTypeShape EntityType="GCPack.DocumentType" Width="1.5" PointX="5.25" PointY="12.625" />
         <EntityTypeShape EntityType="GCPack.JobPosition" Width="1.5" PointX="0.75" PointY="10.25" />
         <EntityTypeShape EntityType="GCPack.LogEvent" Width="1.5" PointX="9.75" PointY="14.125" />
         <EntityTypeShape EntityType="GCPack.ReadConfirmation" Width="1.5" PointX="9.75" PointY="20.125" />
@@ -24,7 +23,6 @@
         <AssociationConnector Association="GCPack.FK_Documents_State" />
         <AssociationConnector Association="GCPack.FK_LogEvent_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
-        <AssociationConnector Association="GCPack.FK_RizeneDokumeny_DocumentType" />
         <AssociationConnector Association="GCPack.FK_Signature_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_SystemCategory_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_UserRoles_Roles" />
@@ -33,7 +31,6 @@
         <AssociationConnector Association="GCPack.FK_File_RizeneDokumeny" />
         <EntityTypeShape EntityType="GCPack.JobPositionUser" Width="1.5" PointX="3.625" PointY="8" />
         <EntityTypeShape EntityType="GCPack.User" Width="1.5" PointX="0.75" PointY="4.25" />
-        <AssociationConnector Association="GCPack.FK_DocumentType_User" />
         <AssociationConnector Association="GCPack.FK_JobPositionUser_JobPosition" />
         <AssociationConnector Association="GCPack.FK_JobPositionUser_User" />
         <AssociationConnector Association="GCPack.FK_LogEvent_User" />
@@ -46,6 +43,10 @@
         <EntityTypeShape EntityType="GCPack.UserDocument" Width="1.5" PointX="12.75" PointY="6.625" />
         <AssociationConnector Association="GCPack.FK_UserDocument_Document" />
         <AssociationConnector Association="GCPack.FK_UserDocument_User" />
+        <EntityTypeShape EntityType="GCPack.DocumentType" Width="1.5" PointX="3" PointY="11.5" />
+        <AssociationConnector Association="GCPack.FK_RizeneDokumeny_DocumentType" />
+        <AssociationConnector Association="GCPack.FK_DocumentType_User" />
+        <AssociationConnector Association="GCPack.FK_User_JobPosition" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

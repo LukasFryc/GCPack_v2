@@ -18,9 +18,9 @@
         });
 
         $('#cancelChanges').click(function () {
-            $("#success-alert").fadeTo(2000, 500).slideUp(500, function () {
+            $("#success-alert").fadeTo(1000, 500).slideUp(500, function () {
                 $("#success-alert").slideUp(500);
-                document.location.href = '/GCPack.Web/Documents';
+                document.location.href = '/Documents';
             });
         });
 
@@ -157,7 +157,7 @@
                 <div class="row">
                     <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
                     <div class="col-md-4">
-                        @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
+                        @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { disabled = true, @class = "form-control", @placeholder = "Číslo dokumentu" } })
                         @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
                     </div>
                     <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
@@ -181,7 +181,7 @@
                 <div class="row">
                     <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
                     <div class="col-md-10">
-                        @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"))
+                        @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true})
                     </div>
                 </div>
 
@@ -303,6 +303,10 @@
             <div class="row">
                 <div class="col-md-10">
                     <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
+                    <input type="submit" value="Nové vydání dokumentu" id="newVersion" class="btn btn-success" />
+                    <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />
+                    <input type="submit" value="Přezkoumání platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />
+                    <input type="submit" value="Přezkoumání - nutná změna" id="revisionChanges" class="btn btn-success" />
                     <input type="button" value="Zrušit změny" id="cancelChanges" class="btn btn-danger" />
                 </div>
             </div>

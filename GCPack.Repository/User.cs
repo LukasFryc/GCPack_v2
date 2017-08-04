@@ -17,13 +17,13 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public User()
         {
-            this.DocumentTypes = new HashSet<DocumentType>();
             this.JobPositionUsers = new HashSet<JobPositionUser>();
             this.LogEvents = new HashSet<LogEvent>();
             this.Logins = new HashSet<Login>();
             this.Signatures = new HashSet<Signature>();
             this.UserRoles = new HashSet<UserRole>();
             this.UserDocuments = new HashSet<UserDocument>();
+            this.DocumentTypes = new HashSet<DocumentType>();
         }
     
         public int ID { get; set; }
@@ -39,9 +39,8 @@ namespace GCPack.Repository
         public bool Active { get; set; }
         public Nullable<int> ManagerID { get; set; }
         public Nullable<int> AdministratorID { get; set; }
+        public Nullable<int> JobPositionID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DocumentType> DocumentTypes { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobPositionUser> JobPositionUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -54,5 +53,8 @@ namespace GCPack.Repository
         public virtual ICollection<UserRole> UserRoles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserDocument> UserDocuments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DocumentType> DocumentTypes { get; set; }
+        public virtual JobPosition JobPosition { get; set; }
     }
 }

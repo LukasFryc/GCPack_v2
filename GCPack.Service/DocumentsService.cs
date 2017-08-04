@@ -21,7 +21,12 @@ namespace GCPack.Service
             this.mailService = mailService;
             this.userService = userService;
         }
-         
+
+        public string GenNumberOfDocument(int documentTypeID)
+        {
+            return documentsRepository.GenNumberOfDocument(documentTypeID);
+        }
+
         public void SendEmail()
         {
             // metoda pro otestovani odesilani emailu

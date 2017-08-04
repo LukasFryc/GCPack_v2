@@ -48,7 +48,6 @@ namespace GCPack.Repository
         public virtual ICollection<LogEvent> LogEvents { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ReadConfirmation> ReadConfirmations { get; set; }
-        public virtual DocumentType DocumentType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Signature> Signatures { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -59,5 +58,6 @@ namespace GCPack.Repository
         public virtual ICollection<JobPositionDocument> JobPositionDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserDocument> UserDocuments { get; set; }
+        public virtual DocumentType DocumentType { get; set; }
     }
 }
