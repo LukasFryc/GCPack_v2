@@ -103,6 +103,24 @@
     });
 
 </script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $("#saveDocument").click(function () {
+            if ($("#myForm .input-validation-error").length > 0) {
+                $("#tabs").tabs("option", "active", 0);
+                return false;
+            }
+
+        });
+    });
+    $.validator.setDefaults({
+        ignore: []
+    });
+
+</script>
+
 <style>
     .row {
         margin-bottom:10px;
@@ -111,7 +129,7 @@
 <h2>@ViewBag.Title</h2>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-    @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
+    @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
     {
         <input type="hidden" name="ID" value="@Model.ID" />
         <input type="hidden" name="type" value="@ViewBag.Type" />

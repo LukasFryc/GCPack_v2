@@ -25,6 +25,16 @@ namespace GCPack.Repository
                 newDocument.DocumentType = documentType;
                 db.SaveChanges();
                 document.ID = newDocument.ID;
+
+                if (document.JobPositionIDs != null)
+                {
+                    foreach (int jobPositionID in document.JobPositionIDs)
+                    {
+                        db.JobPositionDocuments.Add(new JobPositionDocument() { DocumentId = document.ID, JobPositionId = jobPositionID, Created = DateTime.Now });
+                    }
+                    db.SaveChanges();
+                }
+                
                 return document;
             }
         }
