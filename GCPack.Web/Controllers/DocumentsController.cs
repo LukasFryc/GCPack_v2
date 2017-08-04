@@ -144,6 +144,8 @@ namespace GCPack.Web.Controllers
             DocumentModel document = new DocumentModel() { Revision = "P"};
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
+            // opraveno Lukas a Jane 25.7.2017
+            ViewBag.JobPositions = userService.GetJobPositions();
             ViewBag.Type = "Add";
             return View("edit",document);
         }
