@@ -40,6 +40,7 @@ namespace GCPack.Repository
         public string Annotation { get; set; }
         public string Revision { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
+        public Nullable<int> IssueNumber { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DivisionCategory> DivisionCategories { get; set; }

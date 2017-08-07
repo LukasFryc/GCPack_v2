@@ -149,6 +149,10 @@ namespace GCPack.Web.Controllers
             ViewBag.Type = "Add";
             document.DocumentTypeID = documentTypeID;
             document.DocumentNumber = documentService.GenNumberOfDocument(documentTypeID);
+            DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
+            ViewBag.TypeModel = typeModel;
+
+
             return View("edit",document);
         }
 
@@ -166,6 +170,8 @@ namespace GCPack.Web.Controllers
             ViewBag.Type = "Úprava řízeného dokumentu";
             ViewBag.JobPositions = userService.GetJobPositions();
             DocumentModel document = documentService.GetDocument(documentId, userId);
+            DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
+            ViewBag.TypeModel = typeModel;
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             ViewBag.JobPositions = userService.GetJobPositions();

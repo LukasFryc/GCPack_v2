@@ -44,6 +44,7 @@
           <Property Name="Annotation" Type="varchar(max)" />
           <Property Name="Revision" Type="varchar" MaxLength="1" />
           <Property Name="EndDate" Type="datetime" />
+          <Property Name="IssueNumber" Type="int" />
         </EntityType>
         <EntityType Name="DocumentType">
           <Key>
@@ -230,18 +231,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_DocumentType_User">
-          <End Role="User" Type="Self.User" Multiplicity="0..1" />
-          <End Role="DocumentType" Type="Self.DocumentType" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DocumentType">
-              <PropertyRef Name="AdministratorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_File_RizeneDokumeny">
           <End Role="Document" Type="Self.Document" Multiplicity="1" />
           <End Role="File" Type="Self.File" Multiplicity="*" />
@@ -347,18 +336,6 @@
             </Principal>
             <Dependent Role="ReadConfirmation">
               <PropertyRef Name="DocumentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RizeneDokumeny_DocumentType">
-          <End Role="DocumentType" Type="Self.DocumentType" Multiplicity="1" />
-          <End Role="Document" Type="Self.Document" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocumentType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Document">
-              <PropertyRef Name="DocumentTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -489,10 +466,6 @@
             <End Role="State" EntitySet="State" />
             <End Role="Document" EntitySet="Document" />
           </AssociationSet>
-          <AssociationSet Name="FK_DocumentType_User" Association="Self.FK_DocumentType_User">
-            <End Role="User" EntitySet="User" />
-            <End Role="DocumentType" EntitySet="DocumentType" />
-          </AssociationSet>
           <AssociationSet Name="FK_File_RizeneDokumeny" Association="Self.FK_File_RizeneDokumeny">
             <End Role="Document" EntitySet="Document" />
             <End Role="File" EntitySet="File" />
@@ -528,10 +501,6 @@
           <AssociationSet Name="FK_ReadConfirmation_RizeneDokumeny" Association="Self.FK_ReadConfirmation_RizeneDokumeny">
             <End Role="Document" EntitySet="Document" />
             <End Role="ReadConfirmation" EntitySet="ReadConfirmation" />
-          </AssociationSet>
-          <AssociationSet Name="FK_RizeneDokumeny_DocumentType" Association="Self.FK_RizeneDokumeny_DocumentType">
-            <End Role="DocumentType" EntitySet="DocumentType" />
-            <End Role="Document" EntitySet="Document" />
           </AssociationSet>
           <AssociationSet Name="FK_Signature_RizeneDokumeny" Association="Self.FK_Signature_RizeneDokumeny">
             <End Role="Document" EntitySet="Document" />
@@ -743,6 +712,7 @@
           <NavigationProperty Name="JobPositionDocuments" Relationship="GCPack.FK_JobPositionDocument_Document" FromRole="Document" ToRole="JobPositionDocument" />
           <NavigationProperty Name="UserDocuments" Relationship="GCPack.FK_UserDocument_Document" FromRole="Document" ToRole="UserDocument" />
           <NavigationProperty Name="DocumentType" Relationship="GCPack.FK_RizeneDokumeny_DocumentType" FromRole="Document" ToRole="DocumentType" />
+          <Property Name="IssueNumber" Type="Int32" />
         </EntityType>
         <EntityType Name="JobPosition">
           <Key>
@@ -1259,6 +1229,7 @@
           <EntitySetMapping Name="Documents">
             <EntityTypeMapping TypeName="GCPack.Document">
               <MappingFragment StoreEntitySet="Document">
+                <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="Revision" ColumnName="Revision" />
                 <ScalarProperty Name="Annotation" ColumnName="Annotation" />

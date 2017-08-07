@@ -299,6 +299,7 @@ namespace GCPack.Repository
             {
                 var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
                 int stateID = (int)dbDocument.StateID;
+                document.DocumentTypeID = dbDocument.DocumentTypeID;
                 Mapper.Map(document, dbDocument);
                 dbDocument.StateID = stateID;
                 db.SaveChanges();

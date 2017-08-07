@@ -188,11 +188,18 @@
                 <div class="row">
                     <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
                     <div class="col-md-10">
-
-                        @Html.RadioButtonFor(m => m.DocumentAdminType, GCPack.Model.DocumentAdminType.User) Vybraná osoba &nbsp;
-                        @Html.RadioButtonFor(m => m.DocumentAdminType, GCPack.Model.DocumentAdminType.FromDocumentType) Z typu dokumentu
+                        @if (ViewBag.TypeModel.AdministratorID != 0)
+                        {
+                            <p>Z typu dokumentu: @Model.DocumentAdministrator</p>
+                            
+                        }
+                        else
+                        {
+                            <p>Vybraná osoba &nbsp;</p>
+                            @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"));
+                        }
                         <br />
-                        @Html.DropDownListFor(m => m.AdministratorID, new SelectList (ViewBag.Administrators, "ID", "Value"))
+                        
                     </div>
                 </div>
                 <div class="row">
@@ -220,7 +227,7 @@
                             <a href="#" class="btn btn-default btn-sm removeFile" fileId="@item.ID">
                                 <span class="glyphicon glyphicon-remove"></span> Smazat
                             </a>
-                            <a href="/GCPack.Web/Documents/GetFile?FileID=@item.ID" class="btn btn-default btn-sm downloadFile" fileId="@item.ID">
+                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@item.ID" class="btn btn-default btn-sm downloadFile" fileId="@item.ID">
                                 <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
                             </a>
                         </div>
@@ -251,7 +258,7 @@
                                 </div>
                                 <div class="col-md-10">
                                     @foreach (GCPack.Model.JobPositionModel job in ViewBag.JobPositions)
-                {
+                                    {
                                         string isChecked = (Model.JobPositionIDs != null && Model.JobPositionIDs.Contains(job.ID)) ? "checked" : "";
                                         <div>
                                             <input type="checkbox" name="JobPositionIDs" value="@job.ID" @isChecked /> @job.Name
