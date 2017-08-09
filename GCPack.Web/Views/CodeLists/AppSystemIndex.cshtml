@@ -1,0 +1,31 @@
+﻿@model IEnumerable<GCPack.Model.AppSystemModel>
+@{
+    ViewBag.Title = "CodeListsController";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Typy dokumentů</h2>
+@Html.ActionLink("Přidat", "AppSystemAdd", "CodeLists", new { @class = "btn btn-default btn-sm" })
+<div class="row">
+    <div class="col-md-6">
+        <table class="table" style="margin-top:20px">
+            <tr>
+                <th>
+                    Název
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var appSystem in @Model)
+            {
+                <tr>
+                    <td>@appSystem.Name (@appSystem.ID)</td>
+                    <td>
+                        @Html.ActionLink("Upravit", "AppSystemEdit", "CodeLists", new { ID = appSystem.ID }, new { @class = "btn btn-default btn-sm" })
+                        @Html.ActionLink("Smazat", "AppSystemDelete", "CodeLists", new { ID = appSystem.ID }, new { @class = "btn btn-default btn-sm" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

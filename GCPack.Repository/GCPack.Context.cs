@@ -29,7 +29,6 @@ namespace GCPack.Repository
     
         public virtual DbSet<AppSystem> AppSystems { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
-        public virtual DbSet<DivisionCategory> DivisionCategories { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
         public virtual DbSet<JobPosition> JobPositions { get; set; }
         public virtual DbSet<LogEvent> LogEvents { get; set; }
@@ -37,7 +36,6 @@ namespace GCPack.Repository
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<Signature> Signatures { get; set; }
         public virtual DbSet<State> States { get; set; }
-        public virtual DbSet<SystemCategory> SystemCategories { get; set; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<Login> Logins { get; set; }
         public virtual DbSet<File> Files { get; set; }
@@ -46,6 +44,11 @@ namespace GCPack.Repository
         public virtual DbSet<JobPositionDocument> JobPositionDocuments { get; set; }
         public virtual DbSet<UserDocument> UserDocuments { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
+        public virtual DbSet<DivisionDocument> DivisionDocuments { get; set; }
+        public virtual DbSet<Project> Projects { get; set; }
+        public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
+        public virtual DbSet<sysdiagram> sysdiagrams { get; set; }
+        public virtual DbSet<SystemDocument> SystemDocuments { get; set; }
     
         public virtual ObjectResult<GetDocuments_Result> GetDocuments(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage)
         {

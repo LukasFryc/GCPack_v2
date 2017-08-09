@@ -45,7 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeListsService.cs" />
     <Compile Include="DocumentsService.cs" />
+    <Compile Include="Interfaces\ICodeListsService.cs" />
     <Compile Include="Interfaces\IDocumentsService.cs" />
     <Compile Include="Interfaces\IMailService.cs" />
     <Compile Include="Interfaces\IUsersService.cs" />

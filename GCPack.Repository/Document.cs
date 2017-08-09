@@ -17,14 +17,15 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Document()
         {
-            this.DivisionCategories = new HashSet<DivisionCategory>();
             this.LogEvents = new HashSet<LogEvent>();
             this.ReadConfirmations = new HashSet<ReadConfirmation>();
             this.Signatures = new HashSet<Signature>();
-            this.SystemCategories = new HashSet<SystemCategory>();
             this.Files = new HashSet<File>();
             this.JobPositionDocuments = new HashSet<JobPositionDocument>();
             this.UserDocuments = new HashSet<UserDocument>();
+            this.DivisionDocuments = new HashSet<DivisionDocument>();
+            this.ProjectDocuments = new HashSet<ProjectDocument>();
+            this.SystemDocuments = new HashSet<SystemDocument>();
         }
     
         public int ID { get; set; }
@@ -41,9 +42,8 @@ namespace GCPack.Repository
         public string Revision { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public Nullable<int> IssueNumber { get; set; }
+        public Nullable<int> ParentID { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DivisionCategory> DivisionCategories { get; set; }
         public virtual State State { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogEvent> LogEvents { get; set; }
@@ -52,13 +52,17 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Signature> Signatures { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<SystemCategory> SystemCategories { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<File> Files { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobPositionDocument> JobPositionDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserDocument> UserDocuments { get; set; }
         public virtual DocumentType DocumentType { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<DivisionDocument> DivisionDocuments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProjectDocument> ProjectDocuments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<SystemDocument> SystemDocuments { get; set; }
     }
 }

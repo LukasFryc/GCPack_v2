@@ -26,12 +26,14 @@ namespace GCPack.Repository
         public Nullable<int> AuthorizinOfficerID { get; set; }
         public Nullable<int> OrderBy { get; set; }
         public int ValidityInYears { get; set; }
-        public bool IsRequiredFillListOfPersons { get; set; }
+        public Nullable<bool> IsRequiredFillListOfPersons { get; set; }
         public bool AutomaticNumberingOfDocuments { get; set; }
         public string NumberingOfDocumentPrefix { get; set; }
         public string NumberingOfDocumentSeparator { get; set; }
         public Nullable<byte> NumberingOfDocumentLength { get; set; }
         public Nullable<int> LastNumberOfDocument { get; set; }
+        public Nullable<int> DocumentEfficiencyDays { get; set; }
+        public Nullable<int> InformedInDays { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }

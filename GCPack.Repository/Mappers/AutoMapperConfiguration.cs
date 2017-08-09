@@ -22,6 +22,7 @@ namespace GCPack.Repository.Mappers
 
         public ViewModelToModelMappingProfile()
         {
+            CreateMap<AppSystem, AppSystemModel>().ReverseMap();
             CreateMap<JobPositionModel, JobPosition>().ReverseMap();
             CreateMap<UserModel, User>()
                 .ReverseMap();

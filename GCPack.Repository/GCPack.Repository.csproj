@@ -58,10 +58,11 @@
     <Compile Include="AppSystem.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="CodeListsRepository.cs" />
     <Compile Include="Division.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
-    <Compile Include="DivisionCategory.cs">
+    <Compile Include="DivisionDocument.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Document.cs">
@@ -92,6 +93,7 @@
     <Compile Include="GetDocuments_Result.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ICodeListsRepository.cs" />
     <Compile Include="Interfaces\IDocumentsRepository.cs" />
     <Compile Include="Interfaces\IUsersRepository.cs" />
     <Compile Include="JobPosition.cs">
@@ -110,6 +112,12 @@
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Mappers\AutoMapperConfiguration.cs" />
+    <Compile Include="Project.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectDocument.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadConfirmation.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
@@ -123,7 +131,10 @@
     <Compile Include="State.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
-    <Compile Include="SystemCategory.cs">
+    <Compile Include="sysdiagram.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SystemDocument.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="User.cs">

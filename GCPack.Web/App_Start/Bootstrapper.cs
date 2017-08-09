@@ -46,10 +46,14 @@ namespace GCPack.Web.App_Start
             // IOC je navrhovy vzor pro vytvareni instanci trid
             containerBuilder.RegisterType<UsersService>().As<IUsersService>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<UsersRepository>().As<IUsersRepository>().AsImplementedInterfaces().InstancePerRequest();
+            containerBuilder.RegisterType<CodeListsRepository>().As<ICodeListsRepository>().AsImplementedInterfaces().InstancePerRequest();
+
             containerBuilder.RegisterType<DocumentsRepository>().As<IDocumentsRepository>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<MailService>().As<IMailService>().AsImplementedInterfaces().InstancePerRequest();
 
             containerBuilder.Register(r => new DocumentsService(r.Resolve<IDocumentsRepository>(), r.Resolve<IMailService>(), r.Resolve<IUsersService>())).AsImplementedInterfaces().InstancePerLifetimeScope();
+            containerBuilder.Register(r => new CodeListsService(r.Resolve<ICodeListsRepository>())).AsImplementedInterfaces().InstancePerLifetimeScope();
+
             containerBuilder.Register(r => new UsersService(r.Resolve<IUsersRepository>())).AsImplementedInterfaces().InstancePerLifetimeScope();
             containerBuilder.Register(r => new GCAuthentization (r.Resolve<IUsersService>())).AsAuthenticationFilterFor<Controller>().InstancePerLifetimeScope();
 

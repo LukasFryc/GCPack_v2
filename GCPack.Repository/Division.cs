@@ -17,13 +17,13 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Division()
         {
-            this.DivisionCategories = new HashSet<DivisionCategory>();
+            this.DivisionDocuments = new HashSet<DivisionDocument>();
         }
     
         public int ID { get; set; }
         public string Name { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<DivisionCategory> DivisionCategories { get; set; }
+        public virtual ICollection<DivisionDocument> DivisionDocuments { get; set; }
     }
 }

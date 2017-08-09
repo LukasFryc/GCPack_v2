@@ -13,11 +13,12 @@ namespace GCPack.Web.Controllers
     {
         readonly IDocumentsService documentsService;
         readonly IUsersService usersService;
-
-        public CodeListsController(IDocumentsService documentsService, IUsersService usersService)
+        readonly ICodeListsService codeListsService;
+        public CodeListsController(IDocumentsService documentsService, IUsersService usersService, ICodeListsService codeListsService)
         {
             this.documentsService = documentsService;
             this.usersService = usersService;
+            this.codeListsService = codeListsService;
         }
         public ActionResult DocumentTypesIndex()
         {
@@ -57,8 +58,47 @@ namespace GCPack.Web.Controllers
             documentsService.SaveDocumentType(documentType);
             return RedirectToAction("DocumentTypesIndex");
         }
-        
 
+        /// SYSTEM
+        /// 
+
+        public ActionResult AppSystemIndex()
+        {
+            ICollection<AppSystemModel> appSystem = codeListsService.GetAppSystems();
+            return View(appSystem);
+        }
+
+        
+      public ActionResult AppSystemEdit(int ID)
+      {
+          ViewBag.Title = "Editace číselníku systém";
+          //ICollection<Item> Users = new HashSet<Item>();
+          //Users = usersService.GetUserList(new UserFilter());
+          //Users.Add(new Item() { ID = 0, Value = "---------------", OrderBy = 0 });
+          //Users = Users.OrderBy(u => u.ID).ToList();
+          //ViewBag.Users = Users;
+          AppSystemModel appSystem = codeListsService.GetAppSystem(ID);
+          return View(appSystem);
+      }
+       
+            public ActionResult AppSystemAdd()
+            {
+                ViewBag.Title = "Nová položka číselníku systém";
+                return View("AppSystemEdit", new AppSystemModel());
+            }
+            
+
+        public ActionResult AppSystemSave(AppSystemModel appSystem)
+        {
+            codeListsService.AppSystemSave(appSystem);
+            return RedirectToAction("AppSystemIndex");
+        }
+
+        public ActionResult AppSystemDelete(int id)
+        {
+            codeListsService.AppSystemDelete(id);
+            return RedirectToAction("AppSystemIndex");
+        }
 
     }
 }
