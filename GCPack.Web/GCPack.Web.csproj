@@ -295,6 +295,9 @@
     <Content Include="Views\Documents\Details.cshtml" />
     <Content Include="Views\CodeLists\DocumentTypesIndex.cshtml" />
     <Content Include="Views\CodeLists\DocumentTypesEdit.cshtml" />
+    <Content Include="Views\CodeLists\AppSystemIndex.cshtml" />
+    <Content Include="Views\CodeLists\View.cshtml" />
+    <Content Include="Views\CodeLists\AppSystemEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,0 +1,22 @@
+﻿@model GCPack.Model.AppSystemModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("AppSystemSave", "CodeLists", FormMethod.Post))
+{
+    <div class="container">
+        <input type="hidden" name="ID" value="@Model.ID" />
+        <div class="row">
+            <div class="col-md-2">Název</div>
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název typu dokumentu" } })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"><input type="submit" class="btn btn-success" /></div>
+        </div>
+    </div>
+}
+
