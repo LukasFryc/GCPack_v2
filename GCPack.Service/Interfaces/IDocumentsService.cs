@@ -20,5 +20,6 @@ namespace GCPack.Service.Interfaces
         void SendEmail();
         ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter);
         string GenNumberOfDocument(int documentTypeID);
+        DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames);
     }
 }

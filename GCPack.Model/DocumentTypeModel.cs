@@ -27,5 +27,8 @@ namespace GCPack.Model
         public string NumberingOfDocumentSeparator { get; set; }
         public int NumberingOfDocumentLength { get; set; }
         public int LastNumberOfDocument { get; set; }
+        public int DocumentEfficiencyDays { get; set; }
+        public int InformedInDays { get; set; }
+        public int ParentID { get; set; }
     }
 }

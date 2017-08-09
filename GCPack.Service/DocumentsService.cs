@@ -44,9 +44,44 @@ namespace GCPack.Service
             return documentsRepository.GetDocuments_priklad(filter);
         }
 
+        // zaevidovani dokumentu
+        
+        public DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames)
+        {
+            // dokument se nastavi na platny
+            document.StateID = documentsRepository.GetDocumentState("Registered");
+
+            // vygeneruje se nove cislo dokumentu
+            document.DocumentNumber = GenNumberOfDocument(document.DocumentTypeID);
+
+            // stav revize dokumentu se prepne na P
+            document.Revision = "P";
+
+            // nastaveni datumu dalsi revize na: aktualni datum + pocet roku z revize dokumentu
+            DocumentTypeModel documentType = GetDocumentType(document.DocumentTypeID);
+            document.NextReviewDate = DateTime.Now.AddYears(documentType.ValidityInYears);
+
+            // nastaveni ucinnosti dokumentu po schvaleni
+            document.EffeciencyDate = DateTime.Now.AddDays(documentType.DocumentEfficiencyDays);
+
+            // ulozeni dokumentu
+            document = EditDocument(document, fileNames);
+
+
+
+            return document;
+        }
+
+
         public DocumentTypeModel GetDocumentType(int ID)
         {
-            return documentsRepository.GetDocumentType(ID);
+            DocumentTypeModel dm = documentsRepository.GetDocumentType(ID);
+            if (dm.AdministratorID != null && dm.AdministratorID != 0)
+            {
+                var user = userService.GetUser((int) dm.AdministratorID);
+                dm.AdministratorName = user.FirstName + " " + user.LastName;
+            }
+            return dm;
         }
 
         public DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType)
@@ -94,13 +129,20 @@ namespace GCPack.Service
 
         public DocumentModel AddDocument(DocumentModel document, ICollection<string> files)
         {
+
+            // nastaveni stavu dokumentu na novy
+            document.StateID = documentsRepository.GetDocumentState("New");
+
+            // typ revize je vzdy u noveho dokumentu prazdny
+            document.Revision = "";
+
             // novy dokument se vzdy uklada ve stavu rozpracovany
             // nikdy se u tohoto dokumentu neposilaji emaily
 
             document = documentsRepository.AddDocument(document);
 
+            
             // namapuji se uzivatele na dokuemnt
-
             documentsRepository.MapUsersToDocument(document.SelectedUsers, document, null);
 
             // ulozeni vsech souboru

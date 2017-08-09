@@ -8,6 +8,10 @@
     var selectedUsers = [];
     $(document).ready(function () {
 
+        $('.btn').click(function () {
+            $('#Action').val($(this).prop("id"));
+        });
+
         $("#EffeciencyDate").datepicker();
         $("#ReviewDate").datepicker();
         $("#NextReviewDate").datepicker();
@@ -131,6 +135,7 @@
 <div>
     @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
     {
+        <input type="hidden" name="Action" id="Action" />
         <input type="hidden" name="ID" value="@Model.ID" />
         <input type="hidden" name="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
@@ -181,6 +186,7 @@
                 <div class="row">
                     <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
                     <div class="col-md-10">
+                        <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
                         @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true})
                     </div>
                 </div>
@@ -310,6 +316,7 @@
             <div class="row">
                 <div class="col-md-10">
                     <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
+                    <input type="submit" value="Zaevidovat" id="registerDocument" class="btn btn-success" />
                     <input type="submit" value="Nové vydání dokumentu" id="newVersion" class="btn btn-success" />
                     <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />
                     <input type="submit" value="Přezkoumání platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />

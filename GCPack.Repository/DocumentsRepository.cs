@@ -11,7 +11,16 @@ namespace GCPack.Repository
 {
     public class DocumentsRepository : IDocumentsRepository
     {
-        public DocumentModel AddDocument(DocumentModel document)
+        // vraceni id stavu dokumentu z jeho kodu - kvuli prehlednosti se posila kod a vraci se ID
+
+        public int GetDocumentState(string state)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return db.States.Where (s => s.Code == state).Select (s => s.ID).FirstOrDefault();
+            }
+        }
+            public DocumentModel AddDocument(DocumentModel document)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
@@ -22,7 +31,7 @@ namespace GCPack.Repository
                 var documentType = db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID).Select(dt => dt).SingleOrDefault();
                 document.StateID = stateID;
                 var newDocument = db.Documents.Add(Mapper.Map<Document>(document));
-                newDocument.DocumentType = documentType;
+                newDocument.DocumentTypeID = documentType.ID;
                 db.SaveChanges();
                 document.ID = newDocument.ID;
 
@@ -271,7 +280,7 @@ namespace GCPack.Repository
                     else
                     {
                         // overeni ze je osoba spravcem dokumentu pres typ dokumentu
-                        result = (db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID && dt.User.ID == userID).Count() > 0);
+                        result = (db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID && dt.AdministratorID == userID).Count() > 0);
                     }
                 }
             }

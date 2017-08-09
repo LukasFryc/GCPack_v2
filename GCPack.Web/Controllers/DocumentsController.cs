@@ -104,7 +104,7 @@ namespace GCPack.Web.Controllers
             
         }
 
-        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type)
+        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action)
         {
             string folderForFiles = System.Configuration.ConfigurationManager.AppSettings["FileTemp"];
             string guid = Guid.NewGuid().ToString();
@@ -129,7 +129,18 @@ namespace GCPack.Web.Controllers
                     documentService.AddDocument(document, fileNames);
                     break;
                 case "Edit":
-                    documentService.EditDocument(document, fileNames);
+
+                    switch (Action)
+                    {
+                        case "registerDocument":
+                            documentService.RegisterDocument(document, fileNames);
+                            break;
+                        default:
+                            documentService.EditDocument(document, fileNames);
+                            break;
+                    }
+
+                    
                     break;
             }
             

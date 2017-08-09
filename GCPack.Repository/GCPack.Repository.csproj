@@ -61,7 +61,7 @@
     <Compile Include="Division.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
-    <Compile Include="DivisionCategory.cs">
+    <Compile Include="DivisionDocument.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Document.cs">
@@ -110,6 +110,12 @@
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Mappers\AutoMapperConfiguration.cs" />
+    <Compile Include="Project.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
+    <Compile Include="ProjectDocument.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ReadConfirmation.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
@@ -123,7 +129,7 @@
     <Compile Include="State.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
-    <Compile Include="SystemCategory.cs">
+    <Compile Include="SystemDocument.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="User.cs">

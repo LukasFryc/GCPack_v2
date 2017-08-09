@@ -19,7 +19,7 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="50" />
         </EntityType>
-        <EntityType Name="DivisionCategory">
+        <EntityType Name="DivisionDocument">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
@@ -45,6 +45,7 @@
           <Property Name="Revision" Type="varchar" MaxLength="1" />
           <Property Name="EndDate" Type="datetime" />
           <Property Name="IssueNumber" Type="int" />
+          <Property Name="ParentID" Type="int" />
         </EntityType>
         <EntityType Name="DocumentType">
           <Key>
@@ -62,6 +63,8 @@
           <Property Name="NumberingOfDocumentSeparator" Type="varchar" MaxLength="1" />
           <Property Name="NumberingOfDocumentLength" Type="tinyint" />
           <Property Name="LastNumberOfDocument" Type="int" />
+          <Property Name="DocumentEfficiencyDays" Type="int" />
+          <Property Name="InformedInDays" Type="int" />
         </EntityType>
         <EntityType Name="File">
           <Key>
@@ -116,6 +119,21 @@
           <Property Name="Hash" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="LastTick" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ProjectDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ProjectID" Type="int" Nullable="false" />
+          <Property Name="DocumentID" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="ReadConfirmation">
           <Key>
             <PropertyRef Name="ID" />
@@ -151,7 +169,7 @@
           <Property Name="Name" Type="varchar" MaxLength="50" />
           <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="SystemCategory">
+        <EntityType Name="SystemDocument">
           <Key>
             <PropertyRef Name="ID" />
           </Key>
@@ -197,24 +215,24 @@
         </EntityType>
         <Association Name="FK_DivisionCategory_Division">
           <End Role="Division" Type="Self.Division" Multiplicity="1" />
-          <End Role="DivisionCategory" Type="Self.DivisionCategory" Multiplicity="*" />
+          <End Role="DivisionDocument" Type="Self.DivisionDocument" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Division">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="DivisionCategory">
+            <Dependent Role="DivisionDocument">
               <PropertyRef Name="DivisionID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_DivisionCategory_RizeneDokumeny">
           <End Role="Document" Type="Self.Document" Multiplicity="1" />
-          <End Role="DivisionCategory" Type="Self.DivisionCategory" Multiplicity="*" />
+          <End Role="DivisionDocument" Type="Self.DivisionDocument" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Document">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="DivisionCategory">
+            <Dependent Role="DivisionDocument">
               <PropertyRef Name="DocumentID" />
             </Dependent>
           </ReferentialConstraint>
@@ -327,6 +345,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_ProjectDocument_Document">
+          <End Role="Document" Type="Self.Document" Multiplicity="1" />
+          <End Role="ProjectDocument" Type="Self.ProjectDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProjectDocument">
+              <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectDocument_Project">
+          <End Role="Project" Type="Self.Project" Multiplicity="1" />
+          <End Role="ProjectDocument" Type="Self.ProjectDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProjectDocument">
+              <PropertyRef Name="ProjectID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_ReadConfirmation_RizeneDokumeny">
           <End Role="Document" Type="Self.Document" Multiplicity="1" />
           <End Role="ReadConfirmation" Type="Self.ReadConfirmation" Multiplicity="*" />
@@ -365,24 +407,24 @@
         </Association>
         <Association Name="FK_SystemCategory_RizeneDokumeny">
           <End Role="Document" Type="Self.Document" Multiplicity="1" />
-          <End Role="SystemCategory" Type="Self.SystemCategory" Multiplicity="*" />
+          <End Role="SystemDocument" Type="Self.SystemDocument" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Document">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="SystemCategory">
+            <Dependent Role="SystemDocument">
               <PropertyRef Name="DocumentID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_SystemCategory_System">
           <End Role="AppSystem" Type="Self.AppSystem" Multiplicity="1" />
-          <End Role="SystemCategory" Type="Self.SystemCategory" Multiplicity="*" />
+          <End Role="SystemDocument" Type="Self.SystemDocument" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AppSystem">
               <PropertyRef Name="ID" />
             </Principal>
-            <Dependent Role="SystemCategory">
+            <Dependent Role="SystemDocument">
               <PropertyRef Name="ID_System" />
             </Dependent>
           </ReferentialConstraint>
@@ -437,7 +479,7 @@
         <EntityContainer Name="GCPackStoreContainer">
           <EntitySet Name="AppSystem" EntityType="Self.AppSystem" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Division" EntityType="Self.Division" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DivisionCategory" EntityType="Self.DivisionCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DivisionDocument" EntityType="Self.DivisionDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Document" EntityType="Self.Document" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DocumentType" EntityType="Self.DocumentType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="File" EntityType="Self.File" Schema="dbo" store:Type="Tables" />
@@ -446,21 +488,23 @@
           <EntitySet Name="JobPositionUser" EntityType="Self.JobPositionUser" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LogEvent" EntityType="Self.LogEvent" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Login" EntityType="Self.Login" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Project" EntityType="Self.Project" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ProjectDocument" EntityType="Self.ProjectDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ReadConfirmation" EntityType="Self.ReadConfirmation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Roles" EntityType="Self.Roles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Signature" EntityType="Self.Signature" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="State" EntityType="Self.State" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="SystemCategory" EntityType="Self.SystemCategory" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SystemDocument" EntityType="Self.SystemDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserDocument" EntityType="Self.UserDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_DivisionCategory_Division" Association="Self.FK_DivisionCategory_Division">
             <End Role="Division" EntitySet="Division" />
-            <End Role="DivisionCategory" EntitySet="DivisionCategory" />
+            <End Role="DivisionDocument" EntitySet="DivisionDocument" />
           </AssociationSet>
           <AssociationSet Name="FK_DivisionCategory_RizeneDokumeny" Association="Self.FK_DivisionCategory_RizeneDokumeny">
             <End Role="Document" EntitySet="Document" />
-            <End Role="DivisionCategory" EntitySet="DivisionCategory" />
+            <End Role="DivisionDocument" EntitySet="DivisionDocument" />
           </AssociationSet>
           <AssociationSet Name="FK_Documents_State" Association="Self.FK_Documents_State">
             <End Role="State" EntitySet="State" />
@@ -498,6 +542,14 @@
             <End Role="User" EntitySet="User" />
             <End Role="Login" EntitySet="Login" />
           </AssociationSet>
+          <AssociationSet Name="FK_ProjectDocument_Document" Association="Self.FK_ProjectDocument_Document">
+            <End Role="Document" EntitySet="Document" />
+            <End Role="ProjectDocument" EntitySet="ProjectDocument" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectDocument_Project" Association="Self.FK_ProjectDocument_Project">
+            <End Role="Project" EntitySet="Project" />
+            <End Role="ProjectDocument" EntitySet="ProjectDocument" />
+          </AssociationSet>
           <AssociationSet Name="FK_ReadConfirmation_RizeneDokumeny" Association="Self.FK_ReadConfirmation_RizeneDokumeny">
             <End Role="Document" EntitySet="Document" />
             <End Role="ReadConfirmation" EntitySet="ReadConfirmation" />
@@ -512,11 +564,11 @@
           </AssociationSet>
           <AssociationSet Name="FK_SystemCategory_RizeneDokumeny" Association="Self.FK_SystemCategory_RizeneDokumeny">
             <End Role="Document" EntitySet="Document" />
-            <End Role="SystemCategory" EntitySet="SystemCategory" />
+            <End Role="SystemDocument" EntitySet="SystemDocument" />
           </AssociationSet>
           <AssociationSet Name="FK_SystemCategory_System" Association="Self.FK_SystemCategory_System">
             <End Role="AppSystem" EntitySet="AppSystem" />
-            <End Role="SystemCategory" EntitySet="SystemCategory" />
+            <End Role="SystemDocument" EntitySet="SystemDocument" />
           </AssociationSet>
           <AssociationSet Name="FK_User_JobPosition" Association="Self.FK_User_JobPosition">
             <End Role="JobPosition" EntitySet="JobPosition" />
@@ -538,7 +590,6 @@
         <EntityContainer Name="GCPackContainer" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="AppSystems" EntityType="GCPack.AppSystem" />
           <EntitySet Name="Divisions" EntityType="GCPack.Division" />
-          <EntitySet Name="DivisionCategories" EntityType="GCPack.DivisionCategory" />
           <EntitySet Name="Documents" EntityType="GCPack.Document" />
           <EntitySet Name="JobPositions" EntityType="GCPack.JobPosition" />
           <EntitySet Name="LogEvents" EntityType="GCPack.LogEvent" />
@@ -546,20 +597,7 @@
           <EntitySet Name="Roles" EntityType="GCPack.Role" />
           <EntitySet Name="Signatures" EntityType="GCPack.Signature" />
           <EntitySet Name="States" EntityType="GCPack.State" />
-          <EntitySet Name="SystemCategories" EntityType="GCPack.SystemCategory" />
           <EntitySet Name="UserRoles" EntityType="GCPack.UserRole" />
-          <AssociationSet Name="FK_SystemCategory_System" Association="GCPack.FK_SystemCategory_System">
-            <End Role="AppSystem" EntitySet="AppSystems" />
-            <End Role="SystemCategory" EntitySet="SystemCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DivisionCategory_Division" Association="GCPack.FK_DivisionCategory_Division">
-            <End Role="Division" EntitySet="Divisions" />
-            <End Role="DivisionCategory" EntitySet="DivisionCategories" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DivisionCategory_RizeneDokumeny" Association="GCPack.FK_DivisionCategory_RizeneDokumeny">
-            <End Role="Document" EntitySet="Documents" />
-            <End Role="DivisionCategory" EntitySet="DivisionCategories" />
-          </AssociationSet>
           <AssociationSet Name="FK_Documents_State" Association="GCPack.FK_Documents_State">
             <End Role="State" EntitySet="States" />
             <End Role="Document" EntitySet="Documents" />
@@ -575,10 +613,6 @@
           <AssociationSet Name="FK_Signature_RizeneDokumeny" Association="GCPack.FK_Signature_RizeneDokumeny">
             <End Role="Document" EntitySet="Documents" />
             <End Role="Signature" EntitySet="Signatures" />
-          </AssociationSet>
-          <AssociationSet Name="FK_SystemCategory_RizeneDokumeny" Association="GCPack.FK_SystemCategory_RizeneDokumeny">
-            <End Role="Document" EntitySet="Documents" />
-            <End Role="SystemCategory" EntitySet="SystemCategories" />
           </AssociationSet>
           <AssociationSet Name="FK_UserRoles_Roles" Association="GCPack.FK_UserRoles_Roles">
             <End Role="Role" EntitySet="Roles" />
@@ -645,18 +679,38 @@
             <Parameter Name="Page" Mode="In" Type="Int32" />
             <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="DocumentTypes" EntityType="GCPack.DocumentType" />
-          <AssociationSet Name="FK_RizeneDokumeny_DocumentType" Association="GCPack.FK_RizeneDokumeny_DocumentType">
-            <End Role="DocumentType" EntitySet="DocumentTypes" />
-            <End Role="Document" EntitySet="Documents" />
-          </AssociationSet>
-          <AssociationSet Name="FK_DocumentType_User" Association="GCPack.FK_DocumentType_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="DocumentType" EntitySet="DocumentTypes" />
-          </AssociationSet>
           <AssociationSet Name="FK_User_JobPosition" Association="GCPack.FK_User_JobPosition">
             <End Role="JobPosition" EntitySet="JobPositions" />
             <End Role="User" EntitySet="Users" />
+          </AssociationSet>
+          <EntitySet Name="DocumentTypes" EntityType="GCPack.DocumentType" />
+          <EntitySet Name="DivisionDocuments" EntityType="GCPack.DivisionDocument" />
+          <EntitySet Name="Projects" EntityType="GCPack.Project" />
+          <EntitySet Name="ProjectDocuments" EntityType="GCPack.ProjectDocument" />
+          <EntitySet Name="SystemDocuments" EntityType="GCPack.SystemDocument" />
+          <AssociationSet Name="FK_SystemCategory_System1" Association="GCPack.FK_SystemCategory_System1">
+            <End Role="AppSystem" EntitySet="AppSystems" />
+            <End Role="SystemDocument" EntitySet="SystemDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DivisionCategory_Division1" Association="GCPack.FK_DivisionCategory_Division1">
+            <End Role="Division" EntitySet="Divisions" />
+            <End Role="DivisionDocument" EntitySet="DivisionDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_DivisionCategory_RizeneDokumeny1" Association="GCPack.FK_DivisionCategory_RizeneDokumeny1">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="DivisionDocument" EntitySet="DivisionDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectDocument_Document" Association="GCPack.FK_ProjectDocument_Document">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="ProjectDocument" EntitySet="ProjectDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SystemCategory_RizeneDokumeny1" Association="GCPack.FK_SystemCategory_RizeneDokumeny1">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="SystemDocument" EntitySet="SystemDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProjectDocument_Project" Association="GCPack.FK_ProjectDocument_Project">
+            <End Role="Project" EntitySet="Projects" />
+            <End Role="ProjectDocument" EntitySet="ProjectDocuments" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="AppSystem">
@@ -665,7 +719,7 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="SystemCategories" Relationship="GCPack.FK_SystemCategory_System" FromRole="AppSystem" ToRole="SystemCategory" />
+          <NavigationProperty Name="SystemDocuments" Relationship="GCPack.FK_SystemCategory_System1" FromRole="AppSystem" ToRole="SystemDocument" />
         </EntityType>
         <EntityType Name="Division">
           <Key>
@@ -673,17 +727,7 @@
           </Key>
           <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="DivisionCategories" Relationship="GCPack.FK_DivisionCategory_Division" FromRole="Division" ToRole="DivisionCategory" />
-        </EntityType>
-        <EntityType Name="DivisionCategory">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DocumentID" Type="Int32" Nullable="false" />
-          <Property Name="DivisionID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Division" Relationship="GCPack.FK_DivisionCategory_Division" FromRole="DivisionCategory" ToRole="Division" />
-          <NavigationProperty Name="Document" Relationship="GCPack.FK_DivisionCategory_RizeneDokumeny" FromRole="DivisionCategory" ToRole="Document" />
+          <NavigationProperty Name="DivisionDocuments" Relationship="GCPack.FK_DivisionCategory_Division1" FromRole="Division" ToRole="DivisionDocument" />
         </EntityType>
         <EntityType Name="Document">
           <Key>
@@ -698,12 +742,10 @@
           <Property Name="NextReviewDate" Type="DateTime" Precision="3" />
           <Property Name="AdministratorID" Type="Int32" Nullable="false" />
           <Property Name="StateID" Type="Int32" />
-          <NavigationProperty Name="DivisionCategories" Relationship="GCPack.FK_DivisionCategory_RizeneDokumeny" FromRole="Document" ToRole="DivisionCategory" />
           <NavigationProperty Name="State" Relationship="GCPack.FK_Documents_State" FromRole="Document" ToRole="State" />
           <NavigationProperty Name="LogEvents" Relationship="GCPack.FK_LogEvent_RizeneDokumeny" FromRole="Document" ToRole="LogEvent" />
           <NavigationProperty Name="ReadConfirmations" Relationship="GCPack.FK_ReadConfirmation_RizeneDokumeny" FromRole="Document" ToRole="ReadConfirmation" />
           <NavigationProperty Name="Signatures" Relationship="GCPack.FK_Signature_RizeneDokumeny" FromRole="Document" ToRole="Signature" />
-          <NavigationProperty Name="SystemCategories" Relationship="GCPack.FK_SystemCategory_RizeneDokumeny" FromRole="Document" ToRole="SystemCategory" />
           <Property Name="DocumentAdminType" Type="Int32" />
           <Property Name="Annotation" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Revision" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
@@ -711,8 +753,11 @@
           <Property Name="EndDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="JobPositionDocuments" Relationship="GCPack.FK_JobPositionDocument_Document" FromRole="Document" ToRole="JobPositionDocument" />
           <NavigationProperty Name="UserDocuments" Relationship="GCPack.FK_UserDocument_Document" FromRole="Document" ToRole="UserDocument" />
-          <NavigationProperty Name="DocumentType" Relationship="GCPack.FK_RizeneDokumeny_DocumentType" FromRole="Document" ToRole="DocumentType" />
           <Property Name="IssueNumber" Type="Int32" />
+          <Property Name="ParentID" Type="Int32" />
+          <NavigationProperty Name="DivisionDocuments" Relationship="GCPack.FK_DivisionCategory_RizeneDokumeny1" FromRole="Document" ToRole="DivisionDocument" />
+          <NavigationProperty Name="ProjectDocuments" Relationship="GCPack.FK_ProjectDocument_Document" FromRole="Document" ToRole="ProjectDocument" />
+          <NavigationProperty Name="SystemDocuments" Relationship="GCPack.FK_SystemCategory_RizeneDokumeny1" FromRole="Document" ToRole="SystemDocument" />
         </EntityType>
         <EntityType Name="JobPosition">
           <Key>
@@ -776,16 +821,6 @@
           <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
           <NavigationProperty Name="Documents" Relationship="GCPack.FK_Documents_State" FromRole="State" ToRole="Document" />
         </EntityType>
-        <EntityType Name="SystemCategory">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="DocumentID" Type="Int32" Nullable="false" />
-          <Property Name="ID_System" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="AppSystem" Relationship="GCPack.FK_SystemCategory_System" FromRole="SystemCategory" ToRole="AppSystem" />
-          <NavigationProperty Name="Document" Relationship="GCPack.FK_SystemCategory_RizeneDokumeny" FromRole="SystemCategory" ToRole="Document" />
-        </EntityType>
         <EntityType Name="UserRole">
           <Key>
             <PropertyRef Name="UserRoleId" />
@@ -796,42 +831,6 @@
           <NavigationProperty Name="Role" Relationship="GCPack.FK_UserRoles_Roles" FromRole="UserRole" ToRole="Role" />
           <NavigationProperty Name="User" Relationship="GCPack.FK_UserRoles_Users" FromRole="UserRole" ToRole="User" />
         </EntityType>
-        <Association Name="FK_SystemCategory_System">
-          <End Type="GCPack.AppSystem" Role="AppSystem" Multiplicity="1" />
-          <End Type="GCPack.SystemCategory" Role="SystemCategory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="AppSystem">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="SystemCategory">
-              <PropertyRef Name="ID_System" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DivisionCategory_Division">
-          <End Type="GCPack.Division" Role="Division" Multiplicity="1" />
-          <End Type="GCPack.DivisionCategory" Role="DivisionCategory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Division">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DivisionCategory">
-              <PropertyRef Name="DivisionID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DivisionCategory_RizeneDokumeny">
-          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
-          <End Type="GCPack.DivisionCategory" Role="DivisionCategory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Document">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DivisionCategory">
-              <PropertyRef Name="DocumentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_Documents_State">
           <End Type="GCPack.State" Role="State" Multiplicity="0..1" />
           <End Type="GCPack.Document" Role="Document" Multiplicity="*" />
@@ -876,18 +875,6 @@
               <PropertyRef Name="ID" />
             </Principal>
             <Dependent Role="Signature">
-              <PropertyRef Name="DocumentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_SystemCategory_RizeneDokumeny">
-          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
-          <End Type="GCPack.SystemCategory" Role="SystemCategory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Document">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="SystemCategory">
               <PropertyRef Name="DocumentID" />
             </Dependent>
           </ReferentialConstraint>
@@ -970,7 +957,6 @@
           <NavigationProperty Name="Signatures" Relationship="GCPack.FK_Signature_User" FromRole="User" ToRole="Signature" />
           <NavigationProperty Name="UserRoles" Relationship="GCPack.FK_UserRoles_Users" FromRole="User" ToRole="UserRole" />
           <NavigationProperty Name="UserDocuments" Relationship="GCPack.FK_UserDocument_User" FromRole="User" ToRole="UserDocument" />
-          <NavigationProperty Name="DocumentTypes" Relationship="GCPack.FK_DocumentType_User" FromRole="User" ToRole="DocumentType" />
           <Property Name="JobPositionID" Type="Int32" />
           <NavigationProperty Name="JobPosition" Relationship="GCPack.FK_User_JobPosition" FromRole="User" ToRole="JobPosition" />
         </EntityType>
@@ -1138,49 +1124,6 @@
           <Property Type="Int32" Name="CanConfirmRead" Nullable="false" />
           <Property Type="String" Name="DocumentAdministrator" Nullable="true" MaxLength="101" />
         </ComplexType>
-        <EntityType Name="DocumentType">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="AdministratorID" Type="Int32" />
-          <Property Name="AuthorizinOfficerID" Type="Int32" />
-          <Property Name="OrderBy" Type="Int32" />
-          <NavigationProperty Name="Documents" Relationship="GCPack.FK_RizeneDokumeny_DocumentType" FromRole="DocumentType" ToRole="Document" />
-          <NavigationProperty Name="User" Relationship="GCPack.FK_DocumentType_User" FromRole="DocumentType" ToRole="User" />
-          <Property Name="ValidityInYears" Type="Int32" Nullable="false" />
-          <Property Name="IsRequiredFillListOfPersons" Type="Boolean" Nullable="false" />
-          <Property Name="AutomaticNumberingOfDocuments" Type="Boolean" Nullable="false" />
-          <Property Name="NumberingOfDocumentPrefix" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
-          <Property Name="NumberingOfDocumentSeparator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
-          <Property Name="NumberingOfDocumentLength" Type="Byte" />
-          <Property Name="LastNumberOfDocument" Type="Int32" />
-        </EntityType>
-        <Association Name="FK_RizeneDokumeny_DocumentType">
-          <End Type="GCPack.DocumentType" Role="DocumentType" Multiplicity="1" />
-          <End Type="GCPack.Document" Role="Document" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="DocumentType">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="Document">
-              <PropertyRef Name="DocumentTypeID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_DocumentType_User">
-          <End Type="GCPack.User" Role="User" Multiplicity="0..1" />
-          <End Type="GCPack.DocumentType" Role="DocumentType" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="DocumentType">
-              <PropertyRef Name="AdministratorID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_User_JobPosition">
           <End Type="GCPack.JobPosition" Role="JobPosition" Multiplicity="0..1" />
           <End Type="GCPack.User" Role="User" Multiplicity="*" />
@@ -1190,6 +1133,135 @@
             </Principal>
             <Dependent Role="User">
               <PropertyRef Name="JobPositionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="DocumentType">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="AdministratorID" Type="Int32" />
+          <Property Name="AuthorizinOfficerID" Type="Int32" />
+          <Property Name="OrderBy" Type="Int32" />
+          <Property Name="ValidityInYears" Type="Int32" Nullable="false" />
+          <Property Name="IsRequiredFillListOfPersons" Type="Boolean" Nullable="false" />
+          <Property Name="AutomaticNumberingOfDocuments" Type="Boolean" Nullable="false" />
+          <Property Name="NumberingOfDocumentPrefix" Type="String" MaxLength="2" FixedLength="false" Unicode="false" />
+          <Property Name="NumberingOfDocumentSeparator" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="NumberingOfDocumentLength" Type="Byte" />
+          <Property Name="LastNumberOfDocument" Type="Int32" />
+          <Property Name="DocumentEfficiencyDays" Type="Int32" />
+          <Property Name="InformedInDays" Type="Int32" />
+        </EntityType>
+        <EntityType Name="DivisionDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocumentID" Type="Int32" Nullable="false" />
+          <Property Name="DivisionID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Division" Relationship="GCPack.FK_DivisionCategory_Division1" FromRole="DivisionDocument" ToRole="Division" />
+          <NavigationProperty Name="Document" Relationship="GCPack.FK_DivisionCategory_RizeneDokumeny1" FromRole="DivisionDocument" ToRole="Document" />
+        </EntityType>
+        <EntityType Name="Project">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProjectDocuments" Relationship="GCPack.FK_ProjectDocument_Project" FromRole="Project" ToRole="ProjectDocument" />
+        </EntityType>
+        <EntityType Name="ProjectDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ProjectID" Type="Int32" Nullable="false" />
+          <Property Name="DocumentID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Document" Relationship="GCPack.FK_ProjectDocument_Document" FromRole="ProjectDocument" ToRole="Document" />
+          <NavigationProperty Name="Project" Relationship="GCPack.FK_ProjectDocument_Project" FromRole="ProjectDocument" ToRole="Project" />
+        </EntityType>
+        <EntityType Name="SystemDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DocumentID" Type="Int32" Nullable="false" />
+          <Property Name="ID_System" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AppSystem" Relationship="GCPack.FK_SystemCategory_System1" FromRole="SystemDocument" ToRole="AppSystem" />
+          <NavigationProperty Name="Document" Relationship="GCPack.FK_SystemCategory_RizeneDokumeny1" FromRole="SystemDocument" ToRole="Document" />
+        </EntityType>
+        <Association Name="FK_SystemCategory_System1">
+          <End Type="GCPack.AppSystem" Role="AppSystem" Multiplicity="1" />
+          <End Type="GCPack.SystemDocument" Role="SystemDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AppSystem">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SystemDocument">
+              <PropertyRef Name="ID_System" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DivisionCategory_Division1">
+          <End Type="GCPack.Division" Role="Division" Multiplicity="1" />
+          <End Type="GCPack.DivisionDocument" Role="DivisionDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Division">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DivisionDocument">
+              <PropertyRef Name="DivisionID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_DivisionCategory_RizeneDokumeny1">
+          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
+          <End Type="GCPack.DivisionDocument" Role="DivisionDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DivisionDocument">
+              <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectDocument_Document">
+          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
+          <End Type="GCPack.ProjectDocument" Role="ProjectDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProjectDocument">
+              <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SystemCategory_RizeneDokumeny1">
+          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
+          <End Type="GCPack.SystemDocument" Role="SystemDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="SystemDocument">
+              <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProjectDocument_Project">
+          <End Type="GCPack.Project" Role="Project" Multiplicity="1" />
+          <End Type="GCPack.ProjectDocument" Role="ProjectDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Project">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="ProjectDocument">
+              <PropertyRef Name="ProjectID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1217,18 +1289,10 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="DivisionCategories">
-            <EntityTypeMapping TypeName="GCPack.DivisionCategory">
-              <MappingFragment StoreEntitySet="DivisionCategory">
-                <ScalarProperty Name="DivisionID" ColumnName="DivisionID" />
-                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Documents">
             <EntityTypeMapping TypeName="GCPack.Document">
               <MappingFragment StoreEntitySet="Document">
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />
                 <ScalarProperty Name="EndDate" ColumnName="EndDate" />
                 <ScalarProperty Name="Revision" ColumnName="Revision" />
@@ -1300,15 +1364,6 @@
               <MappingFragment StoreEntitySet="State">
                 <ScalarProperty Name="Code" ColumnName="Code" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="SystemCategories">
-            <EntityTypeMapping TypeName="GCPack.SystemCategory">
-              <MappingFragment StoreEntitySet="SystemCategory">
-                <ScalarProperty Name="ID_System" ColumnName="ID_System" />
-                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1421,6 +1476,8 @@
           <EntitySetMapping Name="DocumentTypes">
             <EntityTypeMapping TypeName="GCPack.DocumentType">
               <MappingFragment StoreEntitySet="DocumentType">
+                <ScalarProperty Name="InformedInDays" ColumnName="InformedInDays" />
+                <ScalarProperty Name="DocumentEfficiencyDays" ColumnName="DocumentEfficiencyDays" />
                 <ScalarProperty Name="LastNumberOfDocument" ColumnName="LastNumberOfDocument" />
                 <ScalarProperty Name="NumberingOfDocumentLength" ColumnName="NumberingOfDocumentLength" />
                 <ScalarProperty Name="NumberingOfDocumentSeparator" ColumnName="NumberingOfDocumentSeparator" />
@@ -1432,6 +1489,41 @@
                 <ScalarProperty Name="AuthorizinOfficerID" ColumnName="AuthorizinOfficerID" />
                 <ScalarProperty Name="AdministratorID" ColumnName="AdministratorID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DivisionDocuments">
+            <EntityTypeMapping TypeName="GCPack.DivisionDocument">
+              <MappingFragment StoreEntitySet="DivisionDocument">
+                <ScalarProperty Name="DivisionID" ColumnName="DivisionID" />
+                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Projects">
+            <EntityTypeMapping TypeName="GCPack.Project">
+              <MappingFragment StoreEntitySet="Project">
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ProjectDocuments">
+            <EntityTypeMapping TypeName="GCPack.ProjectDocument">
+              <MappingFragment StoreEntitySet="ProjectDocument">
+                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
+                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SystemDocuments">
+            <EntityTypeMapping TypeName="GCPack.SystemDocument">
+              <MappingFragment StoreEntitySet="SystemDocument">
+                <ScalarProperty Name="ID_System" ColumnName="ID_System" />
+                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
