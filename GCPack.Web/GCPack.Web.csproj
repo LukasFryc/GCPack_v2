@@ -298,6 +298,12 @@
     <Content Include="Views\CodeLists\AppSystemIndex.cshtml" />
     <Content Include="Views\CodeLists\View.cshtml" />
     <Content Include="Views\CodeLists\AppSystemEdit.cshtml" />
+    <Content Include="Views\CodeLists\JobPositionIndex.cshtml" />
+    <Content Include="Views\CodeLists\JobPositionEdit.cshtml" />
+    <Content Include="Views\CodeLists\ProjectIndex.cshtml" />
+    <Content Include="Views\CodeLists\ProjectEdit.cshtml" />
+    <Content Include="Views\CodeLists\DivisionIndex.cshtml" />
+    <Content Include="Views\CodeLists\DivisionEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

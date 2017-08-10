@@ -1,0 +1,31 @@
+﻿@model IEnumerable<GCPack.Model.JobPositionModel>
+@{
+    ViewBag.Title = "CodeListsController";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Pracovní pozice</h2>
+@Html.ActionLink("Přidat", "JobPositionAdd", "CodeLists", new { @class = "btn btn-default btn-sm" })
+<div class="row">
+    <div class="col-md-6">
+        <table class="table" style="margin-top:20px">
+            <tr>
+                <th>
+                    Název
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var m in @Model)
+            {
+                <tr>
+                    <td>@m.Name (@m.ID)</td>
+                    <td>
+                        @Html.ActionLink("Upravit", "JobPositionEdit", "CodeLists", new { ID = m.ID }, new { @class = "btn btn-default btn-sm" })
+                        @Html.ActionLink("Smazat", "JobPositionDelete", "CodeLists", new { ID = m.ID }, new { @class = "btn btn-default btn-sm" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>

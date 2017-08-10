@@ -5,6 +5,8 @@ namespace GCPack.Service.Interfaces
 {
     public interface ICodeListsService
     {
+        //AppSystem
+
         ICollection<AppSystemModel> GetAppSystems();
 
         AppSystemModel GetAppSystem(int id);
@@ -12,6 +14,34 @@ namespace GCPack.Service.Interfaces
         AppSystemModel AppSystemSave(AppSystemModel appSystem);
 
         void AppSystemDelete(int id);
+
+        //JobPosition
+
+        ICollection<JobPositionModel> GetJobPositions();
+
+        JobPositionModel GetJobPosition(int id);
+
+        JobPositionModel JobPositionSave(JobPositionModel jobPosition);
+
+        void JobPositionDelete(int id);
+
+        // Project
+        ICollection<ProjectModel> GetProjects();
+
+        ProjectModel GetProject(int id);
+
+        ProjectModel ProjectSave(ProjectModel project);
+
+        void ProjectDelete(int id);
+
+        // Division
+        ICollection<DivisionModel> GetDivisions();
+
+        DivisionModel GetDivision(int id);
+
+        DivisionModel DivisionSave(DivisionModel division);
+
+        void DivisionDelete(int id);
 
     }
 }

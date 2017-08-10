@@ -72,20 +72,15 @@ namespace GCPack.Web.Controllers
       public ActionResult AppSystemEdit(int ID)
       {
           ViewBag.Title = "Editace číselníku systém";
-          //ICollection<Item> Users = new HashSet<Item>();
-          //Users = usersService.GetUserList(new UserFilter());
-          //Users.Add(new Item() { ID = 0, Value = "---------------", OrderBy = 0 });
-          //Users = Users.OrderBy(u => u.ID).ToList();
-          //ViewBag.Users = Users;
           AppSystemModel appSystem = codeListsService.GetAppSystem(ID);
           return View(appSystem);
       }
        
-            public ActionResult AppSystemAdd()
-            {
-                ViewBag.Title = "Nová položka číselníku systém";
-                return View("AppSystemEdit", new AppSystemModel());
-            }
+        public ActionResult AppSystemAdd()
+        {
+            ViewBag.Title = "Nová položka číselníku systém";
+            return View("AppSystemEdit", new AppSystemModel());
+        }
             
 
         public ActionResult AppSystemSave(AppSystemModel appSystem)
@@ -99,6 +94,106 @@ namespace GCPack.Web.Controllers
             codeListsService.AppSystemDelete(id);
             return RedirectToAction("AppSystemIndex");
         }
+
+        // JOBPOSITIONS
+        public ActionResult JobPositionIndex()
+        {
+            ICollection<JobPositionModel> jobPosition = codeListsService.GetJobPositions();
+            return View(jobPosition);
+        }
+
+        public ActionResult JobPositionEdit(int ID)
+        {
+            ViewBag.Title = "Editace číselníku pracovních pozic";
+            JobPositionModel jobPosition = codeListsService.GetJobPosition(ID);
+            return View(jobPosition);
+        }
+
+        public ActionResult JobPositionAdd()
+        {
+            ViewBag.Title = "Nová položka číselníku systém";
+            return View("JobPositionEdit", new JobPositionModel());
+        }
+
+
+        public ActionResult JobPositionSave(JobPositionModel jobPosition)
+        {
+            codeListsService.JobPositionSave(jobPosition);
+            return RedirectToAction("JobPositionIndex");
+        }
+
+        public ActionResult JobPositionDelete(int id)
+        {
+            codeListsService.JobPositionDelete(id);
+            return RedirectToAction("JobPositionIndex");
+        }
+
+        // PROJECTS
+        public ActionResult ProjectIndex()
+        {
+            ICollection<ProjectModel> projects = codeListsService.GetProjects();
+            return View(projects);
+        }
+
+        public ActionResult ProjectEdit(int ID)
+        {
+            ViewBag.Title = "Editace číselníku projektu";
+            ProjectModel project = codeListsService.GetProject(ID);
+            return View(project);
+        }
+
+        public ActionResult ProjectAdd()
+        {
+            ViewBag.Title = "Nová položka projektů";
+            return View("ProjectEdit", new ProjectModel());
+        }
+
+
+        public ActionResult ProjectSave(ProjectModel project)
+        {
+            codeListsService.ProjectSave(project);
+            return RedirectToAction("ProjectIndex");
+        }
+
+        public ActionResult ProjectDelete(int id)
+        {
+            codeListsService.ProjectDelete(id);
+            return RedirectToAction("ProjectIndex");
+        }
+
+        // DIVISION
+        public ActionResult DivisionIndex()
+        {
+            ICollection<DivisionModel> divisions = codeListsService.GetDivisions();
+            return View(divisions);
+        }
+
+        public ActionResult DivisionEdit(int ID)
+        {
+            ViewBag.Title = "Editace číselníku střediska";
+            DivisionModel division = codeListsService.GetDivision(ID);
+            return View(division);
+        }
+
+        public ActionResult DivisionAdd()
+        {
+            ViewBag.Title = "Nová položka střediska";
+            return View("DivisionEdit", new DivisionModel());
+        }
+
+
+        public ActionResult DivisionSave(DivisionModel division)
+        {
+            codeListsService.DivisionSave(division);
+            return RedirectToAction("DivisionIndex");
+        }
+
+        public ActionResult DivisionDelete(int id)
+        {
+            codeListsService.DivisionDelete(id);
+            return RedirectToAction("DivisionIndex");
+        }
+
 
     }
 }
