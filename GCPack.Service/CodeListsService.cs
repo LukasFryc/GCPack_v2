@@ -37,5 +37,64 @@ namespace GCPack.Service
             codeListsRepository.AppSystemDelete(id);
         }
 
+        public ICollection<JobPositionModel> GetJobPositions()
+        {
+            return codeListsRepository.GetJobPositions();
+        }
+
+        public JobPositionModel GetJobPosition(int id)
+        {
+            return codeListsRepository.GetJobPosition(id);
+        }
+
+        public JobPositionModel JobPositionSave(JobPositionModel jobPosition)
+        {
+            return codeListsRepository.JobPositionSave(jobPosition);
+        }
+
+        public void JobPositionDelete(int id)
+        {
+            codeListsRepository.JobPositionDelete(id);
+        }
+
+        public ICollection<ProjectModel> GetProjects()
+        {
+            return codeListsRepository.GetProjects();
+        }
+
+        public ProjectModel GetProject(int id)
+        {
+            return codeListsRepository.GetProject(id);
+        }
+
+        public ProjectModel ProjectSave(ProjectModel project)
+        {
+            return codeListsRepository.ProjectSave(project);
+        }
+
+        public void ProjectDelete(int id)
+        {
+            codeListsRepository.ProjectDelete(id);
+        }
+
+        public ICollection<DivisionModel> GetDivisions()
+        {
+            return codeListsRepository.GetDivisions();
+        }
+
+        public DivisionModel GetDivision(int id)
+        {
+            return codeListsRepository.GetDivision(id);
+        }
+
+        public DivisionModel DivisionSave(DivisionModel division)
+        {
+            return codeListsRepository.DivisionSave(division);
+        }
+
+        public void DivisionDelete(int id)
+        {
+            codeListsRepository.DivisionDelete(id);
+        }
     }
 }

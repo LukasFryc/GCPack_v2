@@ -1,0 +1,31 @@
+﻿@model IEnumerable<GCPack.Model.ProjectModel>
+@{
+    ViewBag.Title = "CodeListsController";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Projekty</h2>
+@Html.ActionLink("Přidat", "ProjectAdd", "CodeLists", new { @class = "btn btn-default btn-sm" })
+<div class="row">
+    <div class="col-md-6">
+        <table class="table" style="margin-top:20px">
+            <tr>
+                <th>
+                    Název
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var m in @Model)
+            {
+                <tr>
+                    <td>@m.Name (@m.ID)</td>
+                    <td>
+                        @Html.ActionLink("Upravit", "ProjectEdit", "CodeLists", new { ID = m.ID }, new { @class = "btn btn-default btn-sm" })
+                        @Html.ActionLink("Smazat", "ProjectDelete", "CodeLists", new { ID = m.ID }, new { @class = "btn btn-default btn-sm" })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
