@@ -58,6 +58,7 @@
     <Compile Include="AppSystem.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="CodeListsRepository.cs" />
     <Compile Include="Division.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
@@ -68,6 +69,9 @@
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="DocumentsRepository.cs" />
+    <Compile Include="DocumentState.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
     <Compile Include="DocumentType.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
@@ -89,9 +93,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GCPack.edmx</DependentUpon>
     </Compile>
-    <Compile Include="GetDocuments_Result.cs">
+    <Compile Include="GetDocuments1_Result.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ICodeListsRepository.cs" />
     <Compile Include="Interfaces\IDocumentsRepository.cs" />
     <Compile Include="Interfaces\IUsersRepository.cs" />
     <Compile Include="JobPosition.cs">
@@ -124,9 +129,6 @@
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Signature.cs">
-      <DependentUpon>GCPack.tt</DependentUpon>
-    </Compile>
-    <Compile Include="State.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="SystemDocument.cs">

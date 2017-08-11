@@ -13,9 +13,7 @@
         <EntityTypeShape EntityType="GCPack.ReadConfirmation" Width="1.5" PointX="9.75" PointY="20.125" />
         <EntityTypeShape EntityType="GCPack.Role" Width="1.5" PointX="3" PointY="5" />
         <EntityTypeShape EntityType="GCPack.Signature" Width="1.5" PointX="9.75" PointY="11.25" />
-        <EntityTypeShape EntityType="GCPack.State" Width="1.5" PointX="3.625" PointY="15.875" />
         <EntityTypeShape EntityType="GCPack.UserRole" Width="1.5" PointX="5.25" PointY="9" />
-        <AssociationConnector Association="GCPack.FK_Documents_State" />
         <AssociationConnector Association="GCPack.FK_LogEvent_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_Signature_RizeneDokumeny" />
@@ -38,6 +36,8 @@
         <AssociationConnector Association="GCPack.FK_UserDocument_Document" />
         <AssociationConnector Association="GCPack.FK_UserDocument_User" />
         <AssociationConnector Association="GCPack.FK_User_JobPosition" />
+        <EntityTypeShape EntityType="GCPack.DocumentState" Width="1.5" PointX="5.25" PointY="13.625" />
+        <AssociationConnector Association="GCPack.FK_Documents_State" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

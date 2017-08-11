@@ -17,17 +17,28 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                return db.States.Where (s => s.Code == state).Select (s => s.ID).FirstOrDefault();
+                return db.DocumentStates.Where (s => s.Code == state).Select (s => s.ID).FirstOrDefault();
             }
         }
-            public DocumentModel AddDocument(DocumentModel document)
+
+        public void SetNumberOfDocument(int documentTypeID)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var documentType = db.DocumentTypes.Where(dt => dt.ID == documentTypeID).Select(dt => dt).FirstOrDefault();
+                documentType.LastNumberOfDocument += 1;
+                db.SaveChanges();
+            }
+        }
+
+        public DocumentModel AddDocument(DocumentModel document)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
                 document.Title = (document.Title == null) ? string.Empty : document.Title;
                 document.DocumentNumber = (document.DocumentNumber == null) ? string.Empty : document.DocumentNumber;
 
-                var stateID = db.States.Where(s => s.Code == "New").Select(s => s.ID).FirstOrDefault();
+                var stateID = db.DocumentStates.Where(s => s.Code == "New").Select(s => s.ID).FirstOrDefault();
                 var documentType = db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID).Select(dt => dt).SingleOrDefault();
                 document.StateID = stateID;
                 var newDocument = db.Documents.Add(Mapper.Map<Document>(document));
@@ -131,7 +142,8 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ICollection<GetDocuments_Result> documentsResult = db.GetDocuments(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100).ToList<GetDocuments_Result>();
+                ICollection<GetDocuments1_Result> documentsResult = db.GetDocuments1(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100).ToList<GetDocuments1_Result>();
+                
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;
             }
@@ -307,10 +319,10 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
-                int stateID = (int)dbDocument.StateID;
+                //int stateID = (int)dbDocument.StateID;
                 document.DocumentTypeID = dbDocument.DocumentTypeID;
                 Mapper.Map(document, dbDocument);
-                dbDocument.StateID = stateID;
+                //dbDocument.StateID = stateID;
                 db.SaveChanges();
 
                 db.JobPositionDocuments.RemoveRange(db.JobPositionDocuments.Where(jpd => jpd.DocumentId == document.ID));
@@ -351,7 +363,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                int stateID = db.States.Where(s => s.Code == state).Select(s => s.ID).FirstOrDefault();
+                int stateID = db.DocumentStates.Where(s => s.Code == state).Select(s => s.ID).FirstOrDefault();
                 db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().StateID = stateID;
                 db.SaveChanges();
             }

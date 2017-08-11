@@ -136,6 +136,7 @@
     @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
     {
         <input type="hidden" name="Action" id="Action" />
+        <input type="hidden" name="StateID" id="StateID" value="@Model.StateID"/>
         <input type="hidden" name="ID" value="@Model.ID" />
         <input type="hidden" name="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
@@ -187,7 +188,12 @@
                     <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
                     <div class="col-md-10">
                         <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
-                        @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true})
+                        @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true })
+                    </div>
+                    <label class="control-label col-md-2" for="DocumentTypeID">Stav dokumentu</label>
+                    <div class="col-md-10">
+                        @Model.DocumentStateName
+                        
                     </div>
                 </div>
 
@@ -316,7 +322,10 @@
             <div class="row">
                 <div class="col-md-10">
                     <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
-                    <input type="submit" value="Zaevidovat" id="registerDocument" class="btn btn-success" />
+                    @if (Model.DocumentStateCode == "New")
+                    {
+                        <input type="submit" value="Zaevidovat" id="registerDocument" class="btn btn-success" />
+                    }
                     <input type="submit" value="Nové vydání dokumentu" id="newVersion" class="btn btn-success" />
                     <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />
                     <input type="submit" value="Přezkoumání platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />

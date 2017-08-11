@@ -11,7 +11,7 @@ namespace GCPack.Repository
 {
     using System;
     
-    public partial class GetDocuments_Result
+    public partial class GetDocuments1_Result
     {
         public Nullable<long> row { get; set; }
         public int ID { get; set; }
@@ -27,11 +27,15 @@ namespace GCPack.Repository
         public string Annotation { get; set; }
         public string Revision { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
+        public Nullable<int> IssueNumber { get; set; }
+        public Nullable<int> ParentID { get; set; }
         public int CanEdit { get; set; }
         public int CanRevision { get; set; }
         public Nullable<System.DateTime> Created { get; set; }
         public Nullable<System.DateTime> ReadDate { get; set; }
         public int CanConfirmRead { get; set; }
         public string DocumentAdministrator { get; set; }
+        public string DocumentStateName { get; set; }
+        public string DocumentStateCode { get; set; }
     }
 }

@@ -152,14 +152,14 @@ namespace GCPack.Web.Controllers
             ViewBag.DocumentTypes = documentService.GetDocumentTypes();
             ViewBag.Type = "Nový řízený dokument";
             ViewBag.JobPositions = userService.GetJobPositions();
-            DocumentModel document = new DocumentModel() { Revision = "P"};
+            // TODO: opravit ID = 1, DocumentStateCode, DocumentStateName na GetStateFromCode("New")
+            DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, DocumentStateCode = "New", DocumentStateName = "Nový"};
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             // opraveno Lukas a Jane 25.7.2017
             ViewBag.JobPositions = userService.GetJobPositions();
             ViewBag.Type = "Add";
             document.DocumentTypeID = documentTypeID;
-            document.DocumentNumber = documentService.GenNumberOfDocument(documentTypeID);
             DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
             ViewBag.TypeModel = typeModel;
 

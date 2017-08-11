@@ -67,7 +67,7 @@ namespace GCPack.Service
             // ulozeni dokumentu
             document = EditDocument(document, fileNames);
 
-
+            documentsRepository.SetNumberOfDocument(document.DocumentTypeID);
 
             return document;
         }

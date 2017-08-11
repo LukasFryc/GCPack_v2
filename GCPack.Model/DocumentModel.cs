@@ -39,6 +39,8 @@ namespace GCPack.Model
         public int DocumentTypeID { get; set; }
         public string DocumentNumber { get; set; }
         public string DocumentAdministrator { get; set; }
+        public string DocumentStateName { get; set; }
+        public string DocumentStateCode { get; set; }
         public string Revision { get; set; }
         public int StateID { get; set; }
         public int AdministratorID { get; set; }
