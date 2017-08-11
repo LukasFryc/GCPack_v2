@@ -15,10 +15,12 @@ namespace GCPack.Web.Controllers
     {
         private readonly IDocumentsService documentService;
         private readonly IUsersService userService;
-        public DocumentsController(IDocumentsService documentService, IUsersService userService)
+        private readonly ICodeListsService codeListService;
+        public DocumentsController(IDocumentsService documentService, IUsersService userService, ICodeListsService codeListService)
         {
             this.documentService = documentService;
             this.userService = userService;
+            this.codeListService = codeListService;
         }
 
 
@@ -147,22 +149,30 @@ namespace GCPack.Web.Controllers
             return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
         }
 
+
+        private void InitCodeLists()
+        {
+            ViewBag.Projects = codeListService.GetProjects();
+            ViewBag.AppSystems = codeListService.GetAppSystems();
+            ViewBag.Divisions = codeListService.GetDivisions();
+            ViewBag.DocumentTypes = documentService.GetDocumentTypes();
+            ViewBag.JobPositions = userService.GetJobPositions();
+
+        }
+
         public ActionResult Add(int documentTypeID)
         {
-            ViewBag.DocumentTypes = documentService.GetDocumentTypes();
             ViewBag.Type = "Nový řízený dokument";
-            ViewBag.JobPositions = userService.GetJobPositions();
             // TODO: opravit ID = 1, DocumentStateCode, DocumentStateName na GetStateFromCode("New")
             DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, DocumentStateCode = "New", DocumentStateName = "Nový"};
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             // opraveno Lukas a Jane 25.7.2017
-            ViewBag.JobPositions = userService.GetJobPositions();
             ViewBag.Type = "Add";
             document.DocumentTypeID = documentTypeID;
             DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
             ViewBag.TypeModel = typeModel;
-
+            InitCodeLists();
 
             return View("edit",document);
         }
@@ -176,17 +186,15 @@ namespace GCPack.Web.Controllers
         public ActionResult Edit(int documentId)
         {
 
-            ViewBag.DocumentTypes = documentService.GetDocumentTypes();
             int userId = UserRoles.GetUserId();
             ViewBag.Type = "Úprava řízeného dokumentu";
-            ViewBag.JobPositions = userService.GetJobPositions();
             DocumentModel document = documentService.GetDocument(documentId, userId);
             DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
             ViewBag.TypeModel = typeModel;
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
-            ViewBag.JobPositions = userService.GetJobPositions();
             ViewBag.Type = "Edit";
+            InitCodeLists();
             return View("edit", document);
         }
 
