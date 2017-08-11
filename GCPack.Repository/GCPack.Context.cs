@@ -44,10 +44,6 @@ namespace GCPack.Repository
         public virtual DbSet<JobPositionDocument> JobPositionDocuments { get; set; }
         public virtual DbSet<UserDocument> UserDocuments { get; set; }
         public virtual DbSet<DocumentType> DocumentTypes { get; set; }
-        public virtual DbSet<DivisionDocument> DivisionDocuments { get; set; }
-        public virtual DbSet<Project> Projects { get; set; }
-        public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
-        public virtual DbSet<SystemDocument> SystemDocuments { get; set; }
     
         public virtual ObjectResult<GetDocuments_Result> GetDocuments(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage)
         {
