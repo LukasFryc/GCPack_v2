@@ -13,6 +13,11 @@ namespace GCPack.Model
         public string OrderBy { get; set; }
     }
 
+    public class CodeListFilter : Filter
+    {
+        public int ItemID { get; set; }
+    }
+
     public class UserFilter : Filter 
     {
         public UserFilter()

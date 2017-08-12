@@ -16,7 +16,12 @@ namespace GCPack
             // rucne vytvorene injection objektu aby se nemuselo pouzivat IoC protoze ve staticke tride 
             // se neda vyuzit konstruktor
             IDocumentsService documentService = 
-                new DocumentsService(new DocumentsRepository(), new MailService(), new UsersService( new UsersRepository() ));
+                new DocumentsService(
+                    new DocumentsRepository(), 
+                    new MailService(), 
+                    new UsersService( new UsersRepository()), 
+                    new CodeListsService (new CodeListsRepository())
+                    );
             return documentService.GetDocumentTypes();
         }
         

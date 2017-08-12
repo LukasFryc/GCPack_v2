@@ -51,7 +51,7 @@ namespace GCPack.Web.App_Start
             containerBuilder.RegisterType<DocumentsRepository>().As<IDocumentsRepository>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<MailService>().As<IMailService>().AsImplementedInterfaces().InstancePerRequest();
 
-            containerBuilder.Register(r => new DocumentsService(r.Resolve<IDocumentsRepository>(), r.Resolve<IMailService>(), r.Resolve<IUsersService>())).AsImplementedInterfaces().InstancePerLifetimeScope();
+            containerBuilder.Register(r => new DocumentsService(r.Resolve<IDocumentsRepository>(), r.Resolve<IMailService>(), r.Resolve<IUsersService>(), r.Resolve<ICodeListsService>())).AsImplementedInterfaces().InstancePerLifetimeScope();
             containerBuilder.Register(r => new CodeListsService(r.Resolve<ICodeListsRepository>())).AsImplementedInterfaces().InstancePerLifetimeScope();
 
             containerBuilder.Register(r => new UsersService(r.Resolve<IUsersRepository>())).AsImplementedInterfaces().InstancePerLifetimeScope();

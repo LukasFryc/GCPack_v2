@@ -30,5 +30,9 @@ namespace GCPack.Repository.Interfaces
         ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter);
         string GenNumberOfDocument(int documentTypeID);
         void SetNumberOfDocument(int documentTypeID);
+        ICollection<int> GetAppSystemsFromDocument(int documentId);
+        ICollection<int> GetAppProjectsFromDocument(int documentId);
+        ICollection<int> GetAppDivisionsFromDocument(int documentId);
+        void SaveListCodes(DocumentModel document);
     }
 }

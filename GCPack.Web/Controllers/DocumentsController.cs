@@ -114,8 +114,6 @@ namespace GCPack.Web.Controllers
             string folderPath = folderForFiles + guid + @"\";
             Directory.CreateDirectory(folderPath);
 
-            bool x = ModelState.IsValid;
-
             for (int i = 0;i < this.Request.Files.Count; i++)
             {
                 if (this.Request.Files[i].ContentLength > 0)

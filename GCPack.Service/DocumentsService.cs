@@ -14,12 +14,14 @@ namespace GCPack.Service
         readonly IDocumentsRepository documentsRepository;
         readonly IMailService mailService;
         readonly IUsersService userService;
+        readonly ICodeListsService codeListService;
 
-        public DocumentsService(IDocumentsRepository documentsRepository, IMailService mailService, IUsersService userService)
+        public DocumentsService(IDocumentsRepository documentsRepository, IMailService mailService, IUsersService userService, ICodeListsService codeListService)
         {
             this.documentsRepository = documentsRepository;
             this.mailService = mailService;
             this.userService = userService;
+            this.codeListService = codeListService;
         }
 
         public string GenNumberOfDocument(int documentTypeID)
@@ -95,6 +97,9 @@ namespace GCPack.Service
             document.Users = documentsRepository.GetUsersForDocument(documentId);
             document.FileItems = documentsRepository.GetFiles(documentId);
             document.JobPositionIDs = documentsRepository.GetJobPositionsFromDocument(documentId);
+            document.SelectedAppSystemsID = documentsRepository.GetAppSystemsFromDocument(documentId);
+            document.SelectedProjectsID = documentsRepository.GetAppProjectsFromDocument(documentId);
+            document.SelectedDivisionsID = documentsRepository.GetAppDivisionsFromDocument(documentId);
             return document;
         }
 
@@ -145,11 +150,19 @@ namespace GCPack.Service
             // namapuji se uzivatele na dokuemnt
             documentsRepository.MapUsersToDocument(document.SelectedUsers, document, null);
 
+            SaveListCodes(document);
+
             // ulozeni vsech souboru
             SaveFiles(document, files);
 
             return new DocumentModel();
 
+        }
+
+        // ulozeni vsech ciselniku - spolecna fce pro add document a edit document
+        private void SaveListCodes(DocumentModel document)
+        {
+            documentsRepository.SaveListCodes(document);
         }
 
         public void DeleteDocument(int documentId)
@@ -175,7 +188,7 @@ namespace GCPack.Service
             documentsRepository.MapUsersToDocument(addedUsers.Select(au => au.ID).ToList(), document, deletedUsers.Select (u => u.ID).ToList<int>());
             documentsRepository.DeleteFilesFromDocument(document);
             document = documentsRepository.EditDocument(document);
-
+            SaveListCodes(document);
             SaveFiles(document, files);
 
             return document;

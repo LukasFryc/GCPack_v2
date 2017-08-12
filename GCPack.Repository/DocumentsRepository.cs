@@ -124,10 +124,78 @@ namespace GCPack.Repository
 
         }
 
+        public void SaveListCodes(DocumentModel document)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                db.DivisionDocuments.RemoveRange(db.DivisionDocuments.Where(dd => dd.DocumentID == document.ID));
+                db.SystemDocuments.RemoveRange(db.SystemDocuments.Where(sd => sd.DocumentID == document.ID));
+                db.ProjectDocuments.RemoveRange(db.ProjectDocuments.Where(pd => pd.DocumentID == document.ID));
+                db.SaveChanges();
+
+                if (document.SelectedDivisionsID != null)
+                {
+                    foreach (int divisionID in document.SelectedDivisionsID)
+                    {
+                        db.DivisionDocuments.Add(new DivisionDocument() { DivisionID = divisionID, DocumentID = document.ID });
+                    }
+                }
+
+                if (document.SelectedAppSystemsID != null)
+                {
+                    foreach (int systemID in document.SelectedAppSystemsID)
+                    {
+                        db.SystemDocuments.Add(new SystemDocument() { ID_System = systemID, DocumentID = document.ID });
+                    }
+                }
+
+                if (document.SelectedProjectsID != null)
+                {
+                    foreach (int projectID in document.SelectedProjectsID)
+                    {
+                        db.ProjectDocuments.Add(new ProjectDocument() { ProjectID = projectID, DocumentID = document.ID });
+                    }
+                }
+
+                db.SaveChanges();
+
+            }
+        }
+
+        public ICollection<int> GetAppSystemsFromDocument(int documentId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                ICollection<int> AppSystemsID = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().SystemDocuments.Select (sd => sd.ID_System).ToList<int>();
+                return AppSystemsID;
+            }
+        }
+
+        public ICollection<int> GetAppProjectsFromDocument(int documentId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                ICollection<int> ProjectsID = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().ProjectDocuments.Select(sd => sd.ProjectID).ToList<int>();
+                return ProjectsID;
+            }
+        }
+
+        public ICollection<int> GetAppDivisionsFromDocument(int documentId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                ICollection<int> DivisionsID = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().DivisionDocuments.Select(sd => sd.DivisionID).ToList<int>();
+                return DivisionsID;
+            }
+        }
+
+
+
         public DocumentModel GetDocument(int documentId, int userID)
         {
             DocumentFilter filter = new DocumentFilter() { DocumentID = documentId, ForUserID = userID };
-            return GetDocuments(filter).FirstOrDefault();
+            DocumentModel document = GetDocuments(filter).FirstOrDefault();
+            return document;
         }
 
         public ICollection<Item> GetDocumentTypes()

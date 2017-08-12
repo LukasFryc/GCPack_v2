@@ -52,6 +52,9 @@ namespace GCPack.Model
         public ICollection<UserModel> Users { get; set; }
         public DateTime? ReadDate { get; set; } // datum seznameni s dokumentem
         public ICollection<int> JobPositionIDs { get; set; }
+        public ICollection<int> SelectedProjectsID { get; set; } // všechny vybrané projekty
+        public ICollection<int> SelectedDivisionsID { get; set; } // všechny vybrané střediska
+        public ICollection<int> SelectedAppSystemsID { get; set; } // všechny vybrané systémy
     }
 
 

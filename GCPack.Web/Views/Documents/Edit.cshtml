@@ -3,6 +3,8 @@
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using GCPack.Model;
+
 <script>
     var timeoutHandle;
     var selectedUsers = [];
@@ -48,7 +50,9 @@
                 return
             }
 
-
+            $('#SelectedProjects option').prop('selected', true);
+            $('#SelectedDivisions option').prop('selected', true);
+            $('#SelectedAppSystems option').prop('selected', true);
             $('#SelectedUsers option').prop('selected', true);
         });
 
@@ -284,17 +288,24 @@
                 ChangeItems('#SelectedDivisions', '#AllDivisions');
             });
 
+        $('#divisionsFilter').keyup(function () {
+            filterCodeList($(this).val(), '#AllDivisions');
+        });
+
         $('#projectsFilter').keyup(function () {
-            var filter = $(this).val();
-            $('#AllProjects option').each(function () {
-                if ($(this).text().indexOf(filter) > -1) {
+            filterCodeList($(this).val(), '#AllProjects');
+        });
+
+
+        function filterCodeList (filter, codeList) {
+            $(codeList + ' option').each(function () {
+                if ($(this).text().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
                     $(this).show();
                 } else {
                     $(this).hide();
                 }
-                
             })
-        });
+        };
 
     });
 
@@ -316,7 +327,7 @@
                         <b>Projekty</b><br />
                         <input type="text" id="projectsFilter" />
                         <select multiple name="AllProjects" id="AllProjects" class="categories">
-                            @foreach (var project in ViewBag.Projects)
+                            @foreach (ProjectModel project in ((ICollection< ProjectModel>) ViewBag.Projects).Where (p => !Model.SelectedProjectsID.Contains(p.ID)).Select (p => p))
                             {
                                 <option value="@project.ID">@project.Name</option>
                             }
@@ -331,7 +342,11 @@
 
                         <div class="col-md-4">
                             <b>Vybrane projekty</b><br />
-                            <select multiple name="SelectedProjects" id="SelectedProjects" class="categories">
+                            <select multiple name="SelectedProjectsID" id="SelectedProjects" class="categories">
+                                @foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
+                                {
+                                    <option value="@project.ID">@project.Name</option>
+                                }
                             </select>
                         </div>
                     </div>
@@ -340,8 +355,9 @@
                 <div class="row">
                     <div class="col-md-4">
                         <b>Střediska</b><br />
+                        <input type="text" id="divisionsFilter" />
                         <select multiple name="AllDivisions" id="AllDivisions" class="categories">
-                            @foreach (var division in ViewBag.Divisions)
+                            @foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => !Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
                             {
                                 <option value="@division.ID">@division.Name</option>
                             }
@@ -356,7 +372,12 @@
 
                     <div class="col-md-4">
                         <b>Vybraná střediska</b><br />
-                        <select multiple name="SelectedDivisions" id="SelectedDivisions" class="categories"></select>
+                        <select multiple name="SelectedDivisionsID" id="SelectedDivisions" class="categories">
+                            @foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
+                            {
+                                <option value="@division.ID">@division.Name</option>
+                            }
+                        </select>
                     </div>
                 </div>
 
