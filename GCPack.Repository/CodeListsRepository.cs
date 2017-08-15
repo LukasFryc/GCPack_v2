@@ -166,7 +166,7 @@ namespace GCPack.Repository
                 return Mapper.Map<DivisionModel>(db.Divisions.Where(d => d.ID == id).Select(d => d).FirstOrDefault());
             }
         }
-
+        
         public DivisionModel DivisionSave(DivisionModel division)
         {
             using (GCPackContainer db = new GCPackContainer())

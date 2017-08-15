@@ -288,12 +288,25 @@
                 ChangeItems('#SelectedDivisions', '#AllDivisions');
             });
 
+        $('#addAppSystems').click(
+            function () {
+                ChangeItems('#AllAppSystems', '#SelectedAppSystems');
+            });
+        $('#removeAppSystems').click(
+            function () {
+                ChangeItems('#SelectedAppSystems', '#AllAppSystems');
+            });
+
         $('#divisionsFilter').keyup(function () {
             filterCodeList($(this).val(), '#AllDivisions');
         });
 
         $('#projectsFilter').keyup(function () {
             filterCodeList($(this).val(), '#AllProjects');
+        });
+
+        $('#appSystemsFilter').keyup(function () {
+            filterCodeList($(this).val(), '#AllAppSystems');
         });
 
 
@@ -315,6 +328,50 @@
             $(target).append('<option value="' + item.value + '">' + item.text + '</option>');
             $(item).remove();
         });
+
+        SortItems(source);
+        SortItems(target);
+    }
+
+    function SortItems(source)
+    {
+        
+        var selectList = $(source + ' option');
+               
+        // nefunguje bzt bz melo
+        //var sortSelectList = selectList.sort(function (o1, o2) { return o1.text > o2.text ? 1 : o1.text < o2.text ? -1 : 0; });
+
+        var sortSelectList = selectList.sort(function (a, b) {
+
+            var str1 = a.text;
+            var str2 = b.text;
+            // nefunguje byt by melo
+            //if (a.text > b.text) return 1; // .text for text comparison
+            //else if (a.text < b.text) return -1;
+            //else return 0
+
+            //funguje
+            var n = str1.localeCompare(str2);
+            return n;
+        });
+
+        // nefunguje
+        //array.sort(function (a, b) {
+        //    var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+        //    if (nameA < nameB) //sort string ascending
+        //        return -1;
+        //    if (nameA > nameB)
+        //        return 1;
+        //    return 0; //default return value (no sorting)
+        //});
+
+        //options.each(function (i, o) {
+        //    o.value = arr[i].v;
+        //    $(o).text(arr[i].t);
+        //});
+
+
+        $(source).html(sortSelectList);
     }
 
 
@@ -341,7 +398,7 @@
 
 
                         <div class="col-md-4">
-                            <b>Vybrane projekty</b><br />
+                            <b>Vybrané projekty</b><br />
                             <select multiple name="SelectedProjectsID" id="SelectedProjects" class="categories">
                                 @foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
                                 {
@@ -380,6 +437,38 @@
                         </select>
                     </div>
                 </div>
+
+                <div class="row">
+                    <div class="col-md-4">
+                        <b>Systémy</b><br />
+                        <input type="text" id="appSystemsFilter" />
+                        <select multiple name="AllAppSystems" id="AllAppSystems" class="categories">
+                            @foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Where(p => !Model.SelectedAppSystemsID.Contains(p.ID)).Select(aps => aps))
+                            {
+                                <option value="@appSystem.ID">@appSystem.Name</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="button" id="addAppSystems" value=">" /><br />
+                        <input type="button" id="removeAppSystems" value="<" />
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <b>Vybrané systémy</b><br />
+                        <select multiple name="SelectedAppSystemID" id="SelectedAppSystems" class="categories">
+                            @foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Where(p => Model.SelectedAppSystemsID.Contains(p.ID)).Select(p => p))
+                            {
+                                <option value="@appSystem.ID">@appSystem.Name</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+
 
 
             </div>
