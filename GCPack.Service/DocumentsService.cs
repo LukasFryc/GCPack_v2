@@ -129,6 +129,7 @@ namespace GCPack.Service
             document.SelectedAppSystemsID = documentsRepository.GetAppSystemsFromDocument(documentId);
             document.SelectedProjectsID = documentsRepository.GetAppProjectsFromDocument(documentId);
             document.SelectedDivisionsID = documentsRepository.GetAppDivisionsFromDocument(documentId);
+            document.SelectedWorkplacesID = documentsRepository.GetWorkplacesFromDocument(documentId);
             return document;
         }
 

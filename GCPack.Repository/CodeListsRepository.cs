@@ -197,5 +197,52 @@ namespace GCPack.Repository
 
             }
         }
+
+        public ICollection<WorkplaceModel> GetWorkplaces()
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return Mapper.Map<ICollection<WorkplaceModel>>(db.Workplaces.Select(d => d).OrderBy(d => d.Name));
+            }
+        }
+
+        public WorkplaceModel GetWorkplace(int id)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return Mapper.Map<WorkplaceModel>(db.Workplaces.Where(d => d.ID == id).Select(d => d).FirstOrDefault());
+            }
+        }
+
+        public WorkplaceModel WorkplaceSave(WorkplaceModel workplace)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                if (workplace.ID == 0)
+                {
+                    var dbCodeList = db.Workplaces.Add(Mapper.Map<Workplace>(workplace));
+                    db.SaveChanges();
+                    workplace.ID = dbCodeList.ID;
+                }
+                else
+                {
+                    var dbCodeList = db.Workplaces.Where(d => d.ID == workplace.ID).FirstOrDefault();
+                    Mapper.Map(workplace, dbCodeList);
+                    db.SaveChanges();
+                }
+            }
+            return workplace;
+        }
+
+        public void WorkplaceDelete(int id)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                db.Workplaces.RemoveRange(db.Workplaces.Where(d => d.ID == id));
+                db.SaveChanges();
+
+
+            }
+        }
     }
 }

@@ -42,6 +42,14 @@ namespace GCPack.Repository.Interfaces
 
         void DivisionDelete(int id);
 
+        // Workplace
+        ICollection<WorkplaceModel> GetWorkplaces();
+
+        WorkplaceModel GetWorkplace(int id);
+
+        WorkplaceModel WorkplaceSave(WorkplaceModel workplace);
+
+        void WorkplaceDelete(int id);
 
     }
 }

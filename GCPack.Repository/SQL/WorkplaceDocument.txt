@@ -1,0 +1,35 @@
+﻿USE [GCPack_v_3_0]
+GO
+
+/****** Object:  Table [dbo].[WorkplaceDocument]    Script Date: 15. 8. 2017 11:07:54 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[WorkplaceDocument](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[WorkplaceID] [int] NOT NULL,
+	[DocumentID] [int] NOT NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[WorkplaceDocument]  WITH CHECK ADD  CONSTRAINT [FK_WorkplaceDocument_Document] FOREIGN KEY([DocumentID])
+REFERENCES [dbo].[Document] ([ID])
+GO
+
+ALTER TABLE [dbo].[WorkplaceDocument] CHECK CONSTRAINT [FK_WorkplaceDocument_Document]
+GO
+
+ALTER TABLE [dbo].[WorkplaceDocument]  WITH CHECK ADD  CONSTRAINT [FK_WorkplaceDocument_Workplace] FOREIGN KEY([WorkplaceID])
+REFERENCES [dbo].[Workplace] ([ID])
+GO
+
+ALTER TABLE [dbo].[WorkplaceDocument] CHECK CONSTRAINT [FK_WorkplaceDocument_Workplace]
+GO

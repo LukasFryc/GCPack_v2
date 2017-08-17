@@ -161,6 +161,7 @@ namespace GCPack.Web.Controllers
             ViewBag.Divisions = codeListService.GetDivisions();
             ViewBag.DocumentTypes = documentService.GetDocumentTypes();
             ViewBag.JobPositions = userService.GetJobPositions();
+            ViewBag.Workplaces = codeListService.GetWorkplaces();
 
         }
 

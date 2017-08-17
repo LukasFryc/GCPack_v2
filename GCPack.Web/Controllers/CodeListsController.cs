@@ -194,6 +194,36 @@ namespace GCPack.Web.Controllers
             return RedirectToAction("DivisionIndex");
         }
 
+        public ActionResult WorkplaceIndex()
+        {
+            ICollection<WorkplaceModel> workplaces = codeListsService.GetWorkplaces();
+            return View(workplaces);
+        }
+        public ActionResult WorkplaceEdit(int ID)
+        {
+            ViewBag.Title = "Editace číselníku pracovní místa";
+            WorkplaceModel workplace = codeListsService.GetWorkplace(ID);
+            return View(workplace);
+        }
+
+        public ActionResult WorkplaceAdd()
+        {
+            ViewBag.Title = "Nová položka pracovního místa";
+            return View("WorkplaceEdit", new WorkplaceModel());
+        }
+
+
+        public ActionResult WorkplaceSave(WorkplaceModel workplace)
+        {
+            codeListsService.WorkplaceSave(workplace);
+            return RedirectToAction("WorkplaceIndex");
+        }
+
+        public ActionResult WorkplaceDelete(int id)
+        {
+            codeListsService.WorkplaceDelete(id);
+            return RedirectToAction("WorkplaceIndex");
+        }
 
     }
 }

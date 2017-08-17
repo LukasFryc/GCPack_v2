@@ -48,6 +48,8 @@ namespace GCPack.Repository
         public virtual DbSet<ProjectDocument> ProjectDocuments { get; set; }
         public virtual DbSet<SystemDocument> SystemDocuments { get; set; }
         public virtual DbSet<DocumentState> DocumentStates { get; set; }
+        public virtual DbSet<Workplace> Workplaces { get; set; }
+        public virtual DbSet<WorkplaceDocument> WorkplaceDocuments { get; set; }
     
         public virtual int GetDocuments(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage)
         {

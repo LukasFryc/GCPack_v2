@@ -33,6 +33,8 @@ namespace GCPack.Repository.Interfaces
         ICollection<int> GetAppSystemsFromDocument(int documentId);
         ICollection<int> GetAppProjectsFromDocument(int documentId);
         ICollection<int> GetAppDivisionsFromDocument(int documentId);
+
+        ICollection<int> GetWorkplacesFromDocument(int documentId);
         void SaveListCodes(DocumentModel document);
     }
 }

@@ -1,0 +1,29 @@
+﻿@model GCPack.Model.WorkplaceModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("WorkplaceSave", "CodeLists", FormMethod.Post))
+{
+    <div class="container">
+        <input type="hidden" name="ID" value="@Model.ID" />
+        <div class="row">   
+            <div class="col-md-2">Kód</div>
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Code, new { htmlAttributes = new { @class = "form-control", @placeholder = "Kód pracoviště" } })
+            </div>
+         </div>
+        <div class="row">
+            <div class="col-md-2">Název</div>
+            <div class="col-md-6">
+                @Html.EditorFor(m => m.Name, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název pracoviště" } })
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2"><input type="submit" class="btn btn-success" value="Uložit a zavřít" /></div>
+        </div>
+    </div>
+}
+
+
