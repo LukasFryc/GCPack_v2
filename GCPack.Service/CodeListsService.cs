@@ -96,5 +96,25 @@ namespace GCPack.Service
         {
             codeListsRepository.DivisionDelete(id);
         }
+
+        public ICollection<WorkplaceModel> GetWorkplaces()
+        {
+            return codeListsRepository.GetWorkplaces();
+        }
+
+        public WorkplaceModel GetWorkplace(int id)
+        {
+            return codeListsRepository.GetWorkplace(id);
+        }
+
+        public WorkplaceModel WorkplaceSave(WorkplaceModel workplace)
+        {
+            return codeListsRepository.WorkplaceSave(workplace);
+        }
+
+        public void WorkplaceDelete(int id)
+        {
+            codeListsRepository.WorkplaceDelete(id);
+        }
     }
 }

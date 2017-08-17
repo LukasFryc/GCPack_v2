@@ -144,6 +144,12 @@
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="UsersRepository.cs" />
+    <Compile Include="Workplace.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
+    <Compile Include="WorkplaceDocument.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />
@@ -181,6 +187,8 @@
     <Content Include="SQL\JobPositionDocument.txt" />
     <Content Include="SQL\JobPostionUser.txt" />
     <Content Include="SQL\remove_column_jobpositionID_in_users.txt" />
+    <Content Include="SQL\Workplace.txt" />
+    <Content Include="SQL\WorkplaceDocument.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

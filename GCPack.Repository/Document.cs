@@ -26,6 +26,7 @@ namespace GCPack.Repository
             this.DivisionDocuments = new HashSet<DivisionDocument>();
             this.ProjectDocuments = new HashSet<ProjectDocument>();
             this.SystemDocuments = new HashSet<SystemDocument>();
+            this.WorkplaceDocuments = new HashSet<WorkplaceDocument>();
         }
     
         public int ID { get; set; }
@@ -63,5 +64,7 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SystemDocument> SystemDocuments { get; set; }
         public virtual DocumentState DocumentState { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<WorkplaceDocument> WorkplaceDocuments { get; set; }
     }
 }

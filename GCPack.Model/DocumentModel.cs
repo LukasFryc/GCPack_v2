@@ -55,6 +55,8 @@ namespace GCPack.Model
         public ICollection<int> SelectedProjectsID { get; set; } // všechny vybrané projekty
         public ICollection<int> SelectedDivisionsID { get; set; } // všechny vybrané střediska
         public ICollection<int> SelectedAppSystemsID { get; set; } // všechny vybrané systémy
+
+        public ICollection<int> SelectedWorkplacesID { get; set; } // všechny vybrané pracovní místa
     }
 
 

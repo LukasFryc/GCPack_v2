@@ -25,6 +25,7 @@ namespace GCPack.Repository.Mappers
             CreateMap<AppSystem, AppSystemModel>().ReverseMap();
             CreateMap<Division, DivisionModel>().ReverseMap();
             CreateMap<Project, ProjectModel>().ReverseMap();
+            CreateMap<Workplace, WorkplaceModel>().ReverseMap();
             CreateMap<UserModel, User>().ReverseMap();
             CreateMap<UserRoleModel, UserRole>().ReverseMap();
             CreateMap<RoleModel, Role>().ReverseMap();

@@ -65,12 +65,12 @@
           <Property Name="AuthorizinOfficerID" Type="int" />
           <Property Name="OrderBy" Type="int" />
           <Property Name="ValidityInYears" Type="int" Nullable="false" />
-          <Property Name="IsRequiredFillListOfPersons" Type="bit" Nullable="false" />
           <Property Name="AutomaticNumberingOfDocuments" Type="bit" Nullable="false" />
           <Property Name="NumberingOfDocumentPrefix" Type="varchar" MaxLength="2" />
           <Property Name="NumberingOfDocumentSeparator" Type="varchar" MaxLength="1" />
           <Property Name="NumberingOfDocumentLength" Type="tinyint" />
           <Property Name="LastNumberOfDocument" Type="int" />
+          <Property Name="IsRequiredFillListOfPersons" Type="bit" Nullable="false" />
           <Property Name="DocumentEfficiencyDays" Type="int" />
           <Property Name="InformedInDays" Type="int" />
         </EntityType>
@@ -212,6 +212,22 @@
           <Property Name="UserRoleId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="RoleId" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Workplace">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Code" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WorkplaceDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="WorkplaceID" Type="int" Nullable="false" />
+          <Property Name="DocumentID" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_DivisionCategory_Division">
           <End Role="Division" Type="Self.Division" Multiplicity="1" />
@@ -465,6 +481,30 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_WorkplaceDocument_Document">
+          <End Role="Document" Type="Self.Document" Multiplicity="1" />
+          <End Role="WorkplaceDocument" Type="Self.WorkplaceDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WorkplaceDocument">
+              <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkplaceDocument_Workplace">
+          <End Role="Workplace" Type="Self.Workplace" Multiplicity="1" />
+          <End Role="WorkplaceDocument" Type="Self.WorkplaceDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workplace">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WorkplaceDocument">
+              <PropertyRef Name="WorkplaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="GetDocuments" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="forUserID" Type="int" Mode="In" />
           <Parameter Name="documentID" Type="int" Mode="In" />
@@ -498,6 +538,8 @@
           <EntitySet Name="User" EntityType="Self.User" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserDocument" EntityType="Self.UserDocument" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRoles" EntityType="Self.UserRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Workplace" EntityType="Self.Workplace" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="WorkplaceDocument" EntityType="Self.WorkplaceDocument" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_DivisionCategory_Division" Association="Self.FK_DivisionCategory_Division">
             <End Role="Division" EntitySet="Division" />
             <End Role="DivisionDocument" EntitySet="DivisionDocument" />
@@ -581,6 +623,14 @@
           <AssociationSet Name="FK_UserRoles_Users" Association="Self.FK_UserRoles_Users">
             <End Role="User" EntitySet="User" />
             <End Role="UserRoles" EntitySet="UserRoles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkplaceDocument_Document" Association="Self.FK_WorkplaceDocument_Document">
+            <End Role="Document" EntitySet="Document" />
+            <End Role="WorkplaceDocument" EntitySet="WorkplaceDocument" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkplaceDocument_Workplace" Association="Self.FK_WorkplaceDocument_Workplace">
+            <End Role="Workplace" EntitySet="Workplace" />
+            <End Role="WorkplaceDocument" EntitySet="WorkplaceDocument" />
           </AssociationSet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -723,6 +773,16 @@
             <Parameter Name="Page" Mode="In" Type="Int32" />
             <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="Workplaces" EntityType="GCPack.Workplace" />
+          <EntitySet Name="WorkplaceDocuments" EntityType="GCPack.WorkplaceDocument" />
+          <AssociationSet Name="FK_WorkplaceDocument_Document" Association="GCPack.FK_WorkplaceDocument_Document">
+            <End Role="Document" EntitySet="Documents" />
+            <End Role="WorkplaceDocument" EntitySet="WorkplaceDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WorkplaceDocument_Workplace" Association="GCPack.FK_WorkplaceDocument_Workplace">
+            <End Role="Workplace" EntitySet="Workplaces" />
+            <End Role="WorkplaceDocument" EntitySet="WorkplaceDocuments" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AppSystem">
           <Key>
@@ -769,6 +829,7 @@
           <NavigationProperty Name="ProjectDocuments" Relationship="GCPack.FK_ProjectDocument_Document" FromRole="Document" ToRole="ProjectDocument" />
           <NavigationProperty Name="SystemDocuments" Relationship="GCPack.FK_SystemCategory_RizeneDokumeny1" FromRole="Document" ToRole="SystemDocument" />
           <NavigationProperty Name="DocumentState" Relationship="GCPack.FK_Documents_State" FromRole="Document" ToRole="DocumentState" />
+          <NavigationProperty Name="WorkplaceDocuments" Relationship="GCPack.FK_WorkplaceDocument_Document" FromRole="Document" ToRole="WorkplaceDocument" />
         </EntityType>
         <EntityType Name="JobPosition">
           <Key>
@@ -1280,6 +1341,49 @@
           <Property Type="String" Name="DocumentStateName" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="DocumentStateCode" Nullable="false" MaxLength="50" />
         </ComplexType>
+        <EntityType Name="Workplace">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Code" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="WorkplaceDocuments" Relationship="GCPack.FK_WorkplaceDocument_Workplace" FromRole="Workplace" ToRole="WorkplaceDocument" />
+        </EntityType>
+        <EntityType Name="WorkplaceDocument">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="WorkplaceID" Type="Int32" Nullable="false" />
+          <Property Name="DocumentID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Document" Relationship="GCPack.FK_WorkplaceDocument_Document" FromRole="WorkplaceDocument" ToRole="Document" />
+          <NavigationProperty Name="Workplace" Relationship="GCPack.FK_WorkplaceDocument_Workplace" FromRole="WorkplaceDocument" ToRole="Workplace" />
+        </EntityType>
+        <Association Name="FK_WorkplaceDocument_Document">
+          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
+          <End Type="GCPack.WorkplaceDocument" Role="WorkplaceDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Document">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WorkplaceDocument">
+              <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WorkplaceDocument_Workplace">
+          <End Type="GCPack.Workplace" Role="Workplace" Multiplicity="1" />
+          <End Type="GCPack.WorkplaceDocument" Role="WorkplaceDocument" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Workplace">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="WorkplaceDocument">
+              <PropertyRef Name="WorkplaceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1547,6 +1651,24 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="Workplaces">
+            <EntityTypeMapping TypeName="GCPack.Workplace">
+              <MappingFragment StoreEntitySet="Workplace">
+                <ScalarProperty Name="Code" ColumnName="Code" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WorkplaceDocuments">
+            <EntityTypeMapping TypeName="GCPack.WorkplaceDocument">
+              <MappingFragment StoreEntitySet="WorkplaceDocument">
+                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
+                <ScalarProperty Name="WorkplaceID" ColumnName="WorkplaceID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

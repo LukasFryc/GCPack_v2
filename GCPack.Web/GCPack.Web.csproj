@@ -304,6 +304,8 @@
     <Content Include="Views\CodeLists\ProjectEdit.cshtml" />
     <Content Include="Views\CodeLists\DivisionIndex.cshtml" />
     <Content Include="Views\CodeLists\DivisionEdit.cshtml" />
+    <Content Include="Views\CodeLists\WorkplaceIndex.cshtml" />
+    <Content Include="Views\CodeLists\WorkplaceEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

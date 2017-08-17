@@ -31,33 +31,7 @@ namespace GCPack.Repository
             }
         }
 
-        public DocumentModel AddDocument(DocumentModel document)
-        {
-            using (GCPackContainer db = new GCPackContainer())
-            {
-                document.Title = (document.Title == null) ? string.Empty : document.Title;
-                document.DocumentNumber = (document.DocumentNumber == null) ? string.Empty : document.DocumentNumber;
-
-                var stateID = db.DocumentStates.Where(s => s.Code == "New").Select(s => s.ID).FirstOrDefault();
-                var documentType = db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID).Select(dt => dt).SingleOrDefault();
-                document.StateID = stateID;
-                var newDocument = db.Documents.Add(Mapper.Map<Document>(document));
-                newDocument.DocumentTypeID = documentType.ID;
-                db.SaveChanges();
-                document.ID = newDocument.ID;
-
-                if (document.JobPositionIDs != null)
-                {
-                    foreach (int jobPositionID in document.JobPositionIDs)
-                    {
-                        db.JobPositionDocuments.Add(new JobPositionDocument() { DocumentId = document.ID, JobPositionId = jobPositionID, Created = DateTime.Now });
-                    }
-                    db.SaveChanges();
-                }
-                
-                return document;
-            }
-        }
+       
 
         // priklad paging 
         public ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter)
@@ -131,6 +105,7 @@ namespace GCPack.Repository
                 db.DivisionDocuments.RemoveRange(db.DivisionDocuments.Where(dd => dd.DocumentID == document.ID));
                 db.SystemDocuments.RemoveRange(db.SystemDocuments.Where(sd => sd.DocumentID == document.ID));
                 db.ProjectDocuments.RemoveRange(db.ProjectDocuments.Where(pd => pd.DocumentID == document.ID));
+                db.WorkplaceDocuments.RemoveRange(db.WorkplaceDocuments.Where(pd => pd.DocumentID == document.ID));
                 db.SaveChanges();
 
                 if (document.SelectedDivisionsID != null)
@@ -154,6 +129,14 @@ namespace GCPack.Repository
                     foreach (int projectID in document.SelectedProjectsID)
                     {
                         db.ProjectDocuments.Add(new ProjectDocument() { ProjectID = projectID, DocumentID = document.ID });
+                    }
+                }
+
+                if (document.SelectedWorkplacesID != null)
+                {
+                    foreach (int workplaceID in document.SelectedWorkplacesID)
+                    {
+                        db.WorkplaceDocuments.Add(new WorkplaceDocument() { WorkplaceID = workplaceID, DocumentID = document.ID });
                     }
                 }
 
@@ -322,6 +305,18 @@ namespace GCPack.Repository
                 db.JobPositionDocuments.RemoveRange(db.JobPositionDocuments.Where(jpd => jpd.DocumentId == documentId));
                 db.SaveChanges();
 
+                db.DivisionDocuments.RemoveRange(db.DivisionDocuments.Where(jpd => jpd.DocumentID == documentId));
+                db.SaveChanges();
+
+                db.ProjectDocuments.RemoveRange(db.ProjectDocuments.Where(jpd => jpd.DocumentID == documentId));
+                db.SaveChanges();
+
+                db.SystemDocuments.RemoveRange(db.SystemDocuments.Where(jpd => jpd.DocumentID == documentId));
+                db.SaveChanges();
+
+                db.WorkplaceDocuments.RemoveRange(db.WorkplaceDocuments.Where(jpd => jpd.DocumentID == documentId));
+                db.SaveChanges();
+
                 db.Documents.Remove(db.Documents.Where(d => d.ID == documentId).SingleOrDefault());
                 db.SaveChanges();
             }
@@ -380,6 +375,35 @@ namespace GCPack.Repository
                 db.SaveChanges();
             }
         }
+
+        public DocumentModel AddDocument(DocumentModel document)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                document.Title = (document.Title == null) ? string.Empty : document.Title;
+                document.DocumentNumber = (document.DocumentNumber == null) ? string.Empty : document.DocumentNumber;
+
+                var stateID = db.DocumentStates.Where(s => s.Code == "New").Select(s => s.ID).FirstOrDefault();
+                var documentType = db.DocumentTypes.Where(dt => dt.ID == document.DocumentTypeID).Select(dt => dt).SingleOrDefault();
+                document.StateID = stateID;
+                var newDocument = db.Documents.Add(Mapper.Map<Document>(document));
+                newDocument.DocumentTypeID = documentType.ID;
+                db.SaveChanges();
+                document.ID = newDocument.ID;
+
+                if (document.JobPositionIDs != null)
+                {
+                    foreach (int jobPositionID in document.JobPositionIDs)
+                    {
+                        db.JobPositionDocuments.Add(new JobPositionDocument() { DocumentId = document.ID, JobPositionId = jobPositionID, Created = DateTime.Now });
+                    }
+                    db.SaveChanges();
+                }
+
+                return document;
+            }
+        }
+
 
         // ulozeni editovaneho dokumentu
         public DocumentModel EditDocument(DocumentModel document)
@@ -462,6 +486,13 @@ namespace GCPack.Repository
                 return numberOfDocument;
         }
 
-
+        public ICollection<int> GetWorkplacesFromDocument(int documentId)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                ICollection<int> WorkplacesID = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().WorkplaceDocuments.Select(sd => sd.WorkplaceID).ToList<int>();
+                return WorkplacesID;
+            }
         }
+    }
 }
