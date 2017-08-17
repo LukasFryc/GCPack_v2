@@ -366,18 +366,20 @@
                         <b>Projekty</b><br />
                         <input type="text" id="projectsFilter" />
                         <select multiple name="AllProjects" id="AllProjects" class="categories">
-                            @foreach (ProjectModel project in ((ICollection< ProjectModel>) ViewBag.Projects).Where (p => !Model.SelectedProjectsID.Contains(p.ID)).Select (p => p))
+                            @if (Model.SelectedProjectsID != null)
                             {
-                                <option value="@project.ID">@project.Name</option>
+                                foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => !Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
+                                {
+                                    <option value="@project.ID">@project.Name</option>
+                                }
                             }
-                        }
-                        else
-                        {
-                            foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Select(p => p))
+                            else
                             {
-                                <option value="@project.ID">@project.Name</option>
+                                foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Select(p => p))
+                                {
+                                    <option value="@project.ID">@project.Name</option>
+                                }
                             }
-                        }
                         </select>
                     </div>
 
@@ -390,9 +392,12 @@
                         <div class="col-md-4">
                             <b>Vybrané projekty</b><br />
                             <select multiple name="SelectedProjectsID" id="SelectedProjects" class="categories">
-                                @foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
+                                @if (Model.SelectedProjectsID != null)
                                 {
-                                    <option value="@project.ID">@project.Name</option>
+                                    foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
+                                    {
+                                        <option value="@project.ID">@project.Name</option>
+                                    }
                                 }
                             </select>
                         </div>
@@ -404,10 +409,20 @@
                         <b>Střediska</b><br />
                         <input type="text" id="divisionsFilter" />
                         <select multiple name="AllDivisions" id="AllDivisions" class="categories">
-                            @foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => !Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
+                        @if (Model.SelectedDivisionsID != null)
+                        {
+                            foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => !Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
                             {
                                 <option value="@division.ID">@division.Name</option>
                             }
+                        }
+                        else
+                        {
+                            foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Select(p => p))
+                            {
+                                <option value="@division.ID">@division.Name</option>
+                            }
+                        }
                         </select>
                     </div>
 
@@ -420,9 +435,12 @@
                     <div class="col-md-4">
                         <b>Vybraná střediska</b><br />
                         <select multiple name="SelectedDivisionsID" id="SelectedDivisions" class="categories">
-                            @foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
+                            @if (Model.SelectedDivisionsID != null)
                             {
-                                <option value="@division.ID">@division.Name</option>
+                                foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
+                                {
+                                    <option value="@division.ID">@division.Name</option>
+                                }
                             }
                         }
                         </select>
