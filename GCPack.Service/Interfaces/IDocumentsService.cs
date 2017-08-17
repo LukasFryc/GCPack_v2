@@ -21,5 +21,7 @@ namespace GCPack.Service.Interfaces
         ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter);
         string GenNumberOfDocument(int documentTypeID);
         DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames);
+        DocumentModel NewVersion(DocumentModel document);
+        void RevisionNoAction(DocumentModel document, int userId);
     }
 }

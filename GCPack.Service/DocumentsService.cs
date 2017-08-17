@@ -24,6 +24,35 @@ namespace GCPack.Service
             this.codeListService = codeListService;
         }
 
+        public void RevisionNoAction(DocumentModel document, int userID)
+        {
+            DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
+            DocumentTypeModel documentTypeModel = documentsRepository.GetDocumentType(document.DocumentTypeID);
+            documentModel.NextReviewDate = DateTime.Now.AddYears(documentTypeModel.ValidityInYears);
+            documentsRepository.EditDocument(documentModel);
+        }
+
+        public DocumentModel NewVersion(DocumentModel document)
+        {
+            // nacte se puvodni dokument
+
+            // kontrola ze puvodni dokument je zaevidovany - pokud ne, tak se nedela nova verze
+
+            // zvysi se issue number o 1
+
+            // zjisti se parentID noveho dokumentu = parentID puvodniho
+            
+            // novy dokument je ve stavu novy
+
+            // u stareho dokumentu se zmeni stav revize na R
+
+            // vymazani typu revize u noveho dokumentu
+
+            // odeslani emailu vsem prirazenym osobam v dokumentu
+
+            return new DocumentModel();
+        }
+
         public string GenNumberOfDocument(int documentTypeID)
         {
             return documentsRepository.GenNumberOfDocument(documentTypeID);
@@ -34,7 +63,7 @@ namespace GCPack.Service
             // metoda pro otestovani odesilani emailu
             int userId = 6;
             UserModel user = userService.GetUser(userId);
-            DocumentModel document = documentsRepository.GetDocument(6013,userId);
+            DocumentModel document = documentsRepository.GetDocument(2015, userId);
             document.EffeciencyDate = DateTime.Now;
 
             mailService.SendEmail("TestovaciEmail", "Odeslani testovaciho emailu", user, document);

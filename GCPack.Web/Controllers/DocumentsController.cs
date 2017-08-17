@@ -135,12 +135,18 @@ namespace GCPack.Web.Controllers
                         case "registerDocument":
                             documentService.RegisterDocument(document, fileNames);
                             break;
+                        case "newVersion":
+                            documentService.NewVersion(document);
+                            break;
+                        case "revisionNoAction":
+                            documentService.RevisionNoAction(document, UserRoles.GetUserId());
+                            break;
                         default:
                             documentService.EditDocument(document, fileNames);
                             break;
                     }
 
-                    
+                       
                     break;
             }
             

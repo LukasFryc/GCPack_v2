@@ -68,6 +68,20 @@
             @Html.EditorFor(m => m.LastNumberOfDocument, new { htmlAttributes = new { @class = "form-control", @placeholder = "Poslední číslo dokumentu" } })
         </div>
     </div>
+
+    <div class="row">
+        <div class="col-md-2">Účinnost dokumentu po schválení ve dnech</div>
+        <div class="col-md-6">
+            @Html.EditorFor(m => m.DocumentEfficiencyDays, new { htmlAttributes = new { @class = "form-control", @placeholder = "Účinnost dokumentu po schválení" } })
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-2">Čas na seznámení ve dnech</div>
+        <div class="col-md-6">
+            @Html.EditorFor(m => m.InformedInDays, new { htmlAttributes = new { @class = "form-control", @placeholder = "Čas na seznámení" } })
+        </div>
+    </div>
     
 
     <div class="row">
