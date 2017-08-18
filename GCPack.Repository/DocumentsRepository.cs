@@ -193,7 +193,8 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ICollection<GetDocuments1_Result> documentsResult = db.GetDocuments1(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100).ToList<GetDocuments1_Result>();
+                
+                ICollection<GetDocuments3_Result> documentsResult = db.GetDocuments3(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID).ToList<GetDocuments3_Result>();
                 
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;

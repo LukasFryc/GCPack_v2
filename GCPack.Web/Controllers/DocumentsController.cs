@@ -34,6 +34,31 @@ namespace GCPack.Web.Controllers
             ICollection<Item> documentTypes = documentService.GetDocumentTypes();
             documentTypes.Add(new Item { ID = 0, OrderBy = 0, Value = "Všechny dokumenty" });
             ViewBag.DocumentTypes = documentTypes.OrderBy(dt => dt.OrderBy);
+
+            ICollection<ProjectModel> projects = new HashSet<ProjectModel>();
+            projects = codeListService.GetProjects();
+            projects.Add(new ProjectModel() { ID = 0, Name = "Všechny projekty", orderBy = 1 });
+            ViewBag.Projects = projects.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
+
+            ICollection<DivisionModel> divisions = new HashSet<DivisionModel>();
+            divisions = codeListService.GetDivisions();
+            divisions.Add(new DivisionModel() { ID = 0, Name = "Všechny střediska", orderBy = 1 });
+            ViewBag.Divisions = divisions.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
+
+            ICollection<AppSystemModel> appSystems = new HashSet<AppSystemModel>();
+            appSystems = codeListService.GetAppSystems();
+            appSystems.Add(new AppSystemModel() { ID = 0, Name = "Všechny systémy", orderBy = 1 });
+            ViewBag.AppSystems = appSystems.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
+
+            ICollection<WorkplaceModel> workplaces = new HashSet<WorkplaceModel>();
+            workplaces = codeListService.GetWorkplaces();
+            workplaces.Add(new WorkplaceModel() { ID = 0, Name = "Všechny pracoviště", orderBy = 1 });
+            ViewBag.Workplaces = workplaces.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
+
+            //@DivisionID int,
+            //@AppSystemID int,
+            //@WorkplaceID int
+
             ViewBag.Message = Message;
             return View(documents);
         }
