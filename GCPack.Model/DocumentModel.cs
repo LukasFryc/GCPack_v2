@@ -12,6 +12,12 @@ namespace GCPack.Model
         User
     }
 
+    // LF doplneno kvuli moznosti filtrace  dokumentu ozncenych priznakem Archived
+    public enum DocumentArchived
+    {
+        Archived = 1
+    }
+
     public class FileItem
     {
         public string Name { get; set; }

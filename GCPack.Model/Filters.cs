@@ -40,6 +40,11 @@ namespace GCPack.Model
         public DateTime ToDateReview { get; set; } // napriklad filtrovani podle datumu revize
         public DateTime FromDateReview { get; set; }
         public int DocumentTypeID { get; set; }
+        public int ProjectID { get; set; }
+        public int DivisionID { get; set; }
+        public int AppSystemID { get; set; }
+        public int WorkplaceID { get; set; }
+
     }
 
 }
