@@ -404,15 +404,26 @@ namespace GCPack.Repository
             }
         }
 
-
-        // ulozeni editovaneho dokumentu
-        public DocumentModel EditDocument(DocumentModel document)
+        public void ChangeRevison(DocumentModel document)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
+                dbDocument.Revision = "R";
+                db.SaveChanges();
+            }
+        }
+            // ulozeni editovaneho dokumentu
+            public DocumentModel EditDocument(DocumentModel document)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
                 var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
                 //int stateID = (int)dbDocument.StateID;
                 document.DocumentTypeID = dbDocument.DocumentTypeID;
+
+                // pokud je jiz vygenerovane cislo dokumentu, tak se vezme z databaze - jinak se necha stavajici
+                document.DocumentNumber = (string.IsNullOrEmpty(document.DocumentNumber)) ? dbDocument.DocumentNumber : document.DocumentNumber;
                 Mapper.Map(document, dbDocument);
                 //dbDocument.StateID = stateID;
                 db.SaveChanges();

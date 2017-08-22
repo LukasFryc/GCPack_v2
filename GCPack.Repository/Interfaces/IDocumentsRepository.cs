@@ -36,5 +36,6 @@ namespace GCPack.Repository.Interfaces
 
         ICollection<int> GetWorkplacesFromDocument(int documentId);
         void SaveListCodes(DocumentModel document);
+        void ChangeRevison(DocumentModel document);
     }
 }

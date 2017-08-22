@@ -24,31 +24,46 @@ namespace GCPack.Service
             this.codeListService = codeListService;
         }
 
-        public void RevisionNoAction(DocumentModel document, int userID)
+        public void RevisionNoAction(DocumentModel document, int userID, ICollection<string> fileNames)
         {
             DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
             DocumentTypeModel documentTypeModel = documentsRepository.GetDocumentType(document.DocumentTypeID);
             documentModel.NextReviewDate = DateTime.Now.AddYears(documentTypeModel.ValidityInYears);
             documentsRepository.EditDocument(documentModel);
+            SaveFiles(document, fileNames);
         }
 
-        public DocumentModel NewVersion(DocumentModel document)
+        public DocumentModel NewVersion(DocumentModel document, int userId, ICollection<string> fileNames)
         {
             // nacte se puvodni dokument
+
+            DocumentModel oldDocument = GetDocument(document.ID, userId);
+            document.ID = 0;
 
             // kontrola ze puvodni dokument je zaevidovany - pokud ne, tak se nedela nova verze
 
             // zvysi se issue number o 1
+            document.IssueNumber = oldDocument.IssueNumber + 1;
 
             // zjisti se parentID noveho dokumentu = parentID puvodniho
-            
+            document.ParentID = oldDocument.ID;
+
             // novy dokument je ve stavu novy
 
+            document.StateID = documentsRepository.GetDocumentState("New");
+
             // u stareho dokumentu se zmeni stav revize na R
+            oldDocument.Revision = "R";
 
             // vymazani typu revize u noveho dokumentu
+            document.Revision = "";
 
             // odeslani emailu vsem prirazenym osobam v dokumentu
+            documentsRepository.ChangeRevison(oldDocument);
+            //EditDocument(oldDocument, null);
+            document = AddDocument(document, fileNames);
+            
+            // preulozit i soubory ???
 
             return new DocumentModel();
         }
@@ -77,13 +92,21 @@ namespace GCPack.Service
 
         // zaevidovani dokumentu
         
-        public DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames)
+        public DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames, int userID)
         {
             // dokument se nastavi na platny
             document.StateID = documentsRepository.GetDocumentState("Registered");
 
-            // vygeneruje se nove cislo dokumentu
-            document.DocumentNumber = GenNumberOfDocument(document.DocumentTypeID);
+            // pokud se jedna o prvni verzi dokumentu, tak se vygeneruje se nove cislo dokumentu
+            if (document.IssueNumber == 1)
+            {
+                document.DocumentNumber = GenNumberOfDocument(document.DocumentTypeID);
+            }
+            else
+            {
+                DocumentModel oldDocument = documentsRepository.GetDocument(document.ParentID, userID);
+                document.DocumentNumber = oldDocument.DocumentNumber;
+            }
 
             // stav revize dokumentu se prepne na P
             document.Revision = "P";
@@ -95,11 +118,11 @@ namespace GCPack.Service
             // nastaveni ucinnosti dokumentu po schvaleni
             document.EffeciencyDate = DateTime.Now.AddDays(documentType.DocumentEfficiencyDays);
 
-            // ulozeni dokumentu
+            // zmena revize dokumentu
             document = EditDocument(document, fileNames);
 
             documentsRepository.SetNumberOfDocument(document.DocumentTypeID);
-
+            SaveFiles(document, fileNames);
             return document;
         }
 
@@ -161,6 +184,8 @@ namespace GCPack.Service
         {
                 documentsRepository.Readed(documentID, userID);
         }
+
+
 
         public DocumentModel AddDocument(DocumentModel document, ICollection<string> files)
         {

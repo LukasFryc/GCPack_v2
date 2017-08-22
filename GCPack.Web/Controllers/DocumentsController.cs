@@ -126,6 +126,8 @@ namespace GCPack.Web.Controllers
             switch (type)
             {
                 case "Add":
+                    // novy dokument ma vzdy cislo vydani 1
+                    document.IssueNumber = 1;
                     documentService.AddDocument(document, fileNames);
                     break;
                 case "Edit":
@@ -133,13 +135,13 @@ namespace GCPack.Web.Controllers
                     switch (Action)
                     {
                         case "registerDocument":
-                            documentService.RegisterDocument(document, fileNames);
+                            documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
                             break;
                         case "newVersion":
-                            documentService.NewVersion(document);
+                            documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
                             break;
                         case "revisionNoAction":
-                            documentService.RevisionNoAction(document, UserRoles.GetUserId());
+                            documentService.RevisionNoAction(document, UserRoles.GetUserId(), fileNames);
                             break;
                         default:
                             documentService.EditDocument(document, fileNames);
