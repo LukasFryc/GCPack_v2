@@ -37,13 +37,18 @@ namespace GCPack.Model
         public string Name { get; set; }
         public string AdministratorName { get; set; }
         public string Number { get; set; }
-        public DateTime ToDateReview { get; set; } // napriklad filtrovani podle datumu revize
-        public DateTime FromDateReview { get; set; }
         public int DocumentTypeID { get; set; }
         public int ProjectID { get; set; }
         public int DivisionID { get; set; }
         public int AppSystemID { get; set; }
         public int WorkplaceID { get; set; }
+
+        public DateTime? EffeciencyDateFrom { get; set; }
+        public DateTime? EffeciencyDateTo { get; set; }
+
+        public DateTime? NextReviewDateFrom { get; set; }
+        public DateTime? NextReviewDateTo { get; set; }
+
 
     }
 

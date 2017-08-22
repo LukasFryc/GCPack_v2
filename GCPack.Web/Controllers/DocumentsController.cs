@@ -115,6 +115,11 @@ namespace GCPack.Web.Controllers
 
         public ActionResult GetDocuments(DocumentFilter filter)
         {
+
+           // filter.EffeciencyDateFrom = string.IsNullOrEmpty(filter.EffeciencyDateFrom.ToString())
+           //? (DateTime?)null
+           //: DateTime.Parse(filter.EffeciencyDateFrom.ToString());
+
             filter.ForUserID = UserRoles.GetUserId();
             ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
             return Json(documents, JsonRequestBehavior.AllowGet);

@@ -37,6 +37,11 @@
                     GetDocuments();
                 });
 
+                $('#EffeciencyDateFrom,#EffeciencyDateTo,#NextReviewDateFrom,#NextReviewDateTo').change(function () {
+                    GetDocuments();
+                });
+                
+
             });
 
         function GetDocuments() {
@@ -46,8 +51,12 @@
                 timeoutHandle = setTimeout(
                     function () {
 
-                        //$('table').children('.data').empty();
-                        $.getJSON(AppRoot + "/documents/getDocuments", {
+                        //var EffeciencyDateFrom = $('#EffeciencyDateFrom').val();
+                        //var EffeciencyDateTo = $('#EffeciencyDateTo').val();
+                        //var NextReviewDateFrom = $('#NextReviewDateFrom').val();
+                        //var NextReviewDateTo = $('#NextReviewDateTo').val();
+
+                        $.post(AppRoot + "/documents/getDocuments", {
                             name: $('#Name').val(),
                             Number: $('#Number').val(),
                             AdministratorName: $('#AdministratorName').val(),
@@ -56,8 +65,13 @@
                             ProjectID: $('#ProjectID').val(),
                             DivisionID: $('#DivisionID').val(),
                             AppSystemID: $('#AppSystemID').val(),
-                            WorkplaceID: $('#WorkplaceID').val()                            
-                        })
+                            WorkplaceID: $('#WorkplaceID').val(),
+                            EffeciencyDateFrom: $('#EffeciencyDateFrom').val(),
+                            EffeciencyDateTo: $('#EffeciencyDateTo').val(),
+                            NextReviewDateFrom: $('#NextReviewDateFrom').val(),
+                            NextReviewDateTo: $('#NextReviewDateTo').val()
+                        } )                      
+                        
                             .done(function (documents) {
                                 $('table .dataRow').remove();
                                 $.each(documents, function (index, doc) {
@@ -104,17 +118,46 @@
 <script>
         $(document).ready(function () {
             $("#section-filter-plus1").on("hide.bs.collapse", function () {
-                $(".btn.btn-success").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
+                $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
                 $("#DocumentTypeID").val(0);
                 $("#ProjectID").val(0);
                 $("#DivisionID").val(0);
                 $("#AppSystemID").val(0);
                 $("#WorkplaceID").val(0);
+             
+                //$(".btn.btn-success").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
+                //$("#EffeciencyDateFrom").val('');
+                //$("#EffeciencyDateTo").val('');
+                //$("#NextReviewDateFrom").val('');
+                //$("#NextReviewDateTo").val('');
+
+
+                //$("#section-filter-plus2").trigger("hide.bs.collapse");
+
                 GetDocuments();
+             
+            });
+
+            //$("#section-filter-plus1").on("show.bs.collapse", function () {
+            //    $('#section-filter-plus2').show();
+            //}
+
+            $("#section-filter-plus2").on("hide.bs.collapse", function () {
+
+                $("#btnCollapse2").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
+
+                $("#EffeciencyDateFrom").val('');
+                $("#EffeciencyDateTo").val('');
+                $("#NextReviewDateFrom").val('');
+                $("#NextReviewDateTo").val('');
+                //$('#section-filter-plus2').hide();
+                GetDocuments();
+
+
             });
 
             $("#section-filter-plus1").on("show.bs.collapse", function () {
-                $(".btn.btn-success").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
+                $(".btn.btn-primary").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
             });
 
             $('#divisionsFilter').keyup(function () {
@@ -144,8 +187,40 @@
                     }
                 })
             };
+            // http://api.jqueryui.com/datepicker/#option-navigationAsDateFormat
+            $("#EffeciencyDateFrom").datepicker();
+            $("#EffeciencyDateTo").datepicker();
+            $("#NextReviewDateFrom").datepicker();
+            $("#NextReviewDateTo").datepicker();
+
+            //https://stackoverflow.com/questions/494958/how-do-i-localize-the-jquery-ui-datepicker
+            $.datepicker.regional['cs'] = {
+                closeText: 'Zavřít',
+                prevText: '&#x3c;Dříve',
+                nextText: 'Později&#x3e;',
+                currentText: 'Nyní',
+                monthNames: ['leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen',
+                    'září', 'říjen', 'listopad', 'prosinec'
+                ],
+                monthNamesShort: ['led', 'úno', 'bře', 'dub', 'kvě', 'čer', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro'],
+                dayNames: ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'],
+                dayNamesShort: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+                dayNamesMin: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+                weekHeader: 'Týd',
+                dateFormat: 'dd/mm/yy',
+                firstDay: 1,
+                isRTL: false,
+                showMonthAfterYear: false,
+                yearSuffix: ''
+            };
+
+            $.datepicker.setDefaults($.datepicker.regional['cs']);
+
+
         });
 
+
+       
 
       
 
@@ -163,7 +238,7 @@
         <label for="AdministratorName">Administrátor</label>
     </div>
     <div class="col-md-2">
-        <button type="button" class="btn btn-success" data-toggle="collapse" data-target="#section-filter-plus1">
+        <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
             <span class="glyphicon glyphicon-collapse-down"></span> +
         </button>
     </div>
@@ -201,6 +276,11 @@
         <div class="col-md-2">
             <label for="WorkplaceID">Pracoviště</label>
         </div>
+        <div class="col-md-2">
+            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
     </div>
 
     <div class="row">
@@ -222,8 +302,13 @@
             workplacesFilter
             
         </div>
+        <div class="col-md-2">
+         
 
+        </div>
     </div>
+
+
 
     <div class="row">
         <div class="col-md-2">
@@ -246,6 +331,57 @@
         </div>
 
     </div>
+  
+
+</div>
+
+<div id="section-filter-plus2" class="collapse">
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <label for="EffeciencyDateFrom">Datum účinnosti od</label>
+
+        </div>
+
+        <div class="col-md-2">
+            <label for="EffeciencyDateTo">Datum účinnosti do</label>
+
+        </div>
+
+        <div class="col-md-2">
+            <label for="NextReviewDateFrom">Příští datum přezkoumání od</label>
+
+        </div>
+
+        <div class="col-md-2">
+            <label for="NextReviewDateTo">Příští datum přezkoumání do</label>
+        </div>
+
+    </div>
+
+
+    <div class="row">
+
+        <div class="col-md-2">
+            <input type="text" id="EffeciencyDateFrom" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <input type="text" id="EffeciencyDateTo" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <input type="text" id="NextReviewDateFrom" class="form-control" />
+        </div>
+
+        <div class="col-md-2">
+            <input type="text" id="NextReviewDateTo" class="form-control" />
+        </div>
+
+    </div>
+
+
 </div>
 
 <table class="table" style="margin-top:20px">

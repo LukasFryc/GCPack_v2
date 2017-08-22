@@ -63,6 +63,8 @@ namespace GCPack.Model
         public ICollection<int> SelectedAppSystemsID { get; set; } // všechny vybrané systémy
 
         public ICollection<int> SelectedWorkplacesID { get; set; } // všechny vybrané pracovní místa
+
+        public bool Archived { get; set; } // 0 - neni v archivu, 1 je v archivu
     }
 
 
