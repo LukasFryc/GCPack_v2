@@ -130,6 +130,10 @@ namespace GCPack.Service
             document.SelectedProjectsID = documentsRepository.GetAppProjectsFromDocument(documentId);
             document.SelectedDivisionsID = documentsRepository.GetAppDivisionsFromDocument(documentId);
             document.SelectedWorkplacesID = documentsRepository.GetWorkplacesFromDocument(documentId);
+
+            // nacteni uzivatelu 
+            document.UsersInDocument = documentsRepository.GetUsersInDocument(documentId);
+
             return document;
         }
 
