@@ -64,7 +64,6 @@ namespace GCPack.Model
         public ICollection<int> SelectedWorkplacesID { get; set; } // všechny vybrané pracovní místa
         public int IssueNumber { get; set; } // číslo vydání
         public int ParentID { get; set; }   // odkaz na předchozího 
-
     }
 
 

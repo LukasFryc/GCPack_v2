@@ -44,7 +44,6 @@ namespace GCPack.Model
         public int DivisionID { get; set; }
         public int AppSystemID { get; set; }
         public int WorkplaceID { get; set; }
-
     }
 
 }

@@ -178,7 +178,7 @@ namespace GCPack.Repository
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetDocuments2", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter);
         }
     
-        public virtual ObjectResult<GetDocuments3_Result> GetDocuments3(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage, Nullable<int> projectID, Nullable<int> divisionID, Nullable<int> appSystemID, Nullable<int> workplaceID)
+        public virtual int GetDocuments3(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage, Nullable<int> projectID, Nullable<int> divisionID, Nullable<int> appSystemID, Nullable<int> workplaceID)
         {
             var forUserIDParameter = forUserID.HasValue ?
                 new ObjectParameter("forUserID", forUserID) :
@@ -232,7 +232,64 @@ namespace GCPack.Repository
                 new ObjectParameter("WorkplaceID", workplaceID) :
                 new ObjectParameter("WorkplaceID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocuments3_Result>("GetDocuments3", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter, divisionIDParameter, appSystemIDParameter, workplaceIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetDocuments3", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter, divisionIDParameter, appSystemIDParameter, workplaceIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocuments4_Result> GetDocuments4(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage, Nullable<int> projectID, Nullable<int> divisionID, Nullable<int> appSystemID, Nullable<int> workplaceID)
+        {
+            var forUserIDParameter = forUserID.HasValue ?
+                new ObjectParameter("forUserID", forUserID) :
+                new ObjectParameter("forUserID", typeof(int));
+    
+            var documentIDParameter = documentID.HasValue ?
+                new ObjectParameter("documentID", documentID) :
+                new ObjectParameter("documentID", typeof(int));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var numberParameter = number != null ?
+                new ObjectParameter("Number", number) :
+                new ObjectParameter("Number", typeof(string));
+    
+            var administratorParameter = administrator != null ?
+                new ObjectParameter("Administrator", administrator) :
+                new ObjectParameter("Administrator", typeof(string));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("OrderBy", orderBy) :
+                new ObjectParameter("OrderBy", typeof(string));
+    
+            var documentTypeIDParameter = documentTypeID.HasValue ?
+                new ObjectParameter("DocumentTypeID", documentTypeID) :
+                new ObjectParameter("DocumentTypeID", typeof(int));
+    
+            var pageParameter = page.HasValue ?
+                new ObjectParameter("Page", page) :
+                new ObjectParameter("Page", typeof(int));
+    
+            var itemsPerPageParameter = itemsPerPage.HasValue ?
+                new ObjectParameter("ItemsPerPage", itemsPerPage) :
+                new ObjectParameter("ItemsPerPage", typeof(int));
+    
+            var projectIDParameter = projectID.HasValue ?
+                new ObjectParameter("ProjectID", projectID) :
+                new ObjectParameter("ProjectID", typeof(int));
+    
+            var divisionIDParameter = divisionID.HasValue ?
+                new ObjectParameter("divisionID", divisionID) :
+                new ObjectParameter("divisionID", typeof(int));
+    
+            var appSystemIDParameter = appSystemID.HasValue ?
+                new ObjectParameter("appSystemID", appSystemID) :
+                new ObjectParameter("appSystemID", typeof(int));
+    
+            var workplaceIDParameter = workplaceID.HasValue ?
+                new ObjectParameter("workplaceID", workplaceID) :
+                new ObjectParameter("workplaceID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocuments4_Result>("GetDocuments4", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter, divisionIDParameter, appSystemIDParameter, workplaceIDParameter);
         }
     }
 }

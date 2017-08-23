@@ -14,9 +14,9 @@
             $('#Action').val($(this).prop("id"));
         });
 
-        $("#EffeciencyDate").datepicker();
-        $("#ReviewDate").datepicker();
-        $("#NextReviewDate").datepicker();
+        $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
+        $("#ReviewDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
+        $("#NextReviewDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
         $("#tabs").tabs();
 
         $('#filter').keyup(function () {
@@ -181,7 +181,7 @@
                     <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
                     <div class="col-md-4">
                         @Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })
+                        
                     </div>
                 </div>
                 <div class="row">
