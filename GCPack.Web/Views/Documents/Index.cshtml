@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<GCPack.Model.DocumentModel>
 
+
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -89,10 +90,10 @@
                                         '<td> ' + doc.DocumentNumber + '</td>' +
                                         '<td> ' + dateStr + '</td>' +
                                         '<td> ' + doc.DocumentAdministrator + '</td>' +
-                                        '<td> <A class="btn btn-default btn-sm" href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
-                                        '">Upravit</A> <A class="btn btn-default btn-sm" href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID +
-                                        '">Zobrazit</A> <A class="btn btn-default btn-sm" href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
-                                        '">Smazat</A> </td>'
+                                        '<td> <A href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
+                                        '"><span class="glyphicon glyphicon-edit"></span></A> <A href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID +
+                                        '"><span class="glyphicon glyphicon-eye-open"></span></A> <A href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
+                                        '"><span class="glyphicon glyphicon-trash"></span></A></td>'
                                     );
                                 });
 
@@ -113,13 +114,23 @@
 <div style="position:relative">
     <div id="success-alert" class="alert alert-success" style="display:none;position:absolute;top:10px;right:0px"></div>
 </div>
-<h2>Dokumenty</h2>
+
+
+<div class="row" style="padding-top:5px; padding-bottom:5px">
+    <div class="col-md-10">
+        <h2>Dokumenty</h2>      
+    </div>
+    
+    <div class="col-md-2">
+       <img src="~/Images/GCpack.gif" class="img-responsive" alt="GC pack logo" width="106" height="57">
+    </div>
+</div>
 
 <script>
         $(document).ready(function () {
             $("#section-filter-plus1").on("hide.bs.collapse", function () {
                 $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
-                $("#DocumentTypeID").val(0);
+                //$("#DocumentTypeID").val(0);
                 $("#ProjectID").val(0);
                 $("#DivisionID").val(0);
                 $("#AppSystemID").val(0);
@@ -157,6 +168,10 @@
             });
 
             $("#section-filter-plus1").on("show.bs.collapse", function () {
+                $(".btn.btn-primary").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
+            });
+
+            $("#section-filter-plus2").on("show.bs.collapse", function () {
                 $(".btn.btn-primary").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
             });
 
@@ -226,161 +241,166 @@
 
 
 </script>
-
-<div class="row">
-    <div class="col-md-2">
-        <label for="Name">Název dokumentu</label>
-    </div>
-    <div class="col-md-2">
-        <label for="Number">Číslo dokumentu</label>
-    </div>
-    <div class="col-md-2">
-        <label for="AdministratorName">Administrátor</label>
-    </div>
-    <div class="col-md-2">
-        <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
-            <span class="glyphicon glyphicon-collapse-down"></span> +
-        </button>
-    </div>
-</div>
-<div class="row">
-    <div class="col-md-2">
-        <input class="filter" type="text" id="Name" />
-    </div>
-    <div class="col-md-2">
-        <input class="filter" type="text" id="Number" />
-    </div>
-    <div class="col-md-2">
-        <input class="filter" type="text" id="AdministratorName" />
-    </div>
-    <div class="col-md-2">
-    </div>
-</div>
-
-<div id="section-filter-plus1" class="collapse">
+<div style="background-color:#D1D1D1; padding-left:5px; padding-top:5px" >
 
     <div class="row">
+        <div class="col-md-2">
+            <label for="Number">Název</label>
+        </div>
+        <div class="col-md-2">
+            <label for="Name">Číslo</label>
+        </div>
+        <div class="col-md-2">
+            <label for="AdministratorName">Správce</label>
+        </div>
         <div class="col-md-2">
             <label for="DocumentTypeID">Typ dokumentu</label>
         </div>
         <div class="col-md-2">
-            <label for="ProjectID">Project</label>
-        </div>
-
-        <div class="col-md-2">
-            <label for="DivisionID">Středisko</label>
-        </div>
-        <div class="col-md-2">
-            <label for="AppSystemID">Systém</label>
-        </div>
-        <div class="col-md-2">
-            <label for="WorkplaceID">Pracoviště</label>
-        </div>
-        <div class="col-md-2">
-            <button type="button" class="btn btn-primary" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
                 <span class="glyphicon glyphicon-collapse-down"></span> +
             </button>
         </div>
+        <div class="col-md-2">
+        </div>
     </div>
-
     <div class="row">
         <div class="col-md-2">
+            <input class="filter form-control" type="text" id="Name" />
         </div>
         <div class="col-md-2">
-            <input type="text" id="projectsFilter" />
-        </div>
-
-        <div class="col-md-2">
-            divisionsFilter
-        </div>
-
-        <div class="col-md-2">
-            appSytemsFilter
-        </div>
-
-        <div class="col-md-2">
-            workplacesFilter
-            
+            <input class="filter form-control" type="text" id="Number" />
         </div>
         <div class="col-md-2">
-         
+            <input class="filter form-control" type="text" id="AdministratorName" />
+        </div>
+        <div class="col-md-2">
+            @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "form-control" })
+        </div>
+        <div class="col-md-2">
 
         </div>
     </div>
 
+    <div id="section-filter-plus1" class="collapse">
 
+        <div class="row">
 
-    <div class="row">
-        <div class="col-md-2">
-            @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"))
-        </div>
-        <div class="col-md-2">
-            @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"))
-        </div>
+            <div class="col-md-2">
+                <label for="ProjectID">Project</label>
+            </div>
 
-        <div class="col-md-2">
-            @Html.DropDownList("DivisionID", new SelectList(ViewBag.Divisions, "ID", "Name"))
-        </div>
-
-        <div class="col-md-2">
-            @Html.DropDownList("AppSystemID", new SelectList(ViewBag.AppSystems, "ID", "Name"))
-        </div>
-
-        <div class="col-md-2">
-            @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"))
-        </div>
-
-    </div>
-  
-
-</div>
-
-<div id="section-filter-plus2" class="collapse">
-
-    <div class="row">
-
-        <div class="col-md-2">
-            <label for="EffeciencyDateFrom">Datum účinnosti od</label>
-
+            <div class="col-md-2">
+                <label for="DivisionID">Středisko</label>
+            </div>
+            <div class="col-md-2">
+                <label for="AppSystemID">Systém</label>
+            </div>
+            <div class="col-md-2">
+                <label for="WorkplaceID">Pracoviště</label>
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
+                    <span class="glyphicon glyphicon-collapse-down"></span> +
+                </button>
+            </div>
         </div>
 
-        <div class="col-md-2">
-            <label for="EffeciencyDateTo">Datum účinnosti do</label>
+        <div class="row">
+            <div class="col-md-2">
+                <input type="text" id="projectsFilter" placeholder="Filtr projektů" class="form-control" />
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" id="divisionsFilter" placeholder="Filtr středisek" class="form-control" />
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" id="appSystemsFilter" placeholder="Filtr systémů" class="form-control" />
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" id="workplacesFilter" placeholder="Filtr prac. míst" class="form-control" />
+            </div>
+            <div class="col-md-2">
+
+
+            </div>
+        </div>
+
+
+
+        <div class="row">
+
+            <div class="col-md-2">
+                @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.DropDownList("DivisionID", new SelectList(ViewBag.Divisions, "ID", "Name"), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.DropDownList("AppSystemID", new SelectList(ViewBag.AppSystems, "ID", "Name"), new { @class = "form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "form-control" })
+            </div>
 
         </div>
 
-        <div class="col-md-2">
-            <label for="NextReviewDateFrom">Příští datum přezkoumání od</label>
-
-        </div>
-
-        <div class="col-md-2">
-            <label for="NextReviewDateTo">Příští datum přezkoumání do</label>
-        </div>
-
-    </div>
-
-
-    <div class="row">
-
-        <div class="col-md-2">
-            <input type="text" id="EffeciencyDateFrom" class="form-control" />
-        </div>
-
-        <div class="col-md-2">
-            <input type="text" id="EffeciencyDateTo" class="form-control" />
-        </div>
-
-        <div class="col-md-2">
-            <input type="text" id="NextReviewDateFrom" class="form-control" />
-        </div>
-
-        <div class="col-md-2">
-            <input type="text" id="NextReviewDateTo" class="form-control" />
-        </div>
 
     </div>
 
+    <div id="section-filter-plus2" class="collapse">
+
+        <div class="row">
+
+            <div class="col-md-2">
+                <label for="EffeciencyDateFrom">Datum účinnosti</label>
+
+            </div>
+
+            <div class="col-md-2">
+                @*<label for="EffeciencyDateTo">Datum účinnosti do</label>*@
+
+            </div>
+
+            <div class="col-md-4">
+                <label for="NextReviewDateFrom">Příští datum přezkoumání</label>
+
+            </div>
+
+            <div class="col-md-2">
+                @*<label for="NextReviewDateTo">Příští datum přezkoumání do</label>*@
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div class="col-md-2">
+                <input type="text" id="EffeciencyDateFrom" class="form-control" placeholder="Od" />
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" id="EffeciencyDateTo" class="form-control" placeholder="Do" />
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" id="NextReviewDateFrom" class="form-control" placeholder="Od" />
+            </div>
+
+            <div class="col-md-2">
+                <input type="text" id="NextReviewDateTo" class="form-control" placeholder="Do" />
+            </div>
+
+        </div>
+
+
+    </div>
 
 </div>
 

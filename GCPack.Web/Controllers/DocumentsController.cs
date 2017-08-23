@@ -26,12 +26,32 @@ namespace GCPack.Web.Controllers
 
         // GET: Documents
         [AuthorizeAttributeGC(Roles = "user,admin,supervisor,poweruser")]
-        public ActionResult Index(string Message)
+        public ActionResult Index(int? DocumentTypeID, string Message)
         {
             // TODO: dopsat filtrovani - pridat do filtru userId pro ktereho se vyberou pouze jeho dokumenty
             ICollection<DocumentModel> documents = new HashSet<DocumentModel>();
-            
+
             ICollection<Item> documentTypes = documentService.GetDocumentTypes();
+            
+
+            if (DocumentTypeID != null) {
+
+                // TODO: Zvazit upravu cislenikovych trid o dedeni z tridy item
+                // TODO: Napreklad pri volani funkce documentService.GetDocumentTypes se varci IColection<Item>
+                // TODO: zatimco documentService.GetDocumentType vraci DocumentTypeModel
+                // TODO: zvazit zda ciselnikove tridy by nemel dedti z obecne tridy Item, je zde samozrejme problem 
+                // TODO: s jiz stavajicim pouzitim trid a s rozdily v propertach (Value x Name a orderBy x OrderBy) 
+                // TODO: mozna se to budoucnu toto precovani muze hodit - mohl bych pretypovat DocumentTypeModel nebo ProjectModel nebo DivisionMOdel na Item
+
+
+                // int v2 = 0;
+                // if (DocumentTypeID.HasValue) v2 = DocumentTypeID.Value;
+                //DocumentTypeModel  choiceDocumentType = documentService.GetDocumentType(v2);
+
+                Item choiceDocumentType = documentTypes.Where(dc => dc.ID == DocumentTypeID).Select(dc => dc).FirstOrDefault();
+               choiceDocumentType.OrderBy = -1;
+            }
+
             documentTypes.Add(new Item { ID = 0, OrderBy = 0, Value = "Všechny dokumenty" });
             ViewBag.DocumentTypes = documentTypes.OrderBy(dt => dt.OrderBy);
 
@@ -61,6 +81,7 @@ namespace GCPack.Web.Controllers
 
             ViewBag.Message = Message;
             return View(documents);
+            
         }
 
         public void SendMail()
