@@ -23,10 +23,12 @@ namespace GCPack.Service
             this.userService = userService;
             this.codeListService = codeListService;
         }
+        
 
         public void RevisionNoAction(DocumentModel document, int userID, ICollection<string> fileNames)
         {
             DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
+            documentModel.ReviewDate = DateTime.Now;
             DocumentTypeModel documentTypeModel = documentsRepository.GetDocumentType(document.DocumentTypeID);
             documentModel.NextReviewDate = DateTime.Now.AddYears(documentTypeModel.ValidityInYears);
             documentsRepository.EditDocument(documentModel);
@@ -84,12 +86,6 @@ namespace GCPack.Service
             mailService.SendEmail("TestovaciEmail", "Odeslani testovaciho emailu", user, document);
         }
 
-
-        public ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter)
-        {
-            return documentsRepository.GetDocuments_priklad(filter);
-        }
-
         // zaevidovani dokumentu
         
         public DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames, int userID)
@@ -106,6 +102,8 @@ namespace GCPack.Service
             {
                 DocumentModel oldDocument = documentsRepository.GetDocument(document.ParentID, userID);
                 document.DocumentNumber = oldDocument.DocumentNumber;
+                oldDocument.Revision = "N";
+                documentsRepository.EditDocument(oldDocument);
             }
 
             // stav revize dokumentu se prepne na P
@@ -200,7 +198,6 @@ namespace GCPack.Service
             // nikdy se u tohoto dokumentu neposilaji emaily
 
             document = documentsRepository.AddDocument(document);
-
             
             // namapuji se uzivatele na dokuemnt
             documentsRepository.MapUsersToDocument(document.SelectedUsers, document, null);

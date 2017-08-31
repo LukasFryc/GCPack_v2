@@ -79,7 +79,12 @@ namespace GCPack.Service
 
         public ICollection<UserModel> GetUsers(UserFilter filter)
         {
-            return usersRepository.GetUsers(filter);
+            ICollection <UserModel> users = usersRepository.GetUsers(filter);
+            foreach (var user in users)
+            {
+                user.Password = "";
+            }
+            return users;
         }
 
         public UserModel AddUser(UserModel user)

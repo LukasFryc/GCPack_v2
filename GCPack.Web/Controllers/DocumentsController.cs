@@ -256,11 +256,5 @@ namespace GCPack.Web.Controllers
             return View("edit", document);
         }
 
-        public ActionResult  GetDocuments_priklad(DocumentFilter filter)
-        {
-             return View("GetDocuments_priklad", documentService.GetDocuments_priklad(filter));
-        }
-
-
     }
 }
