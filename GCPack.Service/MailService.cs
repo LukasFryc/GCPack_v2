@@ -44,6 +44,7 @@ namespace GCPack.Service
             templateString = templateString.Replace("[UserFirstName]", user.FirstName);
             templateString = templateString.Replace("[UserLastName]", user.LastName);
             templateString = templateString.Replace("[EffeciencyDate]", document.EffeciencyDate.ToString());
+            templateString = templateString.Replace("[Annotation]",(document.Annotation != null && document.Annotation.Length > 0) ? $" ANOTACE:<br/>{document.Annotation}" : string.Empty );
             string documentLink = System.Configuration.ConfigurationManager.AppSettings["urlToServer"] + "/Documents/Details?documentId=" + document.ID.ToString();
             templateString = templateString.Replace("[DocumentLink]", documentLink);
             
