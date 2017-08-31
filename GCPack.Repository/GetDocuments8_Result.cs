@@ -11,7 +11,7 @@ namespace GCPack.Repository
 {
     using System;
     
-    public partial class GetDocuments4_Result
+    public partial class GetDocuments8_Result
     {
         public Nullable<long> row { get; set; }
         public int ID { get; set; }

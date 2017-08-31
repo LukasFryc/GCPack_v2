@@ -11,19 +11,35 @@ namespace GCPack
 {
     public static class Helper
     {
+        
         public static ICollection<Item> GetDocumentTypeItems()
         {
             // rucne vytvorene injection objektu aby se nemuselo pouzivat IoC protoze ve staticke tride 
             // se neda vyuzit konstruktor
-            IDocumentsService documentService = 
+            IDocumentsService documentService =
                 new DocumentsService(
-                    new DocumentsRepository(), 
-                    new MailService(), 
-                    new UsersService( new UsersRepository()), 
-                    new CodeListsService (new CodeListsRepository())
+                    new DocumentsRepository(),
+                    new MailService(),
+                    new UsersService(new UsersRepository()),
+                    new CodeListsService(new CodeListsRepository())
                     );
+            
             return documentService.GetDocumentTypes();
         }
-        
+
+        //public static DocumentTypeModel GetDocumentTypeItem(int DocumentTypeID)
+        //{
+        //    // rucne vytvorene injection objektu aby se nemuselo pouzivat IoC protoze ve staticke tride 
+        //    // se neda vyuzit konstruktor
+        //    IDocumentsService documentService =
+        //        new DocumentsService(
+        //            new DocumentsRepository(),
+        //            new MailService(),
+        //            new UsersService(new UsersRepository()),
+        //            new CodeListsService(new CodeListsRepository())
+        //            );
+        //    return documentService.GetDocumentType(DocumentTypeID);
+        //}
+
     }
 }

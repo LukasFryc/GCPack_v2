@@ -33,7 +33,7 @@ namespace GCPack.Repository.Mappers
             CreateMap<Document, DocumentModel>().ReverseMap();
             CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
             CreateMap<File, FileItem>().ReverseMap();
-            CreateMap<GetDocuments4_Result, DocumentModel>()
+            CreateMap<GetDocuments8_Result, DocumentModel>()
                 .ForMember(dr => dr.DocumentStateCode, m => m.MapFrom(dt => dt.DocumentStateCode))
                 .ForMember(dr => dr.DocumentStateName, m => m.MapFrom(dt => dt.DocumentStateName))
                 .ReverseMap();

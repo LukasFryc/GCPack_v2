@@ -66,12 +66,12 @@
           <Property Name="AuthorizinOfficerID" Type="int" />
           <Property Name="OrderBy" Type="int" />
           <Property Name="ValidityInYears" Type="int" Nullable="false" />
-          <Property Name="IsRequiredFillListOfPersons" Type="bit" Nullable="false" />
           <Property Name="AutomaticNumberingOfDocuments" Type="bit" Nullable="false" />
           <Property Name="NumberingOfDocumentPrefix" Type="varchar" MaxLength="2" />
           <Property Name="NumberingOfDocumentSeparator" Type="varchar" MaxLength="1" />
           <Property Name="NumberingOfDocumentLength" Type="tinyint" />
           <Property Name="LastNumberOfDocument" Type="int" />
+          <Property Name="IsRequiredFillListOfPersons" Type="bit" Nullable="false" />
           <Property Name="DocumentEfficiencyDays" Type="int" />
           <Property Name="InformedInDays" Type="int" />
         </EntityType>
@@ -517,9 +517,13 @@
           <Parameter Name="Page" Type="int" Mode="In" />
           <Parameter Name="ItemsPerPage" Type="int" Mode="In" />
           <Parameter Name="ProjectID" Type="int" Mode="In" />
-          <Parameter Name="divisionID" Type="int" Mode="In" />
-          <Parameter Name="appSystemID" Type="int" Mode="In" />
-          <Parameter Name="workplaceID" Type="int" Mode="In" />
+          <Parameter Name="DivisionID" Type="int" Mode="In" />
+          <Parameter Name="AppSystemID" Type="int" Mode="In" />
+          <Parameter Name="WorkplaceID" Type="int" Mode="In" />
+          <Parameter Name="NextReviewDateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="NextReviewDateTo" Type="datetime" Mode="In" />
+          <Parameter Name="EffeciencyDateFrom" Type="datetime" Mode="In" />
+          <Parameter Name="EffeciencyDateTo" Type="datetime" Mode="In" />
         </Function>
         <EntityContainer Name="GCPackStoreContainer">
           <EntitySet Name="AppSystem" EntityType="Self.AppSystem" Schema="dbo" store:Type="Tables" />
@@ -815,7 +819,7 @@
             <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
             <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="GetDocuments4" ReturnType="Collection(GCPack.GetDocuments4_Result)">
+          <FunctionImport Name="GetDocuments4">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -826,9 +830,89 @@
             <Parameter Name="Page" Mode="In" Type="Int32" />
             <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
             <Parameter Name="ProjectID" Mode="In" Type="Int32" />
-            <Parameter Name="divisionID" Mode="In" Type="Int32" />
-            <Parameter Name="appSystemID" Mode="In" Type="Int32" />
-            <Parameter Name="workplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments5">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="String" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="String" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="String" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments6">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments7">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments8" ReturnType="Collection(GCPack.GetDocuments8_Result)">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="AppSystem">
@@ -1406,7 +1490,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments4_Result">
+        <ComplexType Name="GetDocuments8_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1689,9 +1773,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments4" FunctionName="GCPack.Store.GetDocuments">
+          <FunctionImportMapping FunctionImportName="GetDocuments8" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments4_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments8_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
