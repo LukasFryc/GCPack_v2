@@ -69,6 +69,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EmailTemplates\RegisterDocument.txt" />
     <Content Include="EmailTemplates\TestovaciEmail.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -121,6 +121,14 @@ namespace GCPack.Service
 
             documentsRepository.SetNumberOfDocument(document.DocumentTypeID);
             SaveFiles(document, fileNames);
+
+            // odeslani emailu vsem zaregistrovanym uzivatelum v dokumentu
+            UsersInDocument usersInDoc = documentsRepository.GetUsersInDocument(document.ID);
+            foreach (UserModel user in usersInDoc.AllUsers)
+            {
+                mailService.SendEmail("RegisterDocument", $"Řízený dokument {document.DocumentNumber}/{document.IssueNumber} byl schválen" , user, document);
+            }
+
             return document;
         }
 

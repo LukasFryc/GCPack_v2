@@ -327,20 +327,6 @@ namespace GCPack.Repository
             }
         }
 
-        // nacteni vsech uzivatelu prirazenych k dokumentu
-
-        public ICollection<UserModel> GetUsersFromDocument(DocumentModel document)
-        {
-            ICollection<UserModel> users = new HashSet<UserModel>();
-            using (GCPackContainer db = new GCPackContainer())
-            {
-                var explicitUsers = db.UserDocuments.Where(ud => ud.DocumentId == document.ID).Select(ud => ud.User);
-
-            }
-            return users;
-        }
-
-
         // smazani dokumentu
         public void DeleteDocument(int documentId)
         {

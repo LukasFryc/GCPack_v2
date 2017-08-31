@@ -1,0 +1,10 @@
+﻿<style>
+	body
+	{
+		font-family:arial;
+	}
+</style>
+Seznamte se s řízeným dokumentem v termínu [EffeciencyDate]
+<div style="border: 1px silver solid;margin-top:30px;padding: 10px">
+	Na řízený dokument se dostanete zde <a href="[DocumentLink]">[DocumentLink]</a>
+</div>

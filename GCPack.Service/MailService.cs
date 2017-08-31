@@ -24,7 +24,7 @@ namespace GCPack.Service
             smtpClient.Host = ConfigurationManager.AppSettings["smtpHost"];
             smtpClient.UseDefaultCredentials = false;
             smtpClient.Credentials = basicCredential;
-
+            message.To.Clear();
             message.From = fromAddress;
             message.Subject = subject;
             message.IsBodyHtml = true;
