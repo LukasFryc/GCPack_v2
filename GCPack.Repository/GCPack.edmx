@@ -895,7 +895,26 @@
             <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
             <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
           </FunctionImport>
-          <FunctionImport Name="GetDocuments8" ReturnType="Collection(GCPack.GetDocuments8_Result)">
+          <FunctionImport Name="GetDocuments8">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments9" ReturnType="Collection(GCPack.GetDocuments9_Result)">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -1490,7 +1509,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments8_Result">
+        <ComplexType Name="GetDocuments9_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1516,6 +1535,8 @@
           <Property Type="String" Name="DocumentAdministrator" Nullable="true" MaxLength="101" />
           <Property Type="String" Name="DocumentStateName" Nullable="true" MaxLength="50" />
           <Property Type="String" Name="DocumentStateCode" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="UsersRead" Nullable="true" />
+          <Property Type="Int32" Name="AllUsers" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1773,9 +1794,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments8" FunctionName="GCPack.Store.GetDocuments">
+          <FunctionImportMapping FunctionImportName="GetDocuments9" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments8_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments9_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
@@ -1801,6 +1822,8 @@
                 <ScalarProperty Name="DocumentAdministrator" ColumnName="DocumentAdministrator" />
                 <ScalarProperty Name="DocumentStateName" ColumnName="DocumentStateName" />
                 <ScalarProperty Name="DocumentStateCode" ColumnName="DocumentStateCode" />
+                <ScalarProperty Name="UsersRead" ColumnName="UsersRead" />
+                <ScalarProperty Name="AllUsers" ColumnName="AllUsers" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

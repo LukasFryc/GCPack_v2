@@ -21,6 +21,45 @@ namespace GCPack.Repository
             }
         }
 
+        // metoda ktera vraci vsechny prirazene uzivatele a vsechny uzivatele kteri
+        // se s dokumentem seznamili
+
+        public UsersInDocument GetUsersInDocument(int documentID)
+        {
+            UsersInDocument usersInDocument = new UsersInDocument();
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var allUsers1 = from j in db.JobPositionDocuments
+                                from u in db.JobPositionUsers
+                                where j.JobPositionId == u.JobPositionId && j.DocumentId == documentID
+                                select u.User;
+                var allUsers2 = from ud in db.UserDocuments where ud.DocumentId == documentID
+                                select ud.User;
+                var allUsers = allUsers1.Union(allUsers2);
+
+                var usersRead = from r in db.ReadConfirmations
+                                from u in db.Users
+                                where
+                                    r.DocumentID == documentID &&
+                                    u.ID == r.UserID
+                                select new {User = u, Date = r.ReadDate };
+                usersInDocument.DocumentID = documentID;
+
+                usersInDocument.AllUsers = Mapper.Map<ICollection<UserModel>>(allUsers);
+                foreach (var userRead in usersRead)
+                {
+                    usersInDocument.UsersRead.Add(new UserReadDocument() {
+                        DateRead = (DateTime)userRead.Date,
+                        User = Mapper.Map<UserModel> (userRead.User)
+                    });
+                }
+                return usersInDocument;
+            }
+
+        }
+
+
+
         public void SetNumberOfDocument(int documentTypeID)
         {
             using (GCPackContainer db = new GCPackContainer())
@@ -194,7 +233,7 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 
-                ICollection<GetDocuments8_Result> documentsResult = db.GetDocuments8(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo).ToList<GetDocuments8_Result>();
+                ICollection<GetDocuments9_Result> documentsResult = db.GetDocuments9(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo).ToList<GetDocuments9_Result>();
                 
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;

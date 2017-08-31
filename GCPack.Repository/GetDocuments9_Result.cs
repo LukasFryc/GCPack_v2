@@ -11,7 +11,7 @@ namespace GCPack.Repository
 {
     using System;
     
-    public partial class GetDocuments8_Result
+    public partial class GetDocuments9_Result
     {
         public Nullable<long> row { get; set; }
         public int ID { get; set; }
@@ -38,5 +38,7 @@ namespace GCPack.Repository
         public string DocumentAdministrator { get; set; }
         public string DocumentStateName { get; set; }
         public string DocumentStateCode { get; set; }
+        public Nullable<int> UsersRead { get; set; }
+        public Nullable<int> AllUsers { get; set; }
     }
 }
