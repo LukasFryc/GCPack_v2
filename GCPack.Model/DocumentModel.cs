@@ -61,9 +61,8 @@ namespace GCPack.Model
         public ICollection<int> SelectedProjectsID { get; set; } // všechny vybrané projekty
         public ICollection<int> SelectedDivisionsID { get; set; } // všechny vybrané střediska
         public ICollection<int> SelectedAppSystemsID { get; set; } // všechny vybrané systémy
-
         public ICollection<int> SelectedWorkplacesID { get; set; } // všechny vybrané pracovní místa
-
+        public DateTime EndDate { get; set; }
         public bool Archived { get; set; } // 0 - neni v archivu, 1 je v archivu
         public UsersInDocument UsersInDocument { get; set; } // seznam vsech uzivatelu prirazenych k dokumentu a seznam vsech co 
         // si dokument precetli
@@ -71,6 +70,8 @@ namespace GCPack.Model
 
         public int AllUsers { get; set; }
 
+        public int IssueNumber { get; set; } // číslo vydání
+        public int ParentID { get; set; }   // odkaz na předchozího 
     }
 
 

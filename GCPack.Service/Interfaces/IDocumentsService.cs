@@ -18,10 +18,9 @@ namespace GCPack.Service.Interfaces
         void ChangeDocumentState(DocumentModel document, string state);
         void ChangeDocumentState(int documentID, string state);
         void SendEmail();
-        ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter);
         string GenNumberOfDocument(int documentTypeID);
-        DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames);
-        DocumentModel NewVersion(DocumentModel document);
-        void RevisionNoAction(DocumentModel document, int userId);
+        DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames, int userID);
+        DocumentModel NewVersion(DocumentModel document, int userId, ICollection<string> fileNames);
+        void RevisionNoAction(DocumentModel document, int userId, ICollection<string> fileNames);
     }
 }
