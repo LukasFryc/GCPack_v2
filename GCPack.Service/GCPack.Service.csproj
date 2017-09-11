@@ -54,6 +54,7 @@
     <Compile Include="MailService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsersService.cs" />
+    <Compile Include="WarningService.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GCPack.Model\GCPack.Model.csproj">
@@ -69,6 +70,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EmailTemplates\DocumentEndDate.txt" />
+    <Content Include="EmailTemplates\NextRevision.txt" />
+    <Content Include="EmailTemplates\ReadExpiration.txt" />
     <Content Include="EmailTemplates\RegisterDocument.txt" />
     <Content Include="EmailTemplates\TestovaciEmail.txt" />
   </ItemGroup>
