@@ -52,8 +52,48 @@ namespace GCPack.Web.Controllers
                choiceDocumentType.OrderBy = -1;
             }
 
+            //ICollection<Item> documentSortType = new HashSet<Item>(); ;
+            //documentSortType.Add(new Item { ID = 0, Code = "",  OrderBy = 0, Value = "Sestupně" });
+
+            //ICollection<Item> documentSort = new HashSet<Item>(); ;
+            //documentSort.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Setřídit podle" });
+            //documentSort.Add(new Item { ID = 1, Code = "Title", OrderBy = 0, Value = "Názvu" });
+            //documentSort.Add(new Item { ID = 2, Code = "DocumentNumber", OrderBy = 0, Value = "Čísla" });
+            //documentSort.Add(new Item { ID = 3, Code = "DocumentAdminType", OrderBy = 0, Value = "Správce" });
+            //documentSort.Add(new Item { ID = 4, Code = "EffeciencyDate", OrderBy = 0, Value = "Data účinnosti" });
+            //ViewBag.DocumentSort = documentSort.OrderBy(dt => dt.OrderBy);
+
+            ICollection<Item> archivType = new HashSet<Item>(); ;
+            archivType.Add(new Item { ID = 0, Code = "botharchiv", OrderBy = 0, Value = "Všechny" });
+            archivType.Add(new Item { ID = 1, Code = "inarchiv", OrderBy = 1, Value = "V archívu" });
+            archivType.Add(new Item { ID = 2, Code = "outarchiv", OrderBy = 2, Value = "Platné" });
+
+            //ICollection<UserModel> users = new HashSet<UserModel>();
+            //users = userService.GetUsers(new UserFilter());
+            //users.Add(new UserModel() { ID = 0, Name = "Zvolte osobu", orderBy = 1 });
+            //ViewBag.Projects = users.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
+
+            ICollection<Item> revisionType = new HashSet<Item>(); ;
+            revisionType.Add(new Item { ID = 0, Code = "all", OrderBy = 0, Value = "Všechny" });
+            revisionType.Add(new Item { ID = 1, Code = "p", OrderBy = 1, Value = "Platné" });
+            revisionType.Add(new Item { ID = 2, Code = "n", OrderBy = 2, Value = "Neplatné" });
+            revisionType.Add(new Item { ID = 3, Code = "r", OrderBy = 3, Value = "V revizi" });
+            ViewBag.RevisionType = revisionType.OrderBy(rt => rt.OrderBy);
+
+            ICollection<Item> readType = new HashSet<Item>(); ;
+            readType.Add(new Item { ID = 0, Code = "all", OrderBy = 0, Value = "Všechny" });
+            readType.Add(new Item { ID = 2, Code = "read", OrderBy = 1, Value = "Seznámeno" });
+            readType.Add(new Item { ID = 1, Code = "unread", OrderBy = 2, Value = "Neseznámeno" });
+            //readType.Add(new Item { ID = 3, Code = "unreadafterterm", OrderBy = 3, Value = "Neseznámeno po termínu" });
+            ViewBag.ReadType = readType.OrderBy(dt => dt.OrderBy);
+
             documentTypes.Add(new Item { ID = 0, OrderBy = 0, Value = "Všechny dokumenty" });
             ViewBag.DocumentTypes = documentTypes.OrderBy(dt => dt.OrderBy);
+
+            ICollection<DocumentStateModel> documentStates = new HashSet<DocumentStateModel>();
+            documentStates = codeListService.GetDocumentStates();
+            documentStates.Add(new DocumentStateModel() { ID = 0, Name = "Všechny stavy", orderBy = -1 });
+            ViewBag.DocumentStates = documentStates.OrderBy(p => p.orderBy);
 
             ICollection<ProjectModel> projects = new HashSet<ProjectModel>();
             projects = codeListService.GetProjects();
@@ -62,7 +102,7 @@ namespace GCPack.Web.Controllers
 
             ICollection<DivisionModel> divisions = new HashSet<DivisionModel>();
             divisions = codeListService.GetDivisions();
-            divisions.Add(new DivisionModel() { ID = 0, Name = "Všechny střediska", orderBy = 1 });
+            divisions.Add(new DivisionModel() { ID = 0, Name = "Všechna střediska", orderBy = 1 });
             ViewBag.Divisions = divisions.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
 
             ICollection<AppSystemModel> appSystems = new HashSet<AppSystemModel>();
@@ -72,7 +112,7 @@ namespace GCPack.Web.Controllers
 
             ICollection<WorkplaceModel> workplaces = new HashSet<WorkplaceModel>();
             workplaces = codeListService.GetWorkplaces();
-            workplaces.Add(new WorkplaceModel() { ID = 0, Name = "Všechny pracoviště", orderBy = 1 });
+            workplaces.Add(new WorkplaceModel() { ID = 0, Name = "Všechna pracoviště", orderBy = 1 });
             ViewBag.Workplaces = workplaces.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
 
             //@DivisionID int,

@@ -52,5 +52,8 @@ namespace GCPack.Service.Interfaces
 
         void WorkplaceDelete(int id);
 
+        // DocumentSates
+        ICollection<DocumentStateModel> GetDocumentStates();
+
     }
 }

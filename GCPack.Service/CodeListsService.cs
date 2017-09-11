@@ -116,5 +116,10 @@ namespace GCPack.Service
         {
             codeListsRepository.WorkplaceDelete(id);
         }
+
+        public ICollection<DocumentStateModel> GetDocumentStates()
+        {
+            return codeListsRepository.GetDocumentStates();
+        }
     }
 }

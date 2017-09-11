@@ -49,6 +49,8 @@ namespace GCPack.Model
         public DateTime? NextReviewDateFrom { get; set; }
         public DateTime? NextReviewDateTo { get; set; }
 
+        public string ReadType { get; set; }
+
 
     }
 

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace GCPack.Model
 {
-    public class Item
+    public class DocumentStateModel
     {
         public int ID { get; set; }
-        public int OrderBy { get; set; }
-        public string Value { get; set; }
-        public string Code { get; set; } // Lukas 27.8.2017 na zvazeni
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public int orderBy { get; set; }
     }
 }

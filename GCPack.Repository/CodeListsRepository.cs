@@ -244,5 +244,15 @@ namespace GCPack.Repository
 
             }
         }
+
+
+        public ICollection<DocumentStateModel> GetDocumentStates()
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return Mapper.Map<ICollection<DocumentStateModel>>(db.DocumentStates.Select(ds => ds));
+                
+            }
+        }
     }
 }

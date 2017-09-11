@@ -22,6 +22,7 @@ namespace GCPack.Repository.Mappers
 
         public ViewModelToModelMappingProfile()
         {
+            CreateMap<DocumentState, DocumentStateModel>().ReverseMap();
             CreateMap<AppSystem, AppSystemModel>().ReverseMap();
             CreateMap<Division, DivisionModel>().ReverseMap();
             CreateMap<Project, ProjectModel>().ReverseMap();
@@ -33,7 +34,7 @@ namespace GCPack.Repository.Mappers
             CreateMap<Document, DocumentModel>().ReverseMap();
             CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
             CreateMap<File, FileItem>().ReverseMap();
-            CreateMap<GetDocuments9_Result, DocumentModel>()
+            CreateMap<GetDocuments11_Result, DocumentModel>()
                 .ForMember(dr => dr.DocumentStateCode, m => m.MapFrom(dt => dt.DocumentStateCode))
                 .ForMember(dr => dr.DocumentStateName, m => m.MapFrom(dt => dt.DocumentStateName))
                 .ReverseMap();

@@ -44,6 +44,7 @@
     <Compile Include="AppSystemModel.cs" />
     <Compile Include="DivisionModel.cs" />
     <Compile Include="DocumentModel.cs" />
+    <Compile Include="DocumentStateModel.cs" />
     <Compile Include="DocumentTypeModel.cs" />
     <Compile Include="Filters.cs" />
     <Compile Include="Item.cs" />

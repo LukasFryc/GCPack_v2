@@ -228,12 +228,12 @@ namespace GCPack.Repository
             }
         }
 
-            public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
+        public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                
-                ICollection<GetDocuments9_Result> documentsResult = db.GetDocuments9(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo).ToList<GetDocuments9_Result>();
+                filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
+                ICollection<GetDocuments11_Result> documentsResult = db.GetDocuments11(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType).ToList<GetDocuments11_Result>();
                 
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;

@@ -38,7 +38,7 @@
                     GetDocuments();
                 });
 
-                $('#EffeciencyDateFrom,#EffeciencyDateTo,#NextReviewDateFrom,#NextReviewDateTo').change(function () {
+                $('#EffeciencyDateFrom,#EffeciencyDateTo,#NextReviewDateFrom,#NextReviewDateTo,#ReadType').change(function () {
                     GetDocuments();
                 });
                 
@@ -70,7 +70,8 @@
                             EffeciencyDateFrom: $('#EffeciencyDateFrom').val(),
                             EffeciencyDateTo: $('#EffeciencyDateTo').val(),
                             NextReviewDateFrom: $('#NextReviewDateFrom').val(),
-                            NextReviewDateTo: $('#NextReviewDateTo').val()
+                            NextReviewDateTo: $('#NextReviewDateTo').val(),
+                            ReadType: $('#ReadType').val()
                         } )                      
                         
                             .done(function (documents) {
@@ -78,6 +79,13 @@
                                 $.each(documents, function (index, doc) {
 
                                     var dateStr = "";
+
+                                    var unReadCount = 0;
+
+                                    var redColor = "#EE9090";
+                                    var blackColor = "#000000";
+                                    var readColor = blackColor;
+
                                     if (doc.EffeciencyDate != null)
                                     {
                                         var date = eval(doc.EffeciencyDate.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
@@ -85,11 +93,18 @@
                                             date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
                                     }
 
+                                    unReadCount = doc.AllUsers - doc.UsersRead;
+
+                                    if (unReadCount > 0) {
+                                        readColor = redColor
+                                    }
+
                                     $('table').append('<tr class="dataRow">' +
                                         '<td> ' + doc.Title + '</td>' +
                                         '<td> ' + doc.DocumentNumber + '</td>' +
                                         '<td> ' + dateStr + '</td>' +
                                         '<td> ' + doc.DocumentAdministrator + '</td>' +
+                                        '<td> <b> <font color="' + readColor + '">' + doc.UsersRead  + ':' + unReadCount+ '</font></b></td>' +
                                         '<td> <A href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
                                         '"><span class="glyphicon glyphicon-edit"></span></A> <A href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID +
                                         '"><span class="glyphicon glyphicon-eye-open"></span></A> <A href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
@@ -130,37 +145,52 @@
         $(document).ready(function () {
             $("#section-filter-plus1").on("hide.bs.collapse", function () {
                 $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
-                //$("#DocumentTypeID").val(0);
-                $("#ProjectID").val(0);
-                $("#DivisionID").val(0);
-                $("#AppSystemID").val(0);
-                $("#WorkplaceID").val(0);
+                $("#Name").val();
+                $("#Number").val();
+                $("#AdministratorName").val();
+                $("#DocumentTypeID").val(0);
+                $("#DocumentStates").val(0);
              
-                //$(".btn.btn-success").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
-                //$("#EffeciencyDateFrom").val('');
-                //$("#EffeciencyDateTo").val('');
-                //$("#NextReviewDateFrom").val('');
-                //$("#NextReviewDateTo").val('');
-
-
                 //$("#section-filter-plus2").trigger("hide.bs.collapse");
 
                 GetDocuments();
              
             });
 
-            //$("#section-filter-plus1").on("show.bs.collapse", function () {
-            //    $('#section-filter-plus2').show();
-            //}
+            
 
             $("#section-filter-plus2").on("hide.bs.collapse", function () {
 
                 $("#btnCollapse2").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
 
+                $("#ProjectID").val('');
+                $("#DivisionID").val('');
+                $("#AppSystemID").val('');
+                $("#WorkplaceID").val('');
+                $("#ReadType").val('');
+
+                $("#projectsFilter").val('');
+                $("#divisionsFilter").val('');
+                $("#appSystemsFilter").val('');
+                $("#workplacesFilter").val('');
+                
+
+                //$('#section-filter-plus2').hide();
+                GetDocuments();
+
+
+            });
+
+            $("#section-filter-plus3").on("hide.bs.collapse", function () {
+
+                $("#btnCollapse3").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
+
                 $("#EffeciencyDateFrom").val('');
                 $("#EffeciencyDateTo").val('');
                 $("#NextReviewDateFrom").val('');
                 $("#NextReviewDateTo").val('');
+                $("#RevisionType").val('0');
+                
                 //$('#section-filter-plus2').hide();
                 GetDocuments();
 
@@ -168,11 +198,15 @@
             });
 
             $("#section-filter-plus1").on("show.bs.collapse", function () {
-                $(".btn.btn-primary").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
+                $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
             });
 
             $("#section-filter-plus2").on("show.bs.collapse", function () {
-                $(".btn.btn-primary").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
+                $("#btnCollapse2").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
+            });
+
+            $("#section-filter-plus3").on("show.bs.collapse", function () {
+                $("#btnCollapse3").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
             });
 
             $('#divisionsFilter').keyup(function () {
@@ -244,6 +278,12 @@
 <div style="background-color:#D1D1D1; padding-left:5px; padding-top:5px" >
 
     <div class="row">
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
+
         <div class="col-md-2">
             <label for="Number">Název</label>
         </div>
@@ -256,57 +296,69 @@
         <div class="col-md-2">
             <label for="DocumentTypeID">Typ dokumentu</label>
         </div>
+        
         <div class="col-md-2">
-            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
+            <label for="DocumentStates">Stav dokumentu</label>
+        </div>
+    </div>
+    <div id="section-filter-plus1" class="collapse in">
+        <div class="row">
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-2">
+                <input class="filter form-control" type="text" id="Name" />
+            </div>
+            <div class="col-md-2">
+                <input class="filter form-control" type="text" id="Number" />
+            </div>
+            <div class="col-md-2">
+                <input class="filter form-control" type="text" id="AdministratorName" />
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownList("DocumentStates", new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "form-control" })
+            </div>
+           
+        </div>
+    </div>
+
+    
+    
+    <div class="row">
+
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
                 <span class="glyphicon glyphicon-collapse-down"></span> +
             </button>
         </div>
+
         <div class="col-md-2">
+            <label for="ProjectID">Project</label>
         </div>
+
+        <div class="col-md-2">
+            <label for="DivisionID">Středisko</label>
+        </div>
+        <div class="col-md-2">
+            <label for="AppSystemID">Systém</label>
+        </div>
+        <div class="col-md-2">
+            <label for="WorkplaceID">Pracoviště</label>
+        </div>
+        <div class="col-md-2">
+            <label for="ReadType">Seznámeno</label>
+        </div>
+        
     </div>
-    <div class="row">
-        <div class="col-md-2">
-            <input class="filter form-control" type="text" id="Name" />
-        </div>
-        <div class="col-md-2">
-            <input class="filter form-control" type="text" id="Number" />
-        </div>
-        <div class="col-md-2">
-            <input class="filter form-control" type="text" id="AdministratorName" />
-        </div>
-        <div class="col-md-2">
-            @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "form-control" })
-        </div>
-        <div class="col-md-2">
 
-        </div>
-    </div>
-
-    <div id="section-filter-plus1" class="collapse">
-
+    <div id="section-filter-plus2" class="collapse">
         <div class="row">
-
-            <div class="col-md-2">
-                <label for="ProjectID">Project</label>
+            <div class="col-md-1">
+                
             </div>
-
-            <div class="col-md-2">
-                <label for="DivisionID">Středisko</label>
-            </div>
-            <div class="col-md-2">
-                <label for="AppSystemID">Systém</label>
-            </div>
-            <div class="col-md-2">
-                <label for="WorkplaceID">Pracoviště</label>
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
-                    <span class="glyphicon glyphicon-collapse-down"></span> +
-                </button>
-            </div>
-        </div>
-
-        <div class="row">
             <div class="col-md-2">
                 <input type="text" id="projectsFilter" placeholder="Filtr projektů" class="form-control" />
             </div>
@@ -322,15 +374,22 @@
             <div class="col-md-2">
                 <input type="text" id="workplacesFilter" placeholder="Filtr prac. míst" class="form-control" />
             </div>
-            <div class="col-md-2">
 
+            <div class="col-md-2">
+                @Html.DropDownList("ReadType", new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "form-control" })
+
+            </div>
+            <div class="col-md-2">
 
             </div>
         </div>
 
 
-
         <div class="row">
+
+            <div class="col-md-1">
+
+            </div>
 
             <div class="col-md-2">
                 @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "form-control" })
@@ -353,33 +412,48 @@
 
     </div>
 
-    <div id="section-filter-plus2" class="collapse">
+        
 
-        <div class="row">
+    <div class="row">
 
-            <div class="col-md-2">
-                <label for="EffeciencyDateFrom">Datum účinnosti</label>
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus3" id="btnCollapse3">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
 
-            </div>
-
-            <div class="col-md-2">
-                @*<label for="EffeciencyDateTo">Datum účinnosti do</label>*@
-
-            </div>
-
-            <div class="col-md-4">
-                <label for="NextReviewDateFrom">Příští datum přezkoumání</label>
-
-            </div>
-
-            <div class="col-md-2">
-                @*<label for="NextReviewDateTo">Příští datum přezkoumání do</label>*@
-            </div>
+        <div class="col-md-2">
+            <label for="EffeciencyDateFrom">Datum účinnosti</label>
 
         </div>
 
+        <div class="col-md-2">
+            @*<label for="EffeciencyDateTo">Datum účinnosti do</label>*@
+
+        </div>
+
+        <div class="col-md-4">
+            <label for="NextReviewDateFrom">Příští datum přezkoumání</label>
+
+        </div>
+
+        <div class="col-md-2">
+            @*<label for="NextReviewDateTo">Příští datum přezkoumání do</label>*@
+        </div>
+
+        <div class="col-md-2">
+            <label for="ReadType">Typ revize</label>
+        </div>
+
+    </div>
+
+    <div id="section-filter-plus3" class="collapse">
 
         <div class="row">
+
+            <div class="col-md-1">
+                
+            </div>
 
             <div class="col-md-2">
                 <input type="text" id="EffeciencyDateFrom" class="form-control" placeholder="Od" />
@@ -396,13 +470,16 @@
             <div class="col-md-2">
                 <input type="text" id="NextReviewDateTo" class="form-control" placeholder="Do" />
             </div>
+            <div class="col-md-2">
+                @Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "form-control" })
+            </div>
 
         </div>
 
 
     </div>
 
-</div>
+    </div>
 
 <table class="table" style="margin-top:20px">
     <tr>
@@ -427,6 +504,10 @@
             <a href="#" class="sortBy" sortBy="AdminD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
         </th>
 
+        <th>
+            Seznámeno:Ne
+            
+        </th>
         <th></th>
     </tr>
 </table>

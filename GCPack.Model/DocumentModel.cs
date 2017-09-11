@@ -67,6 +67,10 @@ namespace GCPack.Model
         public bool Archived { get; set; } // 0 - neni v archivu, 1 je v archivu
         public UsersInDocument UsersInDocument { get; set; } // seznam vsech uzivatelu prirazenych k dokumentu a seznam vsech co 
         // si dokument precetli
+        public int UsersRead { get; set; }
+
+        public int AllUsers { get; set; }
+
     }
 
 
