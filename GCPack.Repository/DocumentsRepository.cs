@@ -327,7 +327,6 @@ namespace GCPack.Repository
             }
         }
 
-
         // smazani dokumentu
         public void DeleteDocument(int documentId)
         {
@@ -431,6 +430,14 @@ namespace GCPack.Repository
                 db.SaveChanges();
                 document.ID = newDocument.ID;
 
+                // pokud se jedna o novy dokument (a ne nove vydani), pak se parentID nastavi na ID dokumentu
+                if (newDocument.ParentID == 0)
+                {
+                    newDocument.ParentID = document.ID;
+                    db.SaveChanges();
+                } 
+
+
                 if (document.JobPositionIDs != null)
                 {
                     foreach (int jobPositionID in document.JobPositionIDs)
@@ -444,15 +451,26 @@ namespace GCPack.Repository
             }
         }
 
-
-        // ulozeni editovaneho dokumentu
-        public DocumentModel EditDocument(DocumentModel document)
+        public void ChangeRevison(DocumentModel document)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
+                dbDocument.Revision = "R";
+                db.SaveChanges();
+            }
+        }
+            // ulozeni editovaneho dokumentu
+            public DocumentModel EditDocument(DocumentModel document)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
                 var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
                 //int stateID = (int)dbDocument.StateID;
                 document.DocumentTypeID = dbDocument.DocumentTypeID;
+                document.ParentID = (int) dbDocument.ParentID;
+                // pokud je jiz vygenerovane cislo dokumentu, tak se vezme z databaze - jinak se necha stavajici
+                document.DocumentNumber = (string.IsNullOrEmpty(document.DocumentNumber)) ? dbDocument.DocumentNumber : document.DocumentNumber;
                 Mapper.Map(document, dbDocument);
                 //dbDocument.StateID = stateID;
                 db.SaveChanges();

@@ -9,14 +9,14 @@
     var timeoutHandle;
     var selectedUsers = [];
     $(document).ready(function () {
-
+        jQuery.validator.methods["date"] = function (value, element) { return true; } 
         $('.btn').click(function () {
             $('#Action').val($(this).prop("id"));
         });
 
-        $("#EffeciencyDate").datepicker();
-        $("#ReviewDate").datepicker();
-        $("#NextReviewDate").datepicker();
+        $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
+        $("#ReviewDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
+        $("#NextReviewDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
         $("#tabs").tabs();
 
         $('#filter').keyup(function () {
@@ -42,21 +42,11 @@
             GetUsers();
         });
 
-        $('#saveDocument').click(function ()
+        $('#saveDocument, #newVersion, #registerDocument, #revisionNoAction, #revisionChanges').click(function ()
         {
             var form = $(this).closest('form')
-            $(form).validate();
-            if (!$(form).valid()) {
-                return
-            }
-
             $('.categories option').prop('selected', true);
             $('#SelectedUsers option').prop('selected', true);
-            //$('#SelectedProjects option').prop('selected', true);
-            //$('#SelectedDivisions option').prop('selected', true);
-            //$('#SelectedAppSystems option').prop('selected', true);
-            //$('#SelectedWorkplaces option').prop('selected', true);
-            //$('#SelectedUsers option').prop('selected', true);
         });
 
         $('#AddUserToList').click(function () {
@@ -115,22 +105,6 @@
 
 </script>
 
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        $("#saveDocument").click(function () {
-            if ($("#myForm .input-validation-error").length > 0) {
-                $("#tabs").tabs("option", "active", 0);
-                return false;
-            }
-
-        });
-    });
-    $.validator.setDefaults({
-        ignore: []
-    });
-
-</script>
 
 <style>
     .row {
@@ -151,6 +125,7 @@
         <input type="hidden" name="ID" value="@Model.ID" />
         <input type="hidden" name="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
+        <input type="hidden" name="ParentID" value="@Model.ParentID"/>
         <div id="success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>
         <div id="tabs">
             <ul>
@@ -677,10 +652,17 @@
                         {
                             <input type="submit" value="Zaevidovat" id="registerDocument" class="btn btn-success" />
                         }
-                        <input type="submit" value="Nové vydání dokumentu" id="newVersion" class="btn btn-success" />
+                        else
+                        {
+                            <input type="submit" value="Nové vydání dokumentu" id="newVersion" class="btn btn-success" />
+                        }
+
+                        @if (Model.Revision == "P")
+                        {
+                            <input type="submit" value="Přezkoumání platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />
+                            <input type="submit" value="Přezkoumání - nutná změna" id="revisionChanges" class="btn btn-success" />
+                        }
                         <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />
-                        <input type="submit" value="Přezkoumání platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />
-                        <input type="submit" value="Přezkoumání - nutná změna" id="revisionChanges" class="btn btn-success" />
                         <input type="button" value="Zrušit změny" id="cancelChanges" class="btn btn-danger" />
                     </div>
                 </div>
