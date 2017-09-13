@@ -21,36 +21,49 @@ namespace GCPack.Service
 
         public void SendEmail(string subject, string body, string to)
         {
-            smtpClient.Host = ConfigurationManager.AppSettings["smtpHost"];
-            smtpClient.UseDefaultCredentials = false;
-            smtpClient.Credentials = basicCredential;
-            message.To.Clear();
-            message.From = fromAddress;
-            message.Subject = subject;
-            message.IsBodyHtml = true;
-            message.Body = body;
-            message.To.Add(to);
+            // LF 12.9.2017 - pokud nechci posilat postu, hodi se dokud neni postak rozchozen
+            // jedna se o volbu ve webconfigu
+            if (ConfigurationManager.AppSettings["emailDisable"]!="Yes")
+            {
+                smtpClient.Host = ConfigurationManager.AppSettings["smtpHost"];
+                smtpClient.UseDefaultCredentials = false;
+                smtpClient.Credentials = basicCredential;
+                message.To.Clear();
+                message.From = fromAddress;
+                message.Subject = subject;
+                message.IsBodyHtml = true;
+                message.Body = body;
+                message.To.Add(to);
+
+                smtpClient.Send(message);
+            }
             
-            smtpClient.Send(message);
 
         }
 
         // metoda ktera vybere sablonu emailu a posle email vsem uzivatelum kterych se to tyka
         public void SendEmail(string template, string subject, UserModel user, DocumentModel document)
         {
-            string templateString = System.IO.File.ReadAllText(System.Configuration.ConfigurationManager.AppSettings["emailTemplates"] + template + ".txt");
-            templateString = templateString.Replace("[DocumentNumber]", document.DocumentNumber);
-            templateString = templateString.Replace("[DocumentTitle]", document.Title);
-            templateString = templateString.Replace("[UserFirstName]", user.FirstName);
-            templateString = templateString.Replace("[UserLastName]", user.LastName);
-            templateString = templateString.Replace("[EffeciencyDate]", document.EffeciencyDate.ToString());
-            templateString = templateString.Replace("[NextRevision]", document.NextReviewDate.ToString());
-            templateString = templateString.Replace("[EndDate]", document.EndDate.ToString());
-            templateString = templateString.Replace("[Annotation]",(document.Annotation != null && document.Annotation.Length > 0) ? $" ANOTACE:<br/>{document.Annotation}" : string.Empty );
-            string documentLink = System.Configuration.ConfigurationManager.AppSettings["urlToServer"] + "/Documents/Details?documentId=" + document.ID.ToString();
-            templateString = templateString.Replace("[DocumentLink]", documentLink);
+            // LF 12.9.2017 - pokud nechci posilat postu, hodi se dokud neni postak rozchozen
+            // jedna se o volbu ve webconfigu
+            if (ConfigurationManager.AppSettings["emailDisable"] != "Yes")
+            {
+
+                string templateString = System.IO.File.ReadAllText(System.Configuration.ConfigurationManager.AppSettings["emailTemplates"] + template + ".txt");
+                templateString = templateString.Replace("[DocumentNumber]", document.DocumentNumber);
+                templateString = templateString.Replace("[DocumentTitle]", document.Title);
+                templateString = templateString.Replace("[UserFirstName]", user.FirstName);
+                templateString = templateString.Replace("[UserLastName]", user.LastName);
+                templateString = templateString.Replace("[EffeciencyDate]", document.EffeciencyDate.ToString());
+                templateString = templateString.Replace("[NextRevision]", document.NextReviewDate.ToString());
+                templateString = templateString.Replace("[EndDate]", document.EndDate.ToString());
+                templateString = templateString.Replace("[Annotation]", (document.Annotation != null && document.Annotation.Length > 0) ? $" ANOTACE:<br/>{document.Annotation}" : string.Empty);
+                string documentLink = System.Configuration.ConfigurationManager.AppSettings["urlToServer"] + "/Documents/Details?documentId=" + document.ID.ToString();
+                templateString = templateString.Replace("[DocumentLink]", documentLink);
+
+                SendEmail(subject, templateString, user.Email1);
+            }
             
-            SendEmail(subject, templateString, user.Email1);
         }
 
     }

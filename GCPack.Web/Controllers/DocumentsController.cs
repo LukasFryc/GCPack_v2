@@ -262,7 +262,7 @@ namespace GCPack.Web.Controllers
         {
             ViewBag.Type = "Nový řízený dokument";
             // TODO: opravit ID = 1, DocumentStateCode, DocumentStateName na GetStateFromCode("New")
-            DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, DocumentStateCode = "New", DocumentStateName = "Nový"};
+            DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, IssueNumber = 1, DocumentStateCode = "New", DocumentStateName = "Nový"};
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             // opraveno Lukas a Jane 25.7.2017

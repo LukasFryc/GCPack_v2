@@ -14,9 +14,35 @@
             $('#Action').val($(this).prop("id"));
         });
 
-        $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
-        $("#ReviewDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
-        $("#NextReviewDate").datepicker({ dateFormat: 'dd/mm/yyyy' });
+        $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#ReviewDate").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#NextReviewDate").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#EndDate").datepicker({ dateFormat: 'dd/mm/yy' });
+
+        //https://stackoverflow.com/questions/494958/how-do-i-localize-the-jquery-ui-datepicker
+        $.datepicker.regional['cs'] = {
+            closeText: 'Zavřít',
+            prevText: '&#x3c;Dříve',
+            nextText: 'Později&#x3e;',
+            currentText: 'Nyní',
+            monthNames: ['leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen',
+                'září', 'říjen', 'listopad', 'prosinec'
+            ],
+            monthNamesShort: ['led', 'úno', 'bře', 'dub', 'kvě', 'čer', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro'],
+            dayNames: ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'],
+            dayNamesShort: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+            dayNamesMin: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+            weekHeader: 'Týd',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+
+        $.datepicker.setDefaults($.datepicker.regional['cs']);
+
+
         $("#tabs").tabs();
 
         $('#filter').keyup(function () {
@@ -155,7 +181,7 @@
 
                     
                     @{ bool existAsUserReader = false; }
-                    @if (Model.UsersInDocument.AllUsers != null)
+                    @if (Model.UsersInDocument != null && Model.UsersInDocument.AllUsers != null)
                     {
                         foreach (var item in @Model.UsersInDocument.AllUsers.OrderBy(au => au.LastName).Select(au => au))
                         {
@@ -222,7 +248,10 @@
                     <div class="row">
                         <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
                         <div class="col-md-4">
-                            @Html.EditorFor(model => model.DocumentNumber, new { htmlAttributes = new { disabled = true, @class = "form-control", @placeholder = "Číslo dokumentu" } })
+                            @Html.HiddenFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
+                            @Model.DocumentNumber
+                            @Html.HiddenFor(model => model.IssueNumber, new { htmlAttributes = new {  @class = "form-control", @placeholder = "Číslo vydání" } })
+                            @Model.IssueNumber
                             @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
                         </div>
                         <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
@@ -245,10 +274,19 @@
                     </div>
                     <div class="row">
                         <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
-                        <div class="col-md-10">
+                        <div class="col-md-4">
                             <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
                             @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true })
                         </div>
+                        <label class="control-label col-md-2" for="EndDate">Konec platnosti</label>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                        </div>
+
+                    </div>
+
+                    <div class="row">
                         <label class="control-label col-md-2" for="DocumentTypeID">Stav dokumentu</label>
                         <div class="col-md-10">
                             @Model.DocumentStateName

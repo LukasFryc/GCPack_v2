@@ -50,8 +50,14 @@ namespace GCPack.Model
         public string Revision { get; set; }
         public int StateID { get; set; }
         public int AdministratorID { get; set; }
+        
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> EffeciencyDate { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> ReviewDate { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> NextReviewDate { get; set; }
         public ICollection<FileItem> FileItems { get; set; }
         public string DeleteFileItems { get; set; } // soubory ktere smazeme
@@ -62,7 +68,9 @@ namespace GCPack.Model
         public ICollection<int> SelectedDivisionsID { get; set; } // všechny vybrané střediska
         public ICollection<int> SelectedAppSystemsID { get; set; } // všechny vybrané systémy
         public ICollection<int> SelectedWorkplacesID { get; set; } // všechny vybrané pracovní místa
-        public DateTime EndDate { get; set; }
+
+        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        public Nullable<System.DateTime> EndDate { get; set; } // opravil na nullabale 11.9.2017 LF
         public bool Archived { get; set; } // 0 - neni v archivu, 1 je v archivu
         public UsersInDocument UsersInDocument { get; set; } // seznam vsech uzivatelu prirazenych k dokumentu a seznam vsech co 
         // si dokument precetli
