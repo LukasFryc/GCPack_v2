@@ -80,6 +80,8 @@ namespace GCPack.Model
 
         public int IssueNumber { get; set; } // číslo vydání
         public int ParentID { get; set; }   // odkaz na předchozího 
+
+        public bool ReviewNecessaryChange { get; set; } // 1 je nutna zmena
     }
 
 

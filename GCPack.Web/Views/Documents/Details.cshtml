@@ -1,5 +1,7 @@
 ﻿@model GCPack.Model.DocumentModel
 
+@{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
+
 @{
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";

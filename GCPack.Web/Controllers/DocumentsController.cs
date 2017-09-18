@@ -218,9 +218,23 @@ namespace GCPack.Web.Controllers
             {
                 case "Add":
                     // novy dokument ma vzdy cislo vydani 1
-                    document.IssueNumber = 1;
-                    documentService.AddDocument(document, fileNames);
+                    switch (Action)
+                    {
+                        case "registerDocument":
+                            document.IssueNumber = 1;
+                            documentService.AddDocument(document, fileNames);
+                            documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
+                            break;
+                        case "cancelChanges":
+                            break;
+                        default:
+                            document.IssueNumber = 1;
+                            documentService.AddDocument(document, fileNames);
+                            break;
+                    }
+
                     break;
+
                 case "Edit":
 
                     switch (Action)
@@ -231,8 +245,13 @@ namespace GCPack.Web.Controllers
                         case "newVersion":
                             documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
                             break;
-                        case "revisionNoAction":
-                            documentService.RevisionNoAction(document, UserRoles.GetUserId(), fileNames);
+                        case "reviewNoAction":
+                            documentService.ReviewNoAction(document, UserRoles.GetUserId(), fileNames);
+                            break;
+                        case "reviewNecessaryChanges":
+                            documentService.ReviewNecessaryChange(document, UserRoles.GetUserId(), fileNames);
+                            break;
+                        case "cancelChanges":
                             break;
                         default:
                             documentService.EditDocument(document, fileNames);

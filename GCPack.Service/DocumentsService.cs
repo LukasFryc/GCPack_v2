@@ -25,12 +25,25 @@ namespace GCPack.Service
         }
         
 
-        public void RevisionNoAction(DocumentModel document, int userID, ICollection<string> fileNames)
+        public void ReviewNoAction(DocumentModel document, int userID, ICollection<string> fileNames)
         {
             DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
             documentModel.ReviewDate = DateTime.Now;
             DocumentTypeModel documentTypeModel = documentsRepository.GetDocumentType(document.DocumentTypeID);
             documentModel.NextReviewDate = DateTime.Now.AddYears(documentTypeModel.ValidityInYears);
+            documentModel.ReviewNecessaryChange = false;
+            //TODO: LF nevim jestli je nutne volat editDocument a SaveFiles - chci se yeptat dejvi
+            //snad by stacilo jen ulozit documentModel
+            documentsRepository.EditDocument(documentModel);
+            SaveFiles(document, fileNames);
+        }
+
+        public void ReviewNecessaryChange(DocumentModel document, int userID, ICollection<string> fileNames)
+        {
+            DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
+            //TODO: LF nevim jestli je nutne volat editDocument a SaveFiles - chci se yeptat dejvi
+            //snad by stacilo jen ulozit documentModel
+            documentModel.ReviewNecessaryChange = true;
             documentsRepository.EditDocument(documentModel);
             SaveFiles(document, fileNames);
         }
@@ -60,12 +73,30 @@ namespace GCPack.Service
             // vymazani typu revize u noveho dokumentu
             document.Revision = "";
 
+            // vymazani datumu ucinnosti
+            document.EffeciencyDate = null;
+
+            // vymazani datumu revize
+            document.ReviewDate = null;
+
+            // vymazani datumu pristi revize
+            document.NextReviewDate = null;
+
+            // vymazani datumu konec platnosti
+            document.EndDate = null;
+
+            //nastvani priznaku ReviewChange - Nutna zmena
+            document.ReviewNecessaryChange = false;
+
+            //nastvani priznaku Archiv
+            document.Archived = false;
+
             // odeslani emailu vsem prirazenym osobam v dokumentu
             documentsRepository.ChangeRevison(oldDocument);
             //EditDocument(oldDocument, null);
             document = AddDocument(document, fileNames);
             
-            // preulozit i soubory ???
+            // preulozit i soubory ??? - zatim nee 
 
             return new DocumentModel();
         }

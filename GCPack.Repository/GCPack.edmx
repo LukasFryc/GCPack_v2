@@ -47,6 +47,7 @@
           <Property Name="IssueNumber" Type="int" />
           <Property Name="ParentID" Type="int" />
           <Property Name="Archived" Type="bit" Nullable="false" />
+          <Property Name="ReviewNecessaryChange" Type="bit" />
         </EntityType>
         <EntityType Name="DocumentState">
           <Key>
@@ -1022,6 +1023,7 @@
           <NavigationProperty Name="DocumentState" Relationship="GCPack.FK_Documents_State" FromRole="Document" ToRole="DocumentState" />
           <NavigationProperty Name="WorkplaceDocuments" Relationship="GCPack.FK_WorkplaceDocument_Document" FromRole="Document" ToRole="WorkplaceDocument" />
           <Property Name="Archived" Type="Boolean" Nullable="false" />
+          <Property Name="ReviewNecessaryChange" Type="Boolean" />
         </EntityType>
         <EntityType Name="JobPosition">
           <Key>
@@ -1606,6 +1608,7 @@
           <EntitySetMapping Name="Documents">
             <EntityTypeMapping TypeName="GCPack.Document">
               <MappingFragment StoreEntitySet="Document">
+                <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
                 <ScalarProperty Name="Archived" ColumnName="Archived" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />

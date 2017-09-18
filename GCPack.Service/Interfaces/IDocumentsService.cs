@@ -21,6 +21,7 @@ namespace GCPack.Service.Interfaces
         string GenNumberOfDocument(int documentTypeID);
         DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames, int userID);
         DocumentModel NewVersion(DocumentModel document, int userId, ICollection<string> fileNames);
-        void RevisionNoAction(DocumentModel document, int userId, ICollection<string> fileNames);
+        void ReviewNoAction(DocumentModel document, int userId, ICollection<string> fileNames);
+        void ReviewNecessaryChange(DocumentModel document, int userID, ICollection<string> fileNames);
     }
 }

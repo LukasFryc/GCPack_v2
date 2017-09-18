@@ -1,4 +1,7 @@
 ﻿@model GCPack.Model.DocumentModel
+
+@{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
+
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -9,9 +12,18 @@
     var timeoutHandle;
     var selectedUsers = [];
     $(document).ready(function () {
+
         jQuery.validator.methods["date"] = function (value, element) { return true; } 
-        $('.btn').click(function () {
+
+        // nize uvedene nebude jiz potreba - reseno scriptem lukasuv kousek 15.9.2017
+        //$('.btn').click(function () {
+        //    $('#Action').val($(this).prop("id"));
+        //});
+
+        // LF lukasuv kousek 15.9.2017
+        $('.btnAction').click(function () {
             $('#Action').val($(this).prop("id"));
+            $('#myForm').submit();
         });
 
         $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yy' });
@@ -106,6 +118,10 @@
                         selectedUsers.push($(this).val());
                     });
                     $('#FilteredUsers').empty();
+
+                    var AllPath = AppRoot + "/user/getUsers";
+                    //alert(AllPath);
+
                     $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
                         .done(function (users) {
 
@@ -159,8 +175,13 @@
                 <li><a href="#tabs-3">Soubory</a></li>
                 <li><a href="#tabs-4">Přiřazené osoby k dokumentu</a></li>
                 <li><a href="#tabs-5">Kategorie</a></li>
-                <li><a href="#tabs-6">Záznamy o seznámení</a></li>
+                @if (Model.AllUsers > 0)
+                {
+                    <li><a href="#tabs-6">Záznamy o seznámení</a></li>
+                }
             </ul>
+            @if (Model.AllUsers > 0)
+            {
                 <div id="tabs-6">
                     
                     @*<table class="table" style="margin-top:20px">
@@ -207,14 +228,14 @@
                                             </div>
                                         </div>
                                     }
-                                    
+
 
                                 }
 
                             }
                             if (existAsUserReader == false)
                             {
-                               
+
                                 <div class="row">
                                     <div class="col-md-2">
                                         @item.FirstName
@@ -231,6 +252,7 @@
                         }
                     }
                  </div>
+                }
 
                 <div id="tabs-1">
                     <div class="row">
@@ -684,24 +706,73 @@
                 <input type="hidden" name="ID" id="ID" />
                 <div style="clear:both;margin-bottom:10px"></div>
                 <div class="row">
-                    <div class="col-md-10">
-                        <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
+                    <div class="col-md-12" >
+                        <nav class="navbar navbar-btn">
+                            <div class="container-fluid">
+                                <ul class="nav navbar-nav">
+                                    <li style="padding-right:5px">
+                                        <button class="btn btn-danger navbar-btn btnAction" id="cancelChanges">Zrušit změny</button>
+                                    </li>
+                                    @if (Model.DocumentStateCode == "New")
+                                    {
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="saveDocument">Uložit</button>
+                                        </li>
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="registerDocument">Zaevidovat</button>
+                                        </li>
+
+                                    }
+                                    else if (Model.DocumentStateCode == "Registered")
+                                    {
+
+                                        if (Model.Revision == "P")
+                                        {
+                                            <li style="padding-right:5px">
+                                                <button class="btn btn-primary navbar-btn btnAction" id="newVersion">Nové vydání</button>
+                                            </li>
+                                            <li style="padding-right:5px">
+                                                <button class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Přezkoumání<span class="caret"></span></button>
+                                                <ul class="dropdown-menu">
+                                                    <li style="padding-right:5px">
+                                                        <a href="#" class="btnAction" id="reviewNoAction"> Platný ve stávající formě</a>
+                                                        @*<button class="btnAction" id="revisionNoAction">Platný ve stávající formě</button>*@
+                                                    </li>
+                                                    <li style="padding-right:5px">
+                                                        <a href="#" class="btnAction" id="reviewNecessaryChanges"> Nutná změna</a>
+                                                        @*<button class="btn  btn-primary btnAction" id="revisionChanges">Nutná změna</button>*@
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        }
+                                    }
+
+                                    
+                                </ul>
+                            </div>
+                        </nav>
+
+                        @*<input type="button" value="Zrušit změny" id="cancelChanges" class="btn btn-danger" />
+                        
                         @if (Model.DocumentStateCode == "New")
                         {
+                            <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
                             <input type="submit" value="Zaevidovat" id="registerDocument" class="btn btn-success" />
                         }
-                        else
+                        else if (Model.DocumentStateCode == "Registered")
                         {
-                            <input type="submit" value="Nové vydání dokumentu" id="newVersion" class="btn btn-success" />
+                            
+                            if (Model.Revision == "P")
+                            {
+                                <input type="submit" value="Nové vydání" id="newVersion" class="btn btn-success" />
+                                <input type="submit" value="Platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />
+                                <input type="submit" value="Nutná změna" id="revisionChanges" class="btn btn-success" />
+                            }
                         }
 
-                        @if (Model.Revision == "P")
-                        {
-                            <input type="submit" value="Přezkoumání platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />
-                            <input type="submit" value="Přezkoumání - nutná změna" id="revisionChanges" class="btn btn-success" />
-                        }
-                        <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />
-                        <input type="button" value="Zrušit změny" id="cancelChanges" class="btn btn-danger" />
+                       
+                        <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />*@
+                       
                     </div>
                 </div>
                 }

@@ -461,7 +461,7 @@ namespace GCPack.Repository
             }
         }
             // ulozeni editovaneho dokumentu
-            public DocumentModel EditDocument(DocumentModel document)
+        public DocumentModel EditDocument(DocumentModel document)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
