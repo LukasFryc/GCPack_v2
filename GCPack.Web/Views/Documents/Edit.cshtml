@@ -273,7 +273,7 @@
                             @Html.HiddenFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
                             @Model.DocumentNumber
                             @Html.HiddenFor(model => model.IssueNumber, new { htmlAttributes = new {  @class = "form-control", @placeholder = "Číslo vydání" } })
-                            @Model.IssueNumber
+                            <strong>  (Vydání  </strong> @Model.IssueNumber <strong> ) </strong>                          
                             @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
                         </div>
                         <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
@@ -711,7 +711,7 @@
                             <div class="container-fluid">
                                 <ul class="nav navbar-nav">
                                     <li style="padding-right:5px">
-                                        <button class="btn btn-danger navbar-btn btnAction" id="cancelChanges">Zrušit změny</button>
+                                        <button class="btn btn-danger navbar-btn btnAction" id="cancelChanges">Zpět</button>
                                     </li>
                                     @if (Model.DocumentStateCode == "New")
                                     {
