@@ -199,6 +199,9 @@ namespace GCPack.Web.Controllers
 
         public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action)
         {
+
+            if (Action == "cancelChanges") return RedirectToAction("Index", new { Message = "Dokument nebyl uložen." });
+
             string folderForFiles = System.Configuration.ConfigurationManager.AppSettings["FileTemp"];
             string guid = Guid.NewGuid().ToString();
             ICollection<string> fileNames = new HashSet<string>();

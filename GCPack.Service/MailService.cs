@@ -23,6 +23,8 @@ namespace GCPack.Service
         {
             // LF 12.9.2017 - pokud nechci posilat postu, hodi se dokud neni postak rozchozen
             // jedna se o volbu ve webconfigu
+            // prikaz pro overeni ze se dostanes na postovni server je:
+            // cmd> telnet smtp.seznam.cz 25
             if (ConfigurationManager.AppSettings["emailDisable"]!="Yes")
             {
                 smtpClient.Host = ConfigurationManager.AppSettings["smtpHost"];
