@@ -50,6 +50,9 @@ namespace GCPack.Model
         public DateTime? NextReviewDateTo { get; set; }
 
         public string ReadType { get; set; }
+        public int? StateID { get; set; }
+
+        public string Revision { get; set; }
 
 
     }
