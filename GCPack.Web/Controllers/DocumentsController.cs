@@ -64,9 +64,10 @@ namespace GCPack.Web.Controllers
             //ViewBag.DocumentSort = documentSort.OrderBy(dt => dt.OrderBy);
 
             ICollection<Item> archivType = new HashSet<Item>(); ;
-            archivType.Add(new Item { ID = 0, Code = "botharchiv", OrderBy = 0, Value = "Všechny" });
-            archivType.Add(new Item { ID = 1, Code = "inarchiv", OrderBy = 1, Value = "V archívu" });
-            archivType.Add(new Item { ID = 2, Code = "outarchiv", OrderBy = 2, Value = "Platné" });
+            archivType.Add(new Item { ID = 0, Code = "all", OrderBy = 2, Value = "Všechny" });
+            archivType.Add(new Item { ID = 1, Code = "1", OrderBy = 1, Value = "Je v archívu" });
+            archivType.Add(new Item { ID = 2, Code = "0", OrderBy = 0, Value = "Není v archívu" });
+
 
             //ICollection<UserModel> users = new HashSet<UserModel>();
             //users = userService.GetUsers(new UserFilter());

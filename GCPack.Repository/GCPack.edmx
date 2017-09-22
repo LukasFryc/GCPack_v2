@@ -526,6 +526,8 @@
           <Parameter Name="EffeciencyDateFrom" Type="datetime" Mode="In" />
           <Parameter Name="EffeciencyDateTo" Type="datetime" Mode="In" />
           <Parameter Name="ReadType" Type="varchar" Mode="In" />
+          <Parameter Name="StateID" Type="int" Mode="In" />
+          <Parameter Name="Revision" Type="varchar" Mode="In" />
         </Function>
         <EntityContainer Name="GCPackStoreContainer">
           <EntitySet Name="AppSystem" EntityType="Self.AppSystem" Schema="dbo" store:Type="Tables" />
@@ -955,7 +957,7 @@
             <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
             <Parameter Name="ReadType" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="GetDocuments11" ReturnType="Collection(GCPack.GetDocuments11_Result)">
+          <FunctionImport Name="GetDocuments11">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -974,6 +976,28 @@
             <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
             <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
             <Parameter Name="ReadType" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments12" ReturnType="Collection(GCPack.GetDocuments12_Result)">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="ReadType" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="Revision" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
         <EntityType Name="AppSystem">
@@ -1552,7 +1576,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments11_Result">
+        <ComplexType Name="GetDocuments12_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1570,6 +1594,7 @@
           <Property Type="Int32" Name="IssueNumber" Nullable="true" />
           <Property Type="Int32" Name="ParentID" Nullable="true" />
           <Property Type="Boolean" Name="Archived" Nullable="false" />
+          <Property Type="Boolean" Name="ReviewNecessaryChange" Nullable="true" />
           <Property Type="Int32" Name="CanEdit" Nullable="false" />
           <Property Type="Int32" Name="CanRevision" Nullable="false" />
           <Property Type="DateTime" Name="Created" Nullable="true" Precision="23" />
@@ -1838,9 +1863,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments11" FunctionName="GCPack.Store.GetDocuments">
+          <FunctionImportMapping FunctionImportName="GetDocuments12" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments11_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments12_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
@@ -1858,6 +1883,7 @@
                 <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="Archived" ColumnName="Archived" />
+                <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
                 <ScalarProperty Name="CanEdit" ColumnName="CanEdit" />
                 <ScalarProperty Name="CanRevision" ColumnName="CanRevision" />
                 <ScalarProperty Name="Created" ColumnName="Created" />

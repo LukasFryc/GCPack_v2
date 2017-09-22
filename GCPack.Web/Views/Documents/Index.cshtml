@@ -31,17 +31,21 @@
                     }
                 );
 
-                $('.filter').keyup(function () {
+                $('.filterText').keyup(function () {
                     GetDocuments();
                 });
 
-                $('#DocumentTypeID , #ProjectID, #DivisionID, #AppSystemID, #WorkplaceID').change(function () {
+                $('.filter').change(function () {
                     GetDocuments();
                 });
 
-                $('#EffeciencyDateFrom,#EffeciencyDateTo,#NextReviewDateFrom,#NextReviewDateTo,#ReadType').change(function () {
-                    GetDocuments();
-                });
+                //$('#DocumentTypeID , #ProjectID, #DivisionID, #AppSystemID, #WorkplaceID').change(function () {
+                //    GetDocuments();
+                //});
+
+                //$('#EffeciencyDateFrom,#EffeciencyDateTo,#NextReviewDateFrom,#NextReviewDateTo,#ReadType').change(function () {
+                //    GetDocuments();
+                //});
 
 
             });
@@ -171,7 +175,7 @@
                 $("#DivisionID").val('');
                 $("#AppSystemID").val('');
                 $("#WorkplaceID").val('');
-                $("#ReadType").val('');
+                $("#ReadType").val('all');
 
                 $("#projectsFilter").val('');
                 $("#divisionsFilter").val('');
@@ -193,7 +197,7 @@
                 $("#EffeciencyDateTo").val('');
                 $("#NextReviewDateFrom").val('');
                 $("#NextReviewDateTo").val('');
-                $("#RevisionType").val('0');
+                $("#RevisionType").val('all');
                 
                 //$('#section-filter-plus2').hide();
                 GetDocuments();
@@ -311,19 +315,19 @@
 
             </div>
             <div class="col-md-2">
-                <input class="filter form-control" type="text" id="Name" />
+                <input class="filterText form-control" type="text" id="Name" />
             </div>
             <div class="col-md-2">
-                <input class="filter form-control" type="text" id="Number" />
+                <input class="filterText form-control" type="text" id="Number" />
             </div>
             <div class="col-md-2">
-                <input class="filter form-control" type="text" id="AdministratorName" />
+                <input class="filterText form-control" type="text" id="AdministratorName" />
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "form-control" })
+                @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("DocumentStates", new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownList("DocumentStates", new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" })
             </div>
            
         </div>
@@ -364,23 +368,23 @@
                 
             </div>
             <div class="col-md-2">
-                <input type="text" id="projectsFilter" placeholder="Filtr projektů" class="form-control" />
+                <input type="text" id="projectsFilter" placeholder="Filtr projektů" class="filter  form-control" />
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="divisionsFilter" placeholder="Filtr středisek" class="form-control" />
+                <input type="text" id="divisionsFilter" placeholder="Filtr středisek" class="filter form-control" />
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="appSystemsFilter" placeholder="Filtr systémů" class="form-control" />
+                <input type="text" id="appSystemsFilter" placeholder="Filtr systémů" class="filter form-control" />
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="workplacesFilter" placeholder="Filtr prac. míst" class="form-control" />
+                <input type="text" id="workplacesFilter" placeholder="Filtr prac. míst" class="filter form-control" />
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("ReadType", new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "form-control" })
+                @Html.DropDownList("ReadType", new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "filter form-control" })
 
             </div>
             <div class="col-md-2">
@@ -396,19 +400,19 @@
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("DivisionID", new SelectList(ViewBag.Divisions, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownList("DivisionID", new SelectList(ViewBag.Divisions, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("AppSystemID", new SelectList(ViewBag.AppSystems, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownList("AppSystemID", new SelectList(ViewBag.AppSystems, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "form-control" })
+                @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
         </div>
@@ -460,22 +464,22 @@
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="EffeciencyDateFrom" class="form-control" placeholder="Od" />
+                <input type="text" id="EffeciencyDateFrom" class="filter form-control" placeholder="Od" />
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="EffeciencyDateTo" class="form-control" placeholder="Do" />
+                <input type="text" id="EffeciencyDateTo" class="filter form-control" placeholder="Do" />
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="NextReviewDateFrom" class="form-control" placeholder="Od" />
+                <input type="text" id="NextReviewDateFrom" class="filter form-control" placeholder="Od" />
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="NextReviewDateTo" class="form-control" placeholder="Do" />
+                <input type="text" id="NextReviewDateTo" class="filter form-control" placeholder="Do" />
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "form-control" })
+                @Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
             </div>
 
         </div>
