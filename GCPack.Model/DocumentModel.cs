@@ -50,7 +50,8 @@ namespace GCPack.Model
         public string Revision { get; set; }
         public int StateID { get; set; }
         public int AdministratorID { get; set; }
-        
+        public int OwnerID { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> EffeciencyDate { get; set; }
 

@@ -23,6 +23,12 @@ namespace GCPack.Web.Controllers
             this.codeListService = codeListService;
         }
 
+        [AuthorizeAttributeGC(Roles = "documentOwner,documentAdmin")]
+        public ActionResult Edit2(int DocumentID, string Message)
+        {
+            return View();
+        }
+
 
         // GET: Documents
         [AuthorizeAttributeGC(Roles = "user,admin,supervisor,poweruser")]
