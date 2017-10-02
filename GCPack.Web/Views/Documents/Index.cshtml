@@ -153,9 +153,9 @@
         $(document).ready(function () {
             $("#section-filter-plus1").on("hide.bs.collapse", function () {
                 $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
-                $("#Name").val();
-                $("#Number").val();
-                $("#AdministratorName").val();
+                $("#Name").val('');
+                $("#Number").val('');
+                $("#AdministratorName").val('');
                 $("#DocumentTypeID").val(0);
                 $("#DocumentStates").val(0);
              
@@ -308,6 +308,12 @@
         <div class="col-md-2">
             <label for="DocumentStates">Stav dokumentu</label>
         </div>
+
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
     </div>
     <div id="section-filter-plus1" class="collapse in">
         <div class="row">
@@ -329,7 +335,9 @@
             <div class="col-md-2">
                 @Html.DropDownList("DocumentStates", new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" })
             </div>
-           
+            <div class="col-md-1">
+
+            </div>
         </div>
     </div>
 
@@ -359,7 +367,11 @@
         <div class="col-md-2">
             <label for="ReadType">Seznámeno</label>
         </div>
-        
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
     </div>
 
     <div id="section-filter-plus2" class="collapse">
@@ -388,6 +400,9 @@
 
             </div>
             <div class="col-md-2">
+
+            </div>
+            <div class="col-md-1">
 
             </div>
         </div>
@@ -453,6 +468,12 @@
             <label for="ReadType">Typ revize</label>
         </div>
 
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus3" id="btnCollapse3">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
+
     </div>
 
     <div id="section-filter-plus3" class="collapse">
@@ -481,7 +502,9 @@
             <div class="col-md-2">
                 @Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
             </div>
+            <div class="col-md-1">
 
+            </div>
         </div>
 
 
