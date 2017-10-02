@@ -46,6 +46,8 @@ namespace GCPack.Repository
         public Nullable<int> ParentID { get; set; }
         public bool Archived { get; set; }
         public Nullable<bool> ReviewNecessaryChange { get; set; }
+        public Nullable<bool> TESTIK { get; set; }
+        public Nullable<int> OwnerID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<LogEvent> LogEvents { get; set; }

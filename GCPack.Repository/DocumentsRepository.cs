@@ -233,8 +233,7 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
-                ICollection<GetDocuments12_Result> documentsResult = db.GetDocuments12(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision).ToList<GetDocuments12_Result>();
-                
+                ICollection<GetDocuments13_Result> documentsResult = db.GetDocuments13(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision).ToList<GetDocuments13_Result>();
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;
             }

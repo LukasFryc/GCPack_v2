@@ -48,6 +48,8 @@
           <Property Name="ParentID" Type="int" />
           <Property Name="Archived" Type="bit" Nullable="false" />
           <Property Name="ReviewNecessaryChange" Type="bit" />
+          <Property Name="TESTIK" Type="bit" />
+          <Property Name="OwnerID" Type="int" />
         </EntityType>
         <EntityType Name="DocumentState">
           <Key>
@@ -977,7 +979,29 @@
             <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
             <Parameter Name="ReadType" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="GetDocuments12" ReturnType="Collection(GCPack.GetDocuments12_Result)">
+          <FunctionImport Name="GetDocuments12">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="ReadType" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="Revision" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments13" ReturnType="Collection(GCPack.GetDocuments13_Result)">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -1048,6 +1072,8 @@
           <NavigationProperty Name="WorkplaceDocuments" Relationship="GCPack.FK_WorkplaceDocument_Document" FromRole="Document" ToRole="WorkplaceDocument" />
           <Property Name="Archived" Type="Boolean" Nullable="false" />
           <Property Name="ReviewNecessaryChange" Type="Boolean" />
+          <Property Name="TESTIK" Type="Boolean" />
+          <Property Name="OwnerID" Type="Int32" />
         </EntityType>
         <EntityType Name="JobPosition">
           <Key>
@@ -1576,7 +1602,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments12_Result">
+        <ComplexType Name="GetDocuments13_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1595,6 +1621,8 @@
           <Property Type="Int32" Name="ParentID" Nullable="true" />
           <Property Type="Boolean" Name="Archived" Nullable="false" />
           <Property Type="Boolean" Name="ReviewNecessaryChange" Nullable="true" />
+          <Property Type="Boolean" Name="TESTIK" Nullable="true" />
+          <Property Type="Int32" Name="OwnerID" Nullable="true" />
           <Property Type="Int32" Name="CanEdit" Nullable="false" />
           <Property Type="Int32" Name="CanRevision" Nullable="false" />
           <Property Type="DateTime" Name="Created" Nullable="true" Precision="23" />
@@ -1605,6 +1633,7 @@
           <Property Type="String" Name="DocumentStateCode" Nullable="false" MaxLength="50" />
           <Property Type="Int32" Name="UsersRead" Nullable="true" />
           <Property Type="Int32" Name="AllUsers" Nullable="true" />
+          <Property Type="Int32" Name="DocumentOwnerID" Nullable="true" />
         </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1633,6 +1662,8 @@
           <EntitySetMapping Name="Documents">
             <EntityTypeMapping TypeName="GCPack.Document">
               <MappingFragment StoreEntitySet="Document">
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="TESTIK" ColumnName="TESTIK" />
                 <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
                 <ScalarProperty Name="Archived" ColumnName="Archived" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
@@ -1863,9 +1894,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments12" FunctionName="GCPack.Store.GetDocuments">
+          <FunctionImportMapping FunctionImportName="GetDocuments13" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments12_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments13_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
@@ -1884,6 +1915,8 @@
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="Archived" ColumnName="Archived" />
                 <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
+                <ScalarProperty Name="TESTIK" ColumnName="TESTIK" />
+                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
                 <ScalarProperty Name="CanEdit" ColumnName="CanEdit" />
                 <ScalarProperty Name="CanRevision" ColumnName="CanRevision" />
                 <ScalarProperty Name="Created" ColumnName="Created" />
@@ -1894,6 +1927,7 @@
                 <ScalarProperty Name="DocumentStateCode" ColumnName="DocumentStateCode" />
                 <ScalarProperty Name="UsersRead" ColumnName="UsersRead" />
                 <ScalarProperty Name="AllUsers" ColumnName="AllUsers" />
+                <ScalarProperty Name="DocumentOwnerID" ColumnName="DocumentOwnerID" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
