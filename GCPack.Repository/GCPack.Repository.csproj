@@ -93,7 +93,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GCPack.edmx</DependentUpon>
     </Compile>
-    <Compile Include="GetDocuments13_Result.cs">
+    <Compile Include="GetDocuments14_Result.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ICodeListsRepository.cs" />

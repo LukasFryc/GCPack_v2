@@ -23,5 +23,7 @@ namespace GCPack.Service.Interfaces
         DocumentModel NewVersion(DocumentModel document, int userId, ICollection<string> fileNames);
         void ReviewNoAction(DocumentModel document, int userId, ICollection<string> fileNames);
         void ReviewNecessaryChange(DocumentModel document, int userID, ICollection<string> fileNames);
+
+        void Archived(DocumentModel document, int userID, bool archiv);
     }
 }

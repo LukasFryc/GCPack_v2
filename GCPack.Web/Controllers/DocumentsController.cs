@@ -261,6 +261,16 @@ namespace GCPack.Web.Controllers
                         case "reviewNecessaryChanges":
                             documentService.ReviewNecessaryChange(document, UserRoles.GetUserId(), fileNames);
                             break;
+                        case "archivDocument":
+                          documentService.Archived(document, UserRoles.GetUserId(), true);
+                            break;
+                        case "deArchivDocument":
+                            documentService.Archived(document, UserRoles.GetUserId(), false);
+                            break;
+                        case "stornoDocument":
+                            //documentService.ReviewNecessaryChange(document, UserRoles.GetUserId(), fileNames);
+                            break;
+
                         case "cancelChanges":
                             break;
                         default:
