@@ -48,6 +48,14 @@ namespace GCPack.Service
             SaveFiles(document, fileNames);
         }
 
+        public void Archived(DocumentModel document, int userID, bool archiv)
+        {
+            DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
+            documentModel.Archived = archiv;
+            documentsRepository.EditDocument(documentModel);
+
+        }
+
         public DocumentModel NewVersion(DocumentModel document, int userId, ICollection<string> fileNames)
         {
             // nacte se puvodni dokument

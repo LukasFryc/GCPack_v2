@@ -35,9 +35,9 @@
                     GetDocuments();
                 });
 
-                $('.filter').change(function () {
-                    GetDocuments();
-                });
+                //$('.filter').change(function () {
+                //    GetDocuments();
+                //});
 
                 //$('#DocumentTypeID , #ProjectID, #DivisionID, #AppSystemID, #WorkplaceID').change(function () {
                 //    GetDocuments();
@@ -93,9 +93,9 @@
                                     var redColor = "#EE9090";
                                     var blackColor = "#000000";
                                     var readColor = blackColor;
+                                    var archiv = "";
 
-                                    if (doc.EffeciencyDate != null)
-                                    {
+                                    if (doc.EffeciencyDate != null) {
                                         var date = eval(doc.EffeciencyDate.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
                                         dateStr =
                                             date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
@@ -106,13 +106,19 @@
                                     if (unReadCount > 0) {
                                         readColor = redColor
                                     }
-
+                                   
+                                    //if doc.Archived == true) {
+                                    //    archiv = "A"
+                                    //} else {
+                                    //    archiv = ""
+                                    //}
                                     $('table').append('<tr class="dataRow">' +
+                                        '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
                                         '<td> ' + doc.Title + '</td>' +
-                                        '<td> ' + doc.DocumentNumber + ' (Vydání: ' + doc.IssueNumber + ')</td>' +
                                         '<td> ' + dateStr + '</td>' +
                                         '<td> ' + doc.DocumentAdministrator + '</td>' +
-                                        '<td> <b> <font color="' + readColor + '">' + doc.UsersRead  + ':' + unReadCount+ '</font></b></td>' +
+                                        '<td> <b> <font color="' + readColor + '">' + doc.UsersRead + ':' + unReadCount + '</font></b></td>' +
+                                        //'<td> ' + archiv + '</td>' +
                                         '<td> <A href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
                                         '"><span class="glyphicon glyphicon-edit"></span></A> <A href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID +
                                         '"><span class="glyphicon glyphicon-eye-open"></span></A> <A href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
@@ -153,9 +159,9 @@
         $(document).ready(function () {
             $("#section-filter-plus1").on("hide.bs.collapse", function () {
                 $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
-                $("#Name").val();
-                $("#Number").val();
-                $("#AdministratorName").val();
+                $("#Name").val('');
+                $("#Number").val('');
+                $("#AdministratorName").val('');
                 $("#DocumentTypeID").val(0);
                 $("#DocumentStates").val(0);
              
@@ -171,10 +177,10 @@
 
                 $("#btnCollapse2").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
 
-                $("#ProjectID").val('');
-                $("#DivisionID").val('');
-                $("#AppSystemID").val('');
-                $("#WorkplaceID").val('');
+                $("#ProjectID").val('0');
+                $("#DivisionID").val('0');
+                $("#AppSystemID").val('0');
+                $("#WorkplaceID").val('0');
                 $("#ReadType").val('all');
 
                 $("#projectsFilter").val('');
@@ -308,6 +314,12 @@
         <div class="col-md-2">
             <label for="DocumentStates">Stav dokumentu</label>
         </div>
+
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
     </div>
     <div id="section-filter-plus1" class="collapse in">
         <div class="row">
@@ -329,7 +341,9 @@
             <div class="col-md-2">
                 @Html.DropDownList("DocumentStates", new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" })
             </div>
-           
+            <div class="col-md-1">
+
+            </div>
         </div>
     </div>
 
@@ -359,7 +373,11 @@
         <div class="col-md-2">
             <label for="ReadType">Seznámeno</label>
         </div>
-        
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
     </div>
 
     <div id="section-filter-plus2" class="collapse">
@@ -367,7 +385,7 @@
             <div class="col-md-1">
                 
             </div>
-            <div class="col-md-2">
+            @*<div class="col-md-2">
                 <input type="text" id="projectsFilter" placeholder="Filtr projektů" class="filter  form-control" />
             </div>
 
@@ -381,23 +399,7 @@
 
             <div class="col-md-2">
                 <input type="text" id="workplacesFilter" placeholder="Filtr prac. míst" class="filter form-control" />
-            </div>
-
-            <div class="col-md-2">
-                @Html.DropDownList("ReadType", new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "filter form-control" })
-
-            </div>
-            <div class="col-md-2">
-
-            </div>
-        </div>
-
-
-        <div class="row">
-
-            <div class="col-md-1">
-
-            </div>
+            </div>*@
 
             <div class="col-md-2">
                 @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "filter form-control" })
@@ -415,7 +417,42 @@
                 @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
+            <div class="col-md-2">
+                @Html.DropDownList("ReadType", new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "filter form-control" })
+
+            </div>
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-1">
+
+            </div>
         </div>
+
+
+        @*<div class="row">
+
+            <div class="col-md-1">
+
+            </div>*@
+
+            @*<div class="col-md-2">
+                @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "filter form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.DropDownList("DivisionID", new SelectList(ViewBag.Divisions, "ID", "Name"), new { @class = "filter form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.DropDownList("AppSystemID", new SelectList(ViewBag.AppSystems, "ID", "Name"), new { @class = "filter form-control" })
+            </div>
+
+            <div class="col-md-2">
+                @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "filter form-control" })
+            </div>*@
+
+        @*</div>*@
 
 
     </div>
@@ -453,6 +490,12 @@
             <label for="ReadType">Typ revize</label>
         </div>
 
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus3" id="btnCollapse3">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
+
     </div>
 
     <div id="section-filter-plus3" class="collapse">
@@ -481,7 +524,9 @@
             <div class="col-md-2">
                 @Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
             </div>
+            <div class="col-md-1">
 
+            </div>
         </div>
 
 
@@ -492,17 +537,18 @@
 <table class="table" style="margin-top:20px">
     <tr>
         <th>
-            Název
-            <a href="#" class="sortBy" sortBy="NameA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
-            <a href="#" class="sortBy" sortBy="NameD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
-        </th>
-        <th>
-            Číslo dokumentu
+            Číslo
             <a href="#" class="sortBy" sortBy="NumberA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
             <a href="#" class="sortBy" sortBy="NumberD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
         </th>
         <th>
-            Datum účinnosti
+            Název
+            <a href="#" class="sortBy" sortBy="NameA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
+            <a href="#" class="sortBy" sortBy="NameD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
+        </th>
+        
+        <th>
+            Účinnost
             <a href="#" class="sortBy" sortBy="RevisionA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
             <a href="#" class="sortBy" sortBy="RevisionD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
         </th>
@@ -516,6 +562,10 @@
             Seznámeno:Ne
             
         </th>
+        @*<th>
+            Archiv
+
+        </th>*@
         <th></th>
     </tr>
 </table>

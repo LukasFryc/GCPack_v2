@@ -18,7 +18,7 @@ namespace GCPack.Repository
         public int DocumentID { get; set; }
         public int UserID { get; set; }
     
-        public virtual Document Document { get; set; }
         public virtual User User { get; set; }
+        public virtual Document Document { get; set; }
     }
 }

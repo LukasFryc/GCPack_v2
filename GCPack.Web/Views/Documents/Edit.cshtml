@@ -107,6 +107,42 @@
             
         });
 
+        $('#actionTestModal').click(function () {
+            //$('#myModal').modal('show'); 
+            $('#myModal').modal(); 
+            return false;
+        });
+
+        //$('#myModal').modal('show'); 
+
+        $('#stornoModalSave').click(function () {
+            quota = $("#quotas").val();
+            //alert(quota);
+            $('#HelpText').val(quota);
+            $('#myForm').submit();
+
+        });
+
+        $('#stornoModalClose').click(function () {
+            
+        });
+
+        $('#myModal').on('shown', function () {
+            $("#quotas").focus();
+        })
+
+        $("#myForm").submit(function (event) {
+
+            testik = $('#HelpText').val()
+            //alert(testik);
+            //event.preventDefault(); je shodnz s return false
+            //return false
+        });
+
+        
+
+        
+
         function GetUsers()
         {
             if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
@@ -168,6 +204,8 @@
         <input type="hidden" name="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
         <input type="hidden" name="ParentID" value="@Model.ParentID"/>
+        <input type="hidden" name="HelpText"  id="HelpText" />
+
         <div id="success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>
         <div id="tabs">
             <ul>
@@ -746,6 +784,38 @@
                                             </li>
                                         }
                                     }
+                                    @if (Model.DocumentStateCode == "New" | Model.DocumentStateCode == "Registered")
+                                    {
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="stornoDocument">Storno</button>
+                                        </li>
+                                      
+
+                                    }
+
+                                    @if (Model.DocumentStateCode == "Storno" | Model.DocumentStateCode == "Registered")
+                                    {
+
+                                        if (Model.Archived != true)
+                                        {
+                                            <li style="padding-right:5px">
+                                                <button class="btn btn-primary navbar-btn btnAction" id="archivDocument">Archiv</button>
+                                            </li>
+                                        }
+                                        else
+                                        {
+                                            <li style="padding-right:5px">
+                                                <button class="btn btn-primary navbar-btn btnAction" id="deArchivDocument">Dearchivace</button>
+                                            </li>
+                                        }
+
+                                    }
+                                    
+                                    <li style="padding-right:5px">
+                                        <button class="btn btn-primary navbar-btn" id="actionTestModal">Test modal</button>
+                                    </li>
+
+                                    
 
                                     
                                 </ul>
@@ -776,4 +846,28 @@
                     </div>
                 </div>
                 }
+
+
+</div>
+
+<div id="myModal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Confirmation</h4>
             </div>
+            <div class="modal-body">
+                <p>Do you want to save changes you made to document before closing?</p>
+                <p class="text-warning"><small>If you don't save, your changes will be lost.</small></p>
+                <input type="text" name="quota" class="form-control" id="quotas" value="ahoj" maxlength="20">
+            </div>
+            <div class="modal-footer">
+                <button ID="stornoModalClose" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button ID="stornoModalSave" type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+

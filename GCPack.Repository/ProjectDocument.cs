@@ -18,7 +18,7 @@ namespace GCPack.Repository
         public int ProjectID { get; set; }
         public int DocumentID { get; set; }
     
-        public virtual Document Document { get; set; }
         public virtual Project Project { get; set; }
+        public virtual Document Document { get; set; }
     }
 }
