@@ -18,11 +18,11 @@ namespace GCPack.Repository
         public User()
         {
             this.JobPositionUsers = new HashSet<JobPositionUser>();
-            this.LogEvents = new HashSet<LogEvent>();
             this.Logins = new HashSet<Login>();
             this.Signatures = new HashSet<Signature>();
             this.UserRoles = new HashSet<UserRole>();
             this.UserDocuments = new HashSet<UserDocument>();
+            this.LogEvents = new HashSet<LogEvent>();
         }
     
         public int ID { get; set; }
@@ -43,8 +43,6 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobPositionUser> JobPositionUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<LogEvent> LogEvents { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Login> Logins { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Signature> Signatures { get; set; }
@@ -53,5 +51,7 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserDocument> UserDocuments { get; set; }
         public virtual JobPosition JobPosition { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<LogEvent> LogEvents { get; set; }
     }
 }

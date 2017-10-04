@@ -13,11 +13,13 @@ namespace GCPack.Service
     public class UsersService : IUsersService
     {
         readonly IUsersRepository usersRepository;
+        readonly ILogEventsService logEventsService;
 
         // IOC  se inicializuje v boostrap (ten je GCPack.Web/App_Start)
-        public UsersService(IUsersRepository usersRepository)
+        public UsersService(IUsersRepository usersRepository, ILogEventsService logEventsService)
         {
             this.usersRepository = usersRepository;
+            this.logEventsService = logEventsService;
         }
 
         public string Login(string username, string password)
@@ -30,6 +32,9 @@ namespace GCPack.Service
                 ticket = Guid.NewGuid().ToString();
                 usersRepository.UpdateTicket(ticket, user);
             }
+
+            if (user != null) logEventsService.LogEvent(user.ID, LogEventType.UserLogin, 0);
+
             return ticket;
         }
 

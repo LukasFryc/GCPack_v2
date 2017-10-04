@@ -119,8 +119,9 @@
           <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserID" Type="int" Nullable="false" />
           <Property Name="Text" Type="varchar" MaxLength="50" />
-          <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
-          <Property Name="DocumentID" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="LogType" Type="int" />
+          <Property Name="ResourceID" Type="int" />
         </EntityType>
         <EntityType Name="Login">
           <Key>
@@ -326,18 +327,6 @@
             </Principal>
             <Dependent Role="JobPositionUser">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LogEvent_RizeneDokumeny">
-          <End Role="Document" Type="Self.Document" Multiplicity="1" />
-          <End Role="LogEvent" Type="Self.LogEvent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Document">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="LogEvent">
-              <PropertyRef Name="DocumentID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -587,10 +576,6 @@
             <End Role="User" EntitySet="User" />
             <End Role="JobPositionUser" EntitySet="JobPositionUser" />
           </AssociationSet>
-          <AssociationSet Name="FK_LogEvent_RizeneDokumeny" Association="Self.FK_LogEvent_RizeneDokumeny">
-            <End Role="Document" EntitySet="Document" />
-            <End Role="LogEvent" EntitySet="LogEvent" />
-          </AssociationSet>
           <AssociationSet Name="FK_LogEvent_User" Association="Self.FK_LogEvent_User">
             <End Role="User" EntitySet="User" />
             <End Role="LogEvent" EntitySet="LogEvent" />
@@ -657,15 +642,10 @@
           <EntitySet Name="Divisions" EntityType="GCPack.Division" />
           <EntitySet Name="Documents" EntityType="GCPack.Document" />
           <EntitySet Name="JobPositions" EntityType="GCPack.JobPosition" />
-          <EntitySet Name="LogEvents" EntityType="GCPack.LogEvent" />
           <EntitySet Name="ReadConfirmations" EntityType="GCPack.ReadConfirmation" />
           <EntitySet Name="Roles" EntityType="GCPack.Role" />
           <EntitySet Name="Signatures" EntityType="GCPack.Signature" />
           <EntitySet Name="UserRoles" EntityType="GCPack.UserRole" />
-          <AssociationSet Name="FK_LogEvent_RizeneDokumeny" Association="GCPack.FK_LogEvent_RizeneDokumeny">
-            <End Role="Document" EntitySet="Documents" />
-            <End Role="LogEvent" EntitySet="LogEvents" />
-          </AssociationSet>
           <AssociationSet Name="FK_ReadConfirmation_RizeneDokumeny" Association="GCPack.FK_ReadConfirmation_RizeneDokumeny">
             <End Role="Document" EntitySet="Documents" />
             <End Role="ReadConfirmation" EntitySet="ReadConfirmations" />
@@ -693,10 +673,6 @@
           <AssociationSet Name="FK_JobPositionUser_User" Association="GCPack.FK_JobPositionUser_User">
             <End Role="User" EntitySet="Users" />
             <End Role="JobPositionUser" EntitySet="JobPositionUsers" />
-          </AssociationSet>
-          <AssociationSet Name="FK_LogEvent_User" Association="GCPack.FK_LogEvent_User">
-            <End Role="User" EntitySet="Users" />
-            <End Role="LogEvent" EntitySet="LogEvents" />
           </AssociationSet>
           <AssociationSet Name="FK_Login_User" Association="GCPack.FK_Login_User">
             <End Role="User" EntitySet="Users" />
@@ -1023,6 +999,11 @@
             <Parameter Name="StateID" Mode="In" Type="Int32" />
             <Parameter Name="Revision" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="LogEvents" EntityType="GCPack.LogEvent" />
+          <AssociationSet Name="FK_LogEvent_User" Association="GCPack.FK_LogEvent_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="LogEvent" EntitySet="LogEvents" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="AppSystem">
           <Key>
@@ -1053,7 +1034,6 @@
           <Property Name="NextReviewDate" Type="DateTime" Precision="3" />
           <Property Name="AdministratorID" Type="Int32" Nullable="false" />
           <Property Name="StateID" Type="Int32" />
-          <NavigationProperty Name="LogEvents" Relationship="GCPack.FK_LogEvent_RizeneDokumeny" FromRole="Document" ToRole="LogEvent" />
           <NavigationProperty Name="ReadConfirmations" Relationship="GCPack.FK_ReadConfirmation_RizeneDokumeny" FromRole="Document" ToRole="ReadConfirmation" />
           <NavigationProperty Name="Signatures" Relationship="GCPack.FK_Signature_RizeneDokumeny" FromRole="Document" ToRole="Signature" />
           <Property Name="DocumentAdminType" Type="Int32" />
@@ -1084,18 +1064,6 @@
           <NavigationProperty Name="JobPositionUsers" Relationship="GCPack.FK_JobPositionUser_JobPosition" FromRole="JobPosition" ToRole="JobPositionUser" />
           <NavigationProperty Name="JobPositionDocuments" Relationship="GCPack.FK_JobPositionDocument_JobPosition" FromRole="JobPosition" ToRole="JobPositionDocument" />
           <NavigationProperty Name="Users" Relationship="GCPack.FK_User_JobPosition" FromRole="JobPosition" ToRole="User" />
-        </EntityType>
-        <EntityType Name="LogEvent">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Date" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="DocumentID" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Document" Relationship="GCPack.FK_LogEvent_RizeneDokumeny" FromRole="LogEvent" ToRole="Document" />
-          <NavigationProperty Name="User" Relationship="GCPack.FK_LogEvent_User" FromRole="LogEvent" ToRole="User" />
         </EntityType>
         <EntityType Name="ReadConfirmation">
           <Key>
@@ -1138,18 +1106,6 @@
           <NavigationProperty Name="Role" Relationship="GCPack.FK_UserRoles_Roles" FromRole="UserRole" ToRole="Role" />
           <NavigationProperty Name="User" Relationship="GCPack.FK_UserRoles_Users" FromRole="UserRole" ToRole="User" />
         </EntityType>
-        <Association Name="FK_LogEvent_RizeneDokumeny">
-          <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
-          <End Type="GCPack.LogEvent" Role="LogEvent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Document">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="LogEvent">
-              <PropertyRef Name="DocumentID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ReadConfirmation_RizeneDokumeny">
           <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
           <End Type="GCPack.ReadConfirmation" Role="ReadConfirmation" Multiplicity="*" />
@@ -1247,13 +1203,13 @@
           <Property Name="ManagerID" Type="Int32" />
           <Property Name="AdministratorID" Type="Int32" />
           <NavigationProperty Name="JobPositionUsers" Relationship="GCPack.FK_JobPositionUser_User" FromRole="User" ToRole="JobPositionUser" />
-          <NavigationProperty Name="LogEvents" Relationship="GCPack.FK_LogEvent_User" FromRole="User" ToRole="LogEvent" />
           <NavigationProperty Name="Logins" Relationship="GCPack.FK_Login_User" FromRole="User" ToRole="Login" />
           <NavigationProperty Name="Signatures" Relationship="GCPack.FK_Signature_User" FromRole="User" ToRole="Signature" />
           <NavigationProperty Name="UserRoles" Relationship="GCPack.FK_UserRoles_Users" FromRole="User" ToRole="UserRole" />
           <NavigationProperty Name="UserDocuments" Relationship="GCPack.FK_UserDocument_User" FromRole="User" ToRole="UserDocument" />
           <Property Name="JobPositionID" Type="Int32" />
           <NavigationProperty Name="JobPosition" Relationship="GCPack.FK_User_JobPosition" FromRole="User" ToRole="JobPosition" />
+          <NavigationProperty Name="LogEvents" Relationship="GCPack.FK_LogEvent_User" FromRole="User" ToRole="LogEvent" />
         </EntityType>
         <Association Name="FK_JobPositionUser_JobPosition">
           <End Type="GCPack.JobPosition" Role="JobPosition" Multiplicity="1" />
@@ -1276,18 +1232,6 @@
             </Principal>
             <Dependent Role="JobPositionUser">
               <PropertyRef Name="UserId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_LogEvent_User">
-          <End Type="GCPack.User" Role="User" Multiplicity="1" />
-          <End Type="GCPack.LogEvent" Role="LogEvent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="LogEvent">
-              <PropertyRef Name="UserID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1635,6 +1579,30 @@
           <Property Type="Int32" Name="AllUsers" Nullable="true" />
           <Property Type="Int32" Name="DocumentOwnerID" Nullable="true" />
         </ComplexType>
+        <EntityType Name="LogEvent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LogType" Type="Int32" />
+          <Property Name="ResourceID" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="GCPack.FK_LogEvent_User" FromRole="LogEvent" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_LogEvent_User">
+          <End Type="GCPack.User" Role="User" Multiplicity="1" />
+          <End Type="GCPack.LogEvent" Role="LogEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LogEvent">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1688,17 +1656,6 @@
             <EntityTypeMapping TypeName="GCPack.JobPosition">
               <MappingFragment StoreEntitySet="JobPosition">
                 <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LogEvents">
-            <EntityTypeMapping TypeName="GCPack.LogEvent">
-              <MappingFragment StoreEntitySet="LogEvent">
-                <ScalarProperty Name="DocumentID" ColumnName="DocumentID" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1931,6 +1888,18 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="LogEvents">
+            <EntityTypeMapping TypeName="GCPack.LogEvent">
+              <MappingFragment StoreEntitySet="LogEvent">
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="LogType" ColumnName="LogType" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

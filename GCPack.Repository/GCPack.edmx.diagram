@@ -9,12 +9,10 @@
         <EntityTypeShape EntityType="GCPack.Division" Width="1.5" PointX="10.5" PointY="6" />
         <EntityTypeShape EntityType="GCPack.Document" Width="1.5" PointX="7.5" PointY="11.625" />
         <EntityTypeShape EntityType="GCPack.JobPosition" Width="1.5" PointX="0.75" PointY="10.25" />
-        <EntityTypeShape EntityType="GCPack.LogEvent" Width="1.5" PointX="9.75" PointY="14.125" />
         <EntityTypeShape EntityType="GCPack.ReadConfirmation" Width="1.5" PointX="9.75" PointY="20.125" />
         <EntityTypeShape EntityType="GCPack.Role" Width="1.5" PointX="3" PointY="5" />
         <EntityTypeShape EntityType="GCPack.Signature" Width="1.5" PointX="9.75" PointY="11.25" />
         <EntityTypeShape EntityType="GCPack.UserRole" Width="1.5" PointX="5.25" PointY="9" />
-        <AssociationConnector Association="GCPack.FK_LogEvent_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_Signature_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_UserRoles_Roles" />
@@ -25,7 +23,6 @@
         <EntityTypeShape EntityType="GCPack.User" Width="1.5" PointX="0.75" PointY="4.25" />
         <AssociationConnector Association="GCPack.FK_JobPositionUser_JobPosition" />
         <AssociationConnector Association="GCPack.FK_JobPositionUser_User" />
-        <AssociationConnector Association="GCPack.FK_LogEvent_User" />
         <AssociationConnector Association="GCPack.FK_Login_User" />
         <AssociationConnector Association="GCPack.FK_Signature_User" />
         <AssociationConnector Association="GCPack.FK_UserRoles_Users" />
@@ -42,6 +39,8 @@
         <EntityTypeShape EntityType="GCPack.WorkplaceDocument" Width="1.5" PointX="12.75" PointY="12.625" />
         <AssociationConnector Association="GCPack.FK_WorkplaceDocument_Document" />
         <AssociationConnector Association="GCPack.FK_WorkplaceDocument_Workplace" />
+        <EntityTypeShape EntityType="GCPack.LogEvent" Width="1.5" PointX="3" PointY="11.625" />
+        <AssociationConnector Association="GCPack.FK_LogEvent_User" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
