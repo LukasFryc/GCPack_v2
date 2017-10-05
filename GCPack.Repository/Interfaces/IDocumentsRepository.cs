@@ -15,7 +15,7 @@ namespace GCPack.Repository.Interfaces
         ICollection<UserModel> GetDeletedUsersFromDocument(ICollection<int> users, DocumentModel document);
         void MapUsersToDocument(ICollection<int> addUsers, DocumentModel document, ICollection<int> deleteUsers);
         ICollection<DocumentModel> GetDocuments(DocumentFilter filter);
-        DocumentModel GetDocument(int documentId, int userID);
+        DocumentModel GetDocument(int documentId, int? userID);
         ICollection<FileItem> GetFiles(int documentId);
         ICollection<UserModel> GetUsersForDocument(int documentId);
         FileItem GetFile(int fileID);
@@ -38,5 +38,14 @@ namespace GCPack.Repository.Interfaces
         void SaveListCodes(DocumentModel document);
         UsersInDocument GetUsersInDocument(int documentID);
         void ChangeRevison(DocumentModel document);
+
+        //void Archived(DocumentModel document, bool archiv);
+
+        //void Archived(int documentId, bool archiv);
+
+        void ReviewNoAction(DocumentModel document);
+
+        void ReviewNecessaryChange(DocumentModel document, string comment, string userName);
+
     }
 }

@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<GCPack.Model.DocumentModel>
+@*@model GCPack.Model.DocumentFilter*@
 
 @{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
 
@@ -35,9 +36,9 @@
                     GetDocuments();
                 });
 
-                //$('.filter').change(function () {
-                //    GetDocuments();
-                //});
+                $('.filter').change(function () {
+                    GetDocuments();
+                });
 
                 //$('#DocumentTypeID , #ProjectID, #DivisionID, #AppSystemID, #WorkplaceID').change(function () {
                 //    GetDocuments();
@@ -79,7 +80,9 @@
                             NextReviewDateTo: $('#NextReviewDateTo').val(),
                             ReadType: $('#ReadType').val(),
                             StateID: $('#DocumentStates').val(),
-                            Revision: $('#RevisionType').val()
+                            Revision: $('#RevisionType').val(),
+                            //Archiv: $('#Archiv').val(),
+                            ReviewNecassaryChange: $('#ReviewNecassaryChange').val()
                         } )
 
                             .done(function (documents) {

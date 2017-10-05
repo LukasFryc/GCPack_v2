@@ -128,7 +128,9 @@ namespace GCPack.Web.Controllers
 
             ViewBag.Message = Message;
             return View(documents);
-            
+            //DocumentFilter filterModel = new DocumentFilter() { WorkplaceID = 1, AppSystemID = 1, StateID = 2 };
+            //return View(filterModel);
+
         }
 
         public void SendMail()
@@ -204,7 +206,7 @@ namespace GCPack.Web.Controllers
             
         }
 
-        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action)
+        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action, string HelpText)
         {
 
             if (Action == "cancelChanges") return RedirectToAction("Index", new { Message = "Dokument nebyl uložen." });
@@ -256,19 +258,25 @@ namespace GCPack.Web.Controllers
                             documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
                             break;
                         case "reviewNoAction":
-                            documentService.ReviewNoAction(document, UserRoles.GetUserId(), fileNames);
+                            documentService.ReviewNoAction(document);
                             break;
                         case "reviewNecessaryChanges":
-                            documentService.ReviewNecessaryChange(document, UserRoles.GetUserId(), fileNames);
+
+                            //UserRoles.UserName()
+                            documentService.ReviewNecessaryChange(document, HelpText, UserRoles.UserName());
                             break;
                         case "archivDocument":
-                          documentService.Archived(document, UserRoles.GetUserId(), true);
+                            //documentService.Archived(document, true);
+                            documentService.ChangeDocumentState(document, "Archived");
                             break;
                         case "deArchivDocument":
-                            documentService.Archived(document, UserRoles.GetUserId(), false);
+                            documentService.ChangeDocumentState(document, "Registred");
+                            //documentService.Archived(document, false);
                             break;
                         case "stornoDocument":
-                            //documentService.ReviewNecessaryChange(document, UserRoles.GetUserId(), fileNames);
+
+                            documentService.ChangeDocumentState(document, "Storno");
+
                             break;
 
                         case "cancelChanges":
@@ -331,6 +339,7 @@ namespace GCPack.Web.Controllers
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             ViewBag.Type = "Edit";
+            //ViewBag.ComeBackFilter = 
             InitCodeLists();
             return View("edit", document);
         }

@@ -49,6 +49,7 @@
           <Property Name="Archived" Type="bit" Nullable="false" />
           <Property Name="ReviewNecessaryChange" Type="bit" />
           <Property Name="OwnerID" Type="int" />
+          <Property Name="ReviewNecessaryChangeComment" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="DocumentState">
           <Key>
@@ -1018,7 +1019,29 @@
             <End Role="Document" EntitySet="Documents" />
             <End Role="WorkplaceDocument" EntitySet="WorkplaceDocuments" />
           </AssociationSet>
-          <FunctionImport Name="GetDocuments14" ReturnType="Collection(GCPack.GetDocuments14_Result)">
+          <FunctionImport Name="GetDocuments14">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="ReadType" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="Revision" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments15" ReturnType="Collection(GCPack.GetDocuments15_Result)">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -1483,6 +1506,7 @@
           <NavigationProperty Name="Signatures" Relationship="GCPack.FK_Signature_RizeneDokumeny" FromRole="Document" ToRole="Signature" />
           <NavigationProperty Name="SystemDocuments" Relationship="GCPack.FK_SystemCategory_RizeneDokumeny" FromRole="Document" ToRole="SystemDocument" />
           <NavigationProperty Name="WorkplaceDocuments" Relationship="GCPack.FK_WorkplaceDocument_Document" FromRole="Document" ToRole="WorkplaceDocument" />
+          <Property Name="ReviewNecessaryChangeComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_DivisionCategory_RizeneDokumeny">
           <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
@@ -1604,7 +1628,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments14_Result">
+        <ComplexType Name="GetDocuments15_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1624,6 +1648,7 @@
           <Property Type="Boolean" Name="Archived" Nullable="false" />
           <Property Type="Boolean" Name="ReviewNecessaryChange" Nullable="true" />
           <Property Type="Int32" Name="OwnerID" Nullable="true" />
+          <Property Type="String" Name="ReviewNecessaryChangeComment" Nullable="true" />
           <Property Type="Int32" Name="CanEdit" Nullable="false" />
           <Property Type="Int32" Name="CanRevision" Nullable="false" />
           <Property Type="DateTime" Name="Created" Nullable="true" Precision="23" />
@@ -1873,6 +1898,7 @@
           <EntitySetMapping Name="Documents">
             <EntityTypeMapping TypeName="GCPack.Document">
               <MappingFragment StoreEntitySet="Document">
+                <ScalarProperty Name="ReviewNecessaryChangeComment" ColumnName="ReviewNecessaryChangeComment" />
                 <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
                 <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
                 <ScalarProperty Name="Archived" ColumnName="Archived" />
@@ -1894,9 +1920,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments14" FunctionName="GCPack.Store.GetDocuments">
+          <FunctionImportMapping FunctionImportName="GetDocuments15" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments14_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments15_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
@@ -1916,6 +1942,7 @@
                 <ScalarProperty Name="Archived" ColumnName="Archived" />
                 <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
                 <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="ReviewNecessaryChangeComment" ColumnName="ReviewNecessaryChangeComment" />
                 <ScalarProperty Name="CanEdit" ColumnName="CanEdit" />
                 <ScalarProperty Name="CanRevision" ColumnName="CanRevision" />
                 <ScalarProperty Name="Created" ColumnName="Created" />

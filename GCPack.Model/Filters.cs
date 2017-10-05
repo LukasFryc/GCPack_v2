@@ -32,7 +32,7 @@ namespace GCPack.Model
 
     public class DocumentFilter : Filter
     {
-        public int ForUserID { get; set; }
+        public int? ForUserID { get; set; }
         public int DocumentID { get; set; }
         public string Name { get; set; }
         public string AdministratorName { get; set; }

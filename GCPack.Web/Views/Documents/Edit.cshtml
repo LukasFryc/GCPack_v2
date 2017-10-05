@@ -22,7 +22,32 @@
 
         // LF lukasuv kousek 15.9.2017
         $('.btnAction').click(function () {
+
             $('#Action').val($(this).prop("id"));
+
+            if ($(this).prop("id") == "reviewNecessaryChanges") {
+
+                $("#myModalP1").html("");
+                $("#myModalP2").html("");
+                $("#myModalTitle").html("Nutná změna");
+                $("#myModalComment").attr("placeholder", "Zde zadejte text důvodu změny.");
+                $('#myModal').modal();
+                //zastavi submit
+                return false;
+            }
+
+            if ($(this).prop("id") == "stornoDocument") {
+
+                $("#myModalP1").html("");
+                $("#myModalP2").html("");
+                $("#myModalTitle").html("Storno");
+                $("#myModalComment").attr("placeholder", "Zde zadejte text důvodu storna.");
+                $('#myModal').modal();
+
+                //zastavi submit
+                return false;
+            }
+
             $('#myForm').submit();
         });
 
@@ -110,38 +135,45 @@
         $('#actionTestModal').click(function () {
             //$('#myModal').modal('show'); 
             $('#myModal').modal(); 
+            //zastavi submit
             return false;
         });
 
+        //$('#reviewNecessaryChanges').click(function () {
+        //    //$('#myModal').modal('show'); 
+        //    $('#myModal').modal();
+        //    //zastavi submit
+        //    return false;
+        //});
+        
+
         //$('#myModal').modal('show'); 
 
-        $('#stornoModalSave').click(function () {
-            quota = $("#quotas").val();
+        $('#myModalContinue').click(function () {
+            comment = $("#myModalComment").val();
             //alert(quota);
-            $('#HelpText').val(quota);
+            $('#HelpText').val(comment);
             $('#myForm').submit();
 
         });
 
-        $('#stornoModalClose').click(function () {
-            
-        });
+        //$('#myModalClose').click(function () {
+        //    //return false;
+        //});
 
         $('#myModal').on('shown', function () {
-            $("#quotas").focus();
+            $("#myModalComment").focus();
         })
 
         $("#myForm").submit(function (event) {
 
-            testik = $('#HelpText').val()
-            //alert(testik);
+            //testik = $('#myModalComment').val()
+            
+            //alert($('#Action').val());
+            //alert($('#HelpText').val());
             //event.preventDefault(); je shodnz s return false
             //return false
         });
-
-        
-
-        
 
         function GetUsers()
         {
@@ -217,6 +249,10 @@
                 {
                     <li><a href="#tabs-6">Záznamy o seznámení</a></li>
                 }
+                @if (Model.ReviewNecessaryChangeComment != "")
+                {
+                    <li><a href="#tabs-7">Nutné změny</a></li>
+                }
             </ul>
             @if (Model.AllUsers > 0)
             {
@@ -291,7 +327,18 @@
                     }
                  </div>
                 }
+            <div id="tabs-7">               
+                <div class="row">
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.ReviewNecessaryChangeComment)
+                        <p style="white-space: pre-line">@Model.ReviewNecessaryChangeComment</p>
+                        @*@Html.TextBoxFor(m => m.ReviewNecessaryChangeComment, new { @readonly = "readonly" })*@
+                        @*@Html.EditorFor(m => m.ReviewNecessaryChangeComment, new { htmlAttributes = new { @readonly = "readonly" } })*@
 
+                    </div>
+                </div>
+            </div>
+            @*}*@
                 <div id="tabs-1">
                     <div class="row">
                         <label class="control-label col-md-2" for="Title">Název</label>
@@ -814,9 +861,6 @@
                                     <li style="padding-right:5px">
                                         <button class="btn btn-primary navbar-btn" id="actionTestModal">Test modal</button>
                                     </li>
-
-                                    
-
                                     
                                 </ul>
                             </div>
@@ -855,16 +899,16 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Confirmation</h4>
+                <h4 class="modal-title" id="myModalTitle">Titulek</h4>
             </div>
             <div class="modal-body">
-                <p>Do you want to save changes you made to document before closing?</p>
-                <p class="text-warning"><small>If you don't save, your changes will be lost.</small></p>
-                <input type="text" name="quota" class="form-control" id="quotas" value="ahoj" maxlength="20">
+                <p id="myModalP1">Zde napiste kdyz talcitko ANO</p>
+                <p id="myModalP2" class="text-warning"><small>Zde napisště kdyz tlacitko ne</small></p>
+                <textarea class="form-control" cols="15" id="myModalComment" name="myModalComment" placeholder="Napoveda pro pole" rows="2"></textarea>
             </div>
             <div class="modal-footer">
-                <button ID="stornoModalClose" type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button ID="stornoModalSave" type="button" class="btn btn-primary">Save changes</button>
+                <button ID="myModalClose" type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button ID="myModalContinue" type="button" class="btn btn-primary">OK</button>
             </div>
         </div>
     </div>

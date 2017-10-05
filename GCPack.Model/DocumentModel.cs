@@ -83,6 +83,8 @@ namespace GCPack.Model
         public int ParentID { get; set; }   // odkaz na předchozího 
 
         public bool ReviewNecessaryChange { get; set; } // 1 je nutna zmena
+
+        public string ReviewNecessaryChangeComment { get; set; } // 1 je nutna zmena
     }
 
 

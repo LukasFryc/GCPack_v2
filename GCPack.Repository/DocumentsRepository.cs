@@ -213,7 +213,7 @@ namespace GCPack.Repository
 
 
 
-        public DocumentModel GetDocument(int documentId, int userID)
+        public DocumentModel GetDocument(int documentId, int? userID)
         {
             DocumentFilter filter = new DocumentFilter() { DocumentID = documentId, ForUserID = userID };
             DocumentModel document = GetDocuments(filter).FirstOrDefault();
@@ -233,7 +233,7 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
-                ICollection<GetDocuments14_Result> documentsResult = db.GetDocuments14(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision).ToList<GetDocuments14_Result>();
+                ICollection<GetDocuments15_Result> documentsResult = db.GetDocuments15(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision).ToList<GetDocuments15_Result>();
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;
             }
@@ -518,6 +518,20 @@ namespace GCPack.Repository
             }
         }
 
+        //public void Archived(DocumentModel document, bool archiv)
+        //{
+        //    Archived(document.ID, archiv);
+        //}
+
+        //public void Archived(int documentId, bool archiv)
+        //{
+        //    using (GCPackContainer db = new GCPackContainer())
+        //    {
+        //        db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().Archived = archiv;
+        //        db.SaveChanges();
+        //    }
+        //}
+
         public void DeleteFilesFromDocument(DocumentModel document)
         {
             if (document.DeleteFileItems != null)
@@ -550,6 +564,40 @@ namespace GCPack.Repository
                 ICollection<int> WorkplacesID = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().WorkplaceDocuments.Select(sd => sd.WorkplaceID).ToList<int>();
                 return WorkplacesID;
             }
+        }
+
+        public void ReviewNoAction(DocumentModel document)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
+                dbDocument.ReviewDate = DateTime.Now;
+                DocumentTypeModel documentTypeModel = GetDocumentType(dbDocument.DocumentTypeID);
+                dbDocument.NextReviewDate = DateTime.Now.AddYears(documentTypeModel.ValidityInYears);
+                dbDocument.ReviewNecessaryChange = false;
+
+                db.SaveChanges();
+            }
+            
+
+        }
+
+        public void ReviewNecessaryChange(DocumentModel document, string comment, string userName)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
+                
+                StringBuilder builder = new StringBuilder(dbDocument.ReviewNecessaryChangeComment);
+                builder.AppendLine(DateTime.Now.ToString()+ " - " + userName + " :");
+                builder.AppendLine(comment);
+                dbDocument.ReviewNecessaryChangeComment = builder.ToString();
+                dbDocument.ReviewNecessaryChange = true;
+
+                db.SaveChanges();
+            }
+
+
         }
     }
 }
