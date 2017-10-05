@@ -16,7 +16,7 @@ namespace GCPack.Service
         readonly IUsersService userService;
         readonly ICodeListsService codeListService;
 
-        public DocumentsService(IDocumentsRepository documentsRepository, IMailService mailService, IUsersService userService, ICodeListsService codeListService)
+        public DocumentsService(IDocumentsRepository documentsRepository, IMailService mailService, IUsersService userService, ICodeListsService codeListService, ILogEventsService logEventsService)
         {
             this.documentsRepository = documentsRepository;
             this.mailService = mailService;

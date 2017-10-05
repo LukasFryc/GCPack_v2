@@ -12,7 +12,7 @@ namespace GCPack.Service
     public class CodeListsService : ICodeListsService
     {
         readonly ICodeListsRepository codeListsRepository;
-        public CodeListsService(ICodeListsRepository codeListsRepository)
+        public CodeListsService(ICodeListsRepository codeListsRepository, ILogEventsService logEventsService)
         {
             this.codeListsRepository = codeListsRepository;
         }

@@ -96,6 +96,7 @@
     <Compile Include="GetDocuments15_Result.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="Interfaces\ILogEventsRepository.cs" />
     <Compile Include="Interfaces\ICodeListsRepository.cs" />
     <Compile Include="Interfaces\IDocumentsRepository.cs" />
     <Compile Include="Interfaces\IUsersRepository.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="LogEvent.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
+    <Compile Include="LogEventsRepository.cs" />
     <Compile Include="Login.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>

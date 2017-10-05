@@ -19,8 +19,9 @@ namespace GCPack
             return new DocumentsService(
                     new DocumentsRepository(),
                     new MailService(),
-                    new UsersService(new UsersRepository()),
-                    new CodeListsService(new CodeListsRepository())
+                    new UsersService(new UsersRepository(), new LogEventsService(new LogEventsRepository())),
+                    new CodeListsService(new CodeListsRepository(), new LogEventsService(new LogEventsRepository())),
+                    new LogEventsService(new LogEventsRepository())
                     );
         }
 

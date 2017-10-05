@@ -13,6 +13,15 @@ namespace GCPack.Model
         public string OrderBy { get; set; }
     }
 
+    public class LogEventFilter : Filter
+    {
+        public DateTime DateFrom { get; set; }
+        public DateTime DateTo { get; set; }
+        public int UserId { get; set; }
+        public int ResourceId { get; set; }
+        public int LogType { get; set; }
+    }
+
     public class CodeListFilter : Filter
     {
         public int ItemID { get; set; }

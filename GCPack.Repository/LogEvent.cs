@@ -17,8 +17,9 @@ namespace GCPack.Repository
         public int ID { get; set; }
         public int UserID { get; set; }
         public string Text { get; set; }
-        public string Date { get; set; }
-        public int DocumentID { get; set; }
+        public System.DateTime Date { get; set; }
+        public Nullable<int> LogType { get; set; }
+        public Nullable<int> ResourceID { get; set; }
     
         public virtual User User { get; set; }
         public virtual Document Document { get; set; }
