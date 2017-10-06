@@ -42,15 +42,15 @@ namespace GCPack.Model
     public class DocumentFilter : Filter
     {
         public int? ForUserID { get; set; }
-        public int DocumentID { get; set; }
+        public int? DocumentID { get; set; }
         public string Name { get; set; }
         public string AdministratorName { get; set; }
         public string Number { get; set; }
-        public int DocumentTypeID { get; set; }
-        public int ProjectID { get; set; }
-        public int DivisionID { get; set; }
-        public int AppSystemID { get; set; }
-        public int WorkplaceID { get; set; }
+        public int? DocumentTypeID { get; set; }
+        public int? ProjectID { get; set; }
+        public int? DivisionID { get; set; }
+        public int? AppSystemID { get; set; }
+        public int? WorkplaceID { get; set; }
 
         public DateTime? EffeciencyDateFrom { get; set; }
         public DateTime? EffeciencyDateTo { get; set; }

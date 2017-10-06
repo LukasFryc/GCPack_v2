@@ -29,10 +29,10 @@ namespace GCPack.Repository
         public Nullable<System.DateTime> EndDate { get; set; }
         public Nullable<int> IssueNumber { get; set; }
         public Nullable<int> ParentID { get; set; }
-        public bool Archived { get; set; }
         public Nullable<bool> ReviewNecessaryChange { get; set; }
         public Nullable<int> OwnerID { get; set; }
         public string ReviewNecessaryChangeComment { get; set; }
+        public Nullable<int> PreviousStateID { get; set; }
         public int CanEdit { get; set; }
         public int CanRevision { get; set; }
         public Nullable<System.DateTime> Created { get; set; }

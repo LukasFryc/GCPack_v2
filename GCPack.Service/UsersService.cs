@@ -32,6 +32,12 @@ namespace GCPack.Service
                 ticket = Guid.NewGuid().ToString();
                 usersRepository.UpdateTicket(ticket, user);
             }
+            // po prihlaseni pokud je nacteny uzivatel, tak zaloguju ID uzivatele, UserLogin - udalost, 0 = nejedna se o zadny zdroj 
+            // se kterym se pracovalo (tj. dokument nebo uzivatel)
+            // ok ? ok
+            // jen bych chtel obcas logovat i nejake vlastni texty napr 
+            // duvod storna
+            // kam to dat
 
             if (user != null) logEventsService.LogEvent(user.ID, LogEventType.UserLogin, 0);
 

@@ -8,6 +8,14 @@
 }
 @using GCPack.Model;
 
+<style>
+    .ui-tabs .ui-tabs-nav li.ui-tabs-active {
+        margin-bottom: -1px;
+        padding-bottom: 1px;
+        background: #3276B1;
+    }
+</style>
+
 <script>
     var timeoutHandle;
     var selectedUsers = [];
@@ -840,28 +848,17 @@
 
                                     }
 
-                                    @if (Model.DocumentStateCode == "Storno" | Model.DocumentStateCode == "Registered")
+                                    @if (Model.DocumentStateCode != "Archived" )
                                     {
-
-                                        if (Model.Archived != true)
-                                        {
-                                            <li style="padding-right:5px">
-                                                <button class="btn btn-primary navbar-btn btnAction" id="archivDocument">Archiv</button>
-                                            </li>
-                                        }
-                                        else
-                                        {
-                                            <li style="padding-right:5px">
-                                                <button class="btn btn-primary navbar-btn btnAction" id="deArchivDocument">Dearchivace</button>
-                                            </li>
-                                        }
-
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="ArchivDocument">Archivace</button>
+                                        </li>
+                                    } else 
+                                    {
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="deArchivDocument">Dearchivace</button>
+                                        </li>
                                     }
-                                    
-                                    <li style="padding-right:5px">
-                                        <button class="btn btn-primary navbar-btn" id="actionTestModal">Test modal</button>
-                                    </li>
-                                    
                                 </ul>
                             </div>
                         </nav>

@@ -184,13 +184,15 @@
       <LastGenOutput>GCPack.cs</LastGenOutput>
       <DependentUpon>GCPack.edmx</DependentUpon>
     </Content>
-    <Content Include="SQL\GetDocuments.txt" />
-    <Content Include="SQL\initDb.txt" />
-    <Content Include="SQL\JobPositionDocument.txt" />
-    <Content Include="SQL\JobPostionUser.txt" />
-    <Content Include="SQL\remove_column_jobpositionID_in_users.txt" />
-    <Content Include="SQL\Workplace.txt" />
-    <Content Include="SQL\WorkplaceDocument.txt" />
+    <Content Include="SQL\2017_10_05 - LogEvent - New Table.txt" />
+    <Content Include="SQL\2017_10_06 - Current proceudre GetDocuments.txt" />
+    <Content Include="SQL\2017_07\initDb.txt" />
+    <Content Include="SQL\2017_07\JobPositionDocument.txt" />
+    <Content Include="SQL\2017_07\JobPostionUser.txt" />
+    <Content Include="SQL\2017_07\remove_column_jobpositionID_in_users.txt" />
+    <Content Include="SQL\2017_10_06 - Drop and Add Column to Document table.txt" />
+    <Content Include="SQL\2017_07\Workplace.txt" />
+    <Content Include="SQL\2017_07\WorkplaceDocument.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

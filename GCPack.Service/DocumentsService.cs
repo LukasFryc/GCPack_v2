@@ -205,6 +205,13 @@ namespace GCPack.Service
             return document;
         }
 
+
+        // pokud newState neni vyplnen bude bran novy stav ze sloupce PrivousStateID 
+        public void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState)
+        {
+            documentsRepository.ChangeDocumentStateOnPreviousState(document, newState);
+        }
+
         public void ChangeDocumentState(DocumentModel document, string state)
         {
             documentsRepository.ChangeDocumentState(document, state);

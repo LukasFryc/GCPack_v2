@@ -233,6 +233,7 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
+                filter.DocumentID = 0;
                 ICollection<GetDocuments15_Result> documentsResult = db.GetDocuments15(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision).ToList<GetDocuments15_Result>();
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;
@@ -513,7 +514,11 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 int stateID = db.DocumentStates.Where(s => s.Code == state).Select(s => s.ID).FirstOrDefault();
-                db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().StateID = stateID;
+                var dbDocument = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault();
+
+                dbDocument.PreviousStateID = dbDocument.StateID;
+                dbDocument.StateID = stateID;
+
                 db.SaveChanges();
             }
         }
@@ -598,6 +603,28 @@ namespace GCPack.Repository
             }
 
 
+        }
+
+        public void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+
+                int? stateID;
+                var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
+                stateID = dbDocument.PreviousStateID;
+                if (newState != "")
+                {
+                    stateID = db.DocumentStates.Where(s => s.Code == newState).Select(s => s.ID).FirstOrDefault();
+                }
+
+                if (stateID != null)
+                {
+                    dbDocument.PreviousStateID = dbDocument.StateID;
+                    dbDocument.StateID = stateID;
+                    db.SaveChanges();
+                }
+            }
         }
     }
 }

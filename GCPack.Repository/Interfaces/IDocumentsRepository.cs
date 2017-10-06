@@ -47,5 +47,7 @@ namespace GCPack.Repository.Interfaces
 
         void ReviewNecessaryChange(DocumentModel document, string comment, string userName);
 
+        void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState);
+
     }
 }

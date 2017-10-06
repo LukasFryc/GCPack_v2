@@ -21,11 +21,19 @@ namespace GCPack.Service
         public ICollection<LogEventModel> GetLogEvents(LogEventFilter logEventFilter)
         {
             return logEventsRepository.GetLogEvents(logEventFilter);
+            
+        }
+
+        // pokud si budes chtit do textu logu pridat nejakou poznamku, pak pouzijes tuhle pretizenou metodu
+
+        public void LogEvent(int UserId, LogEventType LogEventType, int ResourceId, string description)
+        {
+            logEventsRepository.LogEvent(UserId, LogEventType, ResourceId, description);
         }
 
         public void LogEvent(int UserId, LogEventType LogEventType, int ResourceId)
         {
-            logEventsRepository.LogEvent(UserId, LogEventType, ResourceId);
+            LogEvent(UserId, LogEventType, ResourceId,"");
         }
 
 
