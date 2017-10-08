@@ -31,6 +31,7 @@ namespace GCPack.Repository
         public Nullable<int> ParentID { get; set; }
         public bool Archived { get; set; }
         public Nullable<bool> ReviewNecessaryChange { get; set; }
+        public Nullable<bool> TESTIK { get; set; }
         public Nullable<int> OwnerID { get; set; }
         public int CanEdit { get; set; }
         public int CanRevision { get; set; }

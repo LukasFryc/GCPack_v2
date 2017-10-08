@@ -977,7 +977,7 @@
             <Parameter Name="StateID" Mode="In" Type="Int32" />
             <Parameter Name="Revision" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="GetDocuments13" ReturnType="Collection(GCPack.GetDocuments13_Result)">
+          <FunctionImport Name="GetDocuments13">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -1004,6 +1004,28 @@
             <End Role="User" EntitySet="Users" />
             <End Role="LogEvent" EntitySet="LogEvents" />
           </AssociationSet>
+          <FunctionImport Name="GetDocuments14" ReturnType="Collection(GCPack.GetDocuments14_Result)">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="ReadType" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="Revision" Mode="In" Type="String" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="AppSystem">
           <Key>
@@ -1546,7 +1568,31 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments13_Result">
+        <EntityType Name="LogEvent">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="Text" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LogType" Type="Int32" />
+          <Property Name="ResourceID" Type="Int32" />
+          <NavigationProperty Name="User" Relationship="GCPack.FK_LogEvent_User" FromRole="LogEvent" ToRole="User" />
+        </EntityType>
+        <Association Name="FK_LogEvent_User">
+          <End Type="GCPack.User" Role="User" Multiplicity="1" />
+          <End Type="GCPack.LogEvent" Role="LogEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="LogEvent">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetDocuments14_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1579,30 +1625,6 @@
           <Property Type="Int32" Name="AllUsers" Nullable="true" />
           <Property Type="Int32" Name="DocumentOwnerID" Nullable="true" />
         </ComplexType>
-        <EntityType Name="LogEvent">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LogType" Type="Int32" />
-          <Property Name="ResourceID" Type="Int32" />
-          <NavigationProperty Name="User" Relationship="GCPack.FK_LogEvent_User" FromRole="LogEvent" ToRole="User" />
-        </EntityType>
-        <Association Name="FK_LogEvent_User">
-          <End Type="GCPack.User" Role="User" Multiplicity="1" />
-          <End Type="GCPack.LogEvent" Role="LogEvent" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="User">
-              <PropertyRef Name="ID" />
-            </Principal>
-            <Dependent Role="LogEvent">
-              <PropertyRef Name="UserID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1851,9 +1873,21 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments13" FunctionName="GCPack.Store.GetDocuments">
+          <EntitySetMapping Name="LogEvents">
+            <EntityTypeMapping TypeName="GCPack.LogEvent">
+              <MappingFragment StoreEntitySet="LogEvent">
+                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
+                <ScalarProperty Name="LogType" ColumnName="LogType" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetDocuments14" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments13_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments14_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
@@ -1888,18 +1922,6 @@
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <EntitySetMapping Name="LogEvents">
-            <EntityTypeMapping TypeName="GCPack.LogEvent">
-              <MappingFragment StoreEntitySet="LogEvent">
-                <ScalarProperty Name="ResourceID" ColumnName="ResourceID" />
-                <ScalarProperty Name="LogType" ColumnName="LogType" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

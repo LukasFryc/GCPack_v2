@@ -36,7 +36,6 @@ namespace GCPack.Web.Controllers
         {
             // TODO: dopsat filtrovani - pridat do filtru userId pro ktereho se vyberou pouze jeho dokumenty
             ICollection<DocumentModel> documents = new HashSet<DocumentModel>();
-
             ICollection<Item> documentTypes = documentService.GetDocumentTypes();
             
 
@@ -184,10 +183,10 @@ namespace GCPack.Web.Controllers
         public ActionResult GetDocuments(DocumentFilter filter)
         {
 
-           // filter.EffeciencyDateFrom = string.IsNullOrEmpty(filter.EffeciencyDateFrom.ToString())
-           //? (DateTime?)null
-           //: DateTime.Parse(filter.EffeciencyDateFrom.ToString());
-
+            // filter.EffeciencyDateFrom = string.IsNullOrEmpty(filter.EffeciencyDateFrom.ToString())
+            //? (DateTime?)null
+            //: DateTime.Parse(filter.EffeciencyDateFrom.ToString());
+            Session["documentFilter"] = filter;
             filter.ForUserID = UserRoles.GetUserId();
             ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
             return Json(documents, JsonRequestBehavior.AllowGet);

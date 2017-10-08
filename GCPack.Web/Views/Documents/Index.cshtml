@@ -1,8 +1,11 @@
 ﻿@model IEnumerable<GCPack.Model.DocumentModel>
+@using GCPack.Model;
 
 @{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
 
 @{
+    DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -327,7 +330,7 @@
 
             </div>
             <div class="col-md-2">
-                <input class="filterText form-control" type="text" id="Name" />
+                <input class="filterText form-control" type="text" id="Name" value="@((filter != null) ? filter.Name : string.Empty)"/>
             </div>
             <div class="col-md-2">
                 <input class="filterText form-control" type="text" id="Number" />

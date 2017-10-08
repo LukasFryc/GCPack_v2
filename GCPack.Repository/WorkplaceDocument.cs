@@ -18,7 +18,7 @@ namespace GCPack.Repository
         public int WorkplaceID { get; set; }
         public int DocumentID { get; set; }
     
-        public virtual Workplace Workplace { get; set; }
         public virtual Document Document { get; set; }
+        public virtual Workplace Workplace { get; set; }
     }
 }

@@ -22,6 +22,5 @@ namespace GCPack.Repository
         public Nullable<int> ResourceID { get; set; }
     
         public virtual User User { get; set; }
-        public virtual Document Document { get; set; }
     }
 }
