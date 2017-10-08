@@ -1,11 +1,10 @@
 ﻿@model IEnumerable<GCPack.Model.DocumentModel>
 @using GCPack.Model;
+@{DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"]; }
 
 @{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
 
 @{
-    DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
-
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -38,9 +37,9 @@
                     GetDocuments();
                 });
 
-                //$('.filter').change(function () {
-                //    GetDocuments();
-                //});
+                $('.filter').change(function () {
+                    GetDocuments();
+                });
 
                 //$('#DocumentTypeID , #ProjectID, #DivisionID, #AppSystemID, #WorkplaceID').change(function () {
                 //    GetDocuments();
@@ -82,7 +81,9 @@
                             NextReviewDateTo: $('#NextReviewDateTo').val(),
                             ReadType: $('#ReadType').val(),
                             StateID: $('#DocumentStates').val(),
-                            Revision: $('#RevisionType').val()
+                            Revision: $('#RevisionType').val(),
+                            //Archiv: $('#Archiv').val(),
+                            ReviewNecassaryChange: $('#ReviewNecassaryChange').val()
                         } )
 
                             .done(function (documents) {
@@ -142,6 +143,8 @@
 
 
     </script>
+
+
 
 <div style="position:relative">
     <div id="success-alert" class="alert alert-success" style="display:none;position:absolute;top:10px;right:0px"></div>
@@ -330,13 +333,13 @@
 
             </div>
             <div class="col-md-2">
-                <input class="filterText form-control" type="text" id="Name" value="@((filter != null) ? filter.Name : string.Empty)"/>
+                <input class="filterText form-control" type="text" id="Name" value="@((filter != null) ? filter.Name : string.Empty)" />
             </div>
             <div class="col-md-2">
-                <input class="filterText form-control" type="text" id="Number" />
+                <input class="filterText form-control" type="text" id="Number" value="@((filter != null) ? filter.Number : string.Empty)" />
             </div>
             <div class="col-md-2">
-                <input class="filterText form-control" type="text" id="AdministratorName" />
+                <input class="filterText form-control" type="text" id="AdministratorName" value="@((filter != null) ? filter.AdministratorName : string.Empty)" />
             </div>
             <div class="col-md-2">
                 @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "filter form-control" })

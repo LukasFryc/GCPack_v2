@@ -1,0 +1,9 @@
+﻿ALTER TABLE [dbo].[Document]  DROP COLUMN TESTIK;
+go
+ALTER TABLE [dbo].[Document] ADD PreviousStateID int null;
+ALTER TABLE [dbo].[Document] WITH CHECK ADD  CONSTRAINT [FK_Documents_PreviousState] FOREIGN KEY([PreviousStateID])
+REFERENCES [dbo].[DocumentState] ([ID])
+GO
+alter table [dbo].[Document] drop constraint [DF__Document__Archiv__2739D489];
+ALTER TABLE [dbo].[Document]  DROP COLUMN Archived;
+go

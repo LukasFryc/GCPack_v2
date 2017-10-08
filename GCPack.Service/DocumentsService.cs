@@ -25,36 +25,36 @@ namespace GCPack.Service
         }
         
 
-        public void ReviewNoAction(DocumentModel document, int userID, ICollection<string> fileNames)
+        public void ReviewNoAction(DocumentModel document)
         {
-            DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
-            documentModel.ReviewDate = DateTime.Now;
-            DocumentTypeModel documentTypeModel = documentsRepository.GetDocumentType(document.DocumentTypeID);
-            documentModel.NextReviewDate = DateTime.Now.AddYears(documentTypeModel.ValidityInYears);
-            documentModel.ReviewNecessaryChange = false;
+            documentsRepository.ReviewNoAction(document);
+
+            //DocumentModel documentModel = documentsRepository.GetDocument(document.ID, null);
+            //documentModel.ReviewDate = DateTime.Now;
+            //DocumentTypeModel documentTypeModel = documentsRepository.GetDocumentType(document.DocumentTypeID);
+            //documentModel.NextReviewDate = DateTime.Now.AddYears(documentTypeModel.ValidityInYears);
+            //documentModel.ReviewNecessaryChange = false;
             //TODO: LF nevim jestli je nutne volat editDocument a SaveFiles - chci se yeptat dejvi
             //snad by stacilo jen ulozit documentModel
-            documentsRepository.EditDocument(documentModel);
-            SaveFiles(document, fileNames);
+            //documentsRepository.EditDocument(documentModel);
+            //SaveFiles(document, fileNames);
         }
 
-        public void ReviewNecessaryChange(DocumentModel document, int userID, ICollection<string> fileNames)
+        public void ReviewNecessaryChange(DocumentModel document, string comment, string userName )
         {
-            DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
+            //DocumentModel documentModel = documentsRepository.GetDocument(document.ID, null);
+
+
+            documentsRepository.ReviewNecessaryChange(document, comment, userName);
+
             //TODO: LF nevim jestli je nutne volat editDocument a SaveFiles - chci se yeptat dejvi
             //snad by stacilo jen ulozit documentModel
-            documentModel.ReviewNecessaryChange = true;
-            documentsRepository.EditDocument(documentModel);
-            SaveFiles(document, fileNames);
+            //documentModel.ReviewNecessaryChange = true;
+            //documentModel.ReviewNecessaryChangeComment = comment;
+            //documentsRepository.EditDocument(documentModel);
+            //SaveFiles(document, fileNames);
         }
-
-        public void Archived(DocumentModel document, int userID, bool archiv)
-        {
-            DocumentModel documentModel = documentsRepository.GetDocument(document.ID, userID);
-            documentModel.Archived = archiv;
-            documentsRepository.EditDocument(documentModel);
-
-        }
+              
 
         public DocumentModel NewVersion(DocumentModel document, int userId, ICollection<string> fileNames)
         {
@@ -205,6 +205,13 @@ namespace GCPack.Service
             return document;
         }
 
+
+        // pokud newState neni vyplnen bude bran novy stav ze sloupce PrivousStateID 
+        public void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState)
+        {
+            documentsRepository.ChangeDocumentStateOnPreviousState(document, newState);
+        }
+
         public void ChangeDocumentState(DocumentModel document, string state)
         {
             documentsRepository.ChangeDocumentState(document, state);
@@ -309,6 +316,12 @@ namespace GCPack.Service
                 }
             }
         }
+
+        //public void Archived(DocumentModel document, bool archiv)
+        //{
+        //    documentsRepository.Archived(document, archiv);
+
+        //}
 
     }
 }

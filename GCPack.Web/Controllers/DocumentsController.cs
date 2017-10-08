@@ -32,14 +32,15 @@ namespace GCPack.Web.Controllers
 
         // GET: Documents
         [AuthorizeAttributeGC(Roles = "user,admin,supervisor,poweruser")]
-        public ActionResult Index(int? DocumentTypeID, string Message)
+        public ActionResult Index(DocumentFilter filter)
         {
             // TODO: dopsat filtrovani - pridat do filtru userId pro ktereho se vyberou pouze jeho dokumenty
             ICollection<DocumentModel> documents = new HashSet<DocumentModel>();
             ICollection<Item> documentTypes = documentService.GetDocumentTypes();
-            
 
-            if (DocumentTypeID != null) {
+            Session["documentFilter"] = filter;
+
+            if (filter.DocumentTypeID != null && filter.DocumentTypeID != 0) {
 
                 // TODO: Zvazit upravu cislenikovych trid o dedeni z tridy item
                 // TODO: Napreklad pri volani funkce documentService.GetDocumentTypes se varci IColection<Item>
@@ -53,7 +54,7 @@ namespace GCPack.Web.Controllers
                 // if (DocumentTypeID.HasValue) v2 = DocumentTypeID.Value;
                 //DocumentTypeModel  choiceDocumentType = documentService.GetDocumentType(v2);
 
-                Item choiceDocumentType = documentTypes.Where(dc => dc.ID == DocumentTypeID).Select(dc => dc).FirstOrDefault();
+               Item choiceDocumentType = documentTypes.Where(dc => dc.ID ==filter.DocumentTypeID).Select(dc => dc).FirstOrDefault();
                choiceDocumentType.OrderBy = -1;
             }
 
@@ -98,6 +99,9 @@ namespace GCPack.Web.Controllers
 
             ICollection<DocumentStateModel> documentStates = new HashSet<DocumentStateModel>();
             documentStates = codeListService.GetDocumentStates();
+            //DocumentStateModel documentState = new DocumentStateModel();
+            //documentState = documentStates.Where(p => p.ID = ((filter != null && filter.StateID != null) ? filter.StateID : string.Empty)).Select(p => p).FirstOrDefault(); 
+
             documentStates.Add(new DocumentStateModel() { ID = 0, Name = "Všechny stavy", orderBy = -1 });
             ViewBag.DocumentStates = documentStates.OrderBy(p => p.orderBy);
 
@@ -125,9 +129,11 @@ namespace GCPack.Web.Controllers
             //@AppSystemID int,
             //@WorkplaceID int
 
-            ViewBag.Message = Message;
+            // ViewBag.Message = Message;
             return View(documents);
-            
+            //DocumentFilter filterModel = new DocumentFilter() { WorkplaceID = 1, AppSystemID = 1, StateID = 2 };
+            //return View(filterModel);
+
         }
 
         public void SendMail()
@@ -188,6 +194,8 @@ namespace GCPack.Web.Controllers
             //: DateTime.Parse(filter.EffeciencyDateFrom.ToString());
             Session["documentFilter"] = filter;
             filter.ForUserID = UserRoles.GetUserId();
+            Session["documentFilter"] = filter;
+
             ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
             return Json(documents, JsonRequestBehavior.AllowGet);
         }
@@ -203,10 +211,13 @@ namespace GCPack.Web.Controllers
             
         }
 
-        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action)
+        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action, string HelpText)
         {
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
 
-            if (Action == "cancelChanges") return RedirectToAction("Index", new { Message = "Dokument nebyl uložen." });
+            if (Action == "cancelChanges") return RedirectToAction("Index", filter);
+
+            //if (Action == "cancelChanges") return RedirectToAction("Index", new { Message = "Dokument nebyl uložen." });
 
             string folderForFiles = System.Configuration.ConfigurationManager.AppSettings["FileTemp"];
             string guid = Guid.NewGuid().ToString();
@@ -255,19 +266,25 @@ namespace GCPack.Web.Controllers
                             documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
                             break;
                         case "reviewNoAction":
-                            documentService.ReviewNoAction(document, UserRoles.GetUserId(), fileNames);
+                            documentService.ReviewNoAction(document);
                             break;
                         case "reviewNecessaryChanges":
-                            documentService.ReviewNecessaryChange(document, UserRoles.GetUserId(), fileNames);
+
+                            //UserRoles.UserName()
+                            documentService.ReviewNecessaryChange(document, HelpText, UserRoles.UserName());
                             break;
                         case "archivDocument":
-                          documentService.Archived(document, UserRoles.GetUserId(), true);
+                            //documentService.Archived(document, true);
+                            documentService.ChangeDocumentState(document, "Archived");
                             break;
                         case "deArchivDocument":
-                            documentService.Archived(document, UserRoles.GetUserId(), false);
+                            documentService.ChangeDocumentStateOnPreviousState(document, "");
+                            //documentService.Archived(document, false);
                             break;
                         case "stornoDocument":
-                            //documentService.ReviewNecessaryChange(document, UserRoles.GetUserId(), fileNames);
+
+                            documentService.ChangeDocumentState(document, "Storno");
+
                             break;
 
                         case "cancelChanges":
@@ -280,8 +297,9 @@ namespace GCPack.Web.Controllers
                        
                     break;
             }
-            
-            return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
+
+            //return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
+            return RedirectToAction("Index", filter);
         }
 
 
@@ -330,6 +348,7 @@ namespace GCPack.Web.Controllers
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             ViewBag.Type = "Edit";
+            //ViewBag.ComeBackFilter = 
             InitCodeLists();
             return View("edit", document);
         }

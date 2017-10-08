@@ -1,0 +1,27 @@
+﻿drop table LogEvent
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ 
+CREATE TABLE [dbo].[LogEvent](
+       [ID] [int] IDENTITY(1,1) NOT NULL,
+       [UserID] [int] NOT NULL,
+       [Text] [varchar](50) NULL,
+       [Date] DateTime NOT NULL,
+       [LogType] [int] NULL,
+       [ResourceID] [int] NULL,
+CONSTRAINT [PK_LogEvent] PRIMARY KEY CLUSTERED
+(
+       [ID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ 
+ALTER TABLE [dbo].[LogEvent]  WITH CHECK ADD  CONSTRAINT [FK_LogEvent_User] FOREIGN KEY([UserID])
+REFERENCES [dbo].[User] ([ID])
+GO
+ 
+ALTER TABLE [dbo].[LogEvent] CHECK CONSTRAINT [FK_LogEvent_User]
+GO
+ 
+ 

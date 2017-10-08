@@ -16,15 +16,20 @@ namespace GCPack.Repository
             return new HashSet<LogEventModel>();
         }
 
-        public void LogEvent(int UserId, LogEventType LogEventType, int ResourceId)
+        public void LogEvent(int UserId, LogEventType LogEventType, int ResourceId, string Description)
         {
+            // text se naplni nazvem dokumentu a jeho verzi a nebo jmenem uzivatele
+            // kdyz se pak vymaze objekt z db, tak text Ti napovi kdo co vymazal, protoze
+            // jinak zustane jen ResourceId s odkazem na vymazany objekt 
+            string Text = "";
             using (GCPackContainer db = new GCPackContainer())
             {
                 db.LogEvents.Add(new LogEvent() {
                     Date = DateTime.Now,
                     LogType = (int)LogEventType,
                     ResourceID = ResourceId,
-                    UserID = UserId
+                    UserID = UserId,
+                    Text = Description + Text
                 });
                 db.SaveChanges();
             }
