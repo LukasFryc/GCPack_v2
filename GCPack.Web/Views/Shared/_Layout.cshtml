@@ -51,7 +51,7 @@
                             @foreach (var item in GCPack.Helper.GetDocumentTypeItems())
                             {
                                 <li>
-                                    @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() {DocumentTypeID = item.ID, StateID = 2, Revision = "P"}, null)
+                                    @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() {DocumentTypeID = item.ID, StateID = 2, Revision = "p", Reset = true }, null)
 
                                 </li>
                             }
@@ -68,7 +68,7 @@
                                 <li>
 
 
-                                    @Html.ActionLink(item.Value, "Add", "Documents", new { DocumentTypeID = item.ID }, null)
+                                    @Html.ActionLink(item.Value, "Add", "Documents", new { DocumentTypeID = item.ID}, null)
                                     
                                 </li>
                             }

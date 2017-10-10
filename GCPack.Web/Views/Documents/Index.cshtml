@@ -1,8 +1,10 @@
-﻿@model IEnumerable<GCPack.Model.DocumentModel>
+﻿@model GCPack.Model.DocumentFilter
 @using GCPack.Model;
 @{DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"]; }
 
 @{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
+@{var dateAndTime = DateTime.Now;
+    var date = dateAndTime.Date;}
 
 @{
     ViewBag.Title = "Index";
@@ -63,9 +65,9 @@
                         //var EffeciencyDateTo = $('#EffeciencyDateTo').val();
                         //var NextReviewDateFrom = $('#NextReviewDateFrom').val();
                         //var NextReviewDateTo = $('#NextReviewDateTo').val();
+
                         var AllPath = AppRoot + "/documents/getDocuments";
-                        //alert(AllPath);
-                        $.post(AppRoot + "/documents/getDocuments", {
+                        $.post(AppRoot + "/documents/getDocuments",  {
                             name: $('#Name').val(),
                             Number: $('#Number').val(),
                             AdministratorName: $('#AdministratorName').val(),
@@ -80,10 +82,10 @@
                             NextReviewDateFrom: $('#NextReviewDateFrom').val(),
                             NextReviewDateTo: $('#NextReviewDateTo').val(),
                             ReadType: $('#ReadType').val(),
-                            StateID: $('#DocumentStates').val(),
-                            Revision: $('#RevisionType').val(),
+                            StateID: $('#StateID').val(),
+                            Revision: $('#Revision').val(),
                             //Archiv: $('#Archiv').val(),
-                            ReviewNecassaryChange: $('#ReviewNecassaryChange').val()
+                            ReviewNecessaryChange: $('#ReviewNecessaryChange').val()
                         } )
 
                             .done(function (documents) {
@@ -163,13 +165,19 @@
 
 <script>
         $(document).ready(function () {
+
+
+            if ($("#ProjectID").val() != 0) {
+                $("#section-filter-plus2").collapse('show');
+            }
+
             $("#section-filter-plus1").on("hide.bs.collapse", function () {
                 $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
                 $("#Name").val('');
                 $("#Number").val('');
                 $("#AdministratorName").val('');
                 $("#DocumentTypeID").val(0);
-                $("#DocumentStates").val(0);
+                
              
                 //$("#section-filter-plus2").trigger("hide.bs.collapse");
 
@@ -209,7 +217,7 @@
                 $("#EffeciencyDateTo").val('');
                 $("#NextReviewDateFrom").val('');
                 $("#NextReviewDateTo").val('');
-                $("#RevisionType").val('all');
+                $("#Revision").val('all');
                 
                 //$('#section-filter-plus2').hide();
                 GetDocuments();
@@ -297,6 +305,69 @@
 </script>
 <div style="background-color:#D1D1D1; padding-left:5px; padding-top:5px" >
 
+    @*--------*@
+    <div class="row">
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus0" id="btnCollapse1">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
+
+        <div class="col-md-2">
+            <label for="DocumentTypeID">Typ dokumentu</label>
+        </div>
+        <div class="col-md-2">
+            <label for="DocumentStates">Stav dokumentu</label>
+        </div>
+        <div class="col-md-2">
+            <label for="ReviewNecessaryChange">Nutná změna</label>
+        </div>
+        <div class="col-md-2">
+          
+        </div>
+
+        <div class="col-md-2">
+            
+        </div>
+
+        <div class="col-md-1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus0" id="btnCollapse1">
+                <span class="glyphicon glyphicon-collapse-down"></span> +
+            </button>
+        </div>
+    </div>
+    <div id="section-filter-plus0" class="collapse in">
+        <div class="row">
+            <div class="col-md-1">
+
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "filter form-control" })                
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.StateID, new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" })
+            </div>
+            <div class="col-md-2">
+                @Html.DropDownListFor(m => m.ReviewNecessaryChange, new SelectList(ViewBag.ReviewNecessaryChange, "Code", "Value"), new { @class = "filter form-control" })
+            </div>
+            <div class="col-md-2">
+
+            </div>
+            <div class="col-md-2">
+                <!-- Timto zpusobem muzes upravit vsechny selectBoxy-->
+                
+            </div>
+            <div class="col-md-1">
+
+            </div>
+        </div>
+    </div>
+
+
+
+    @*------*@
+
+
     <div class="row">
         <div class="col-md-1">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus1" id="btnCollapse1">
@@ -314,11 +385,11 @@
             <label for="AdministratorName">Správce</label>
         </div>
         <div class="col-md-2">
-            <label for="DocumentTypeID">Typ dokumentu</label>
+           
         </div>
         
         <div class="col-md-2">
-            <label for="DocumentStates">Stav dokumentu</label>
+           
         </div>
 
         <div class="col-md-1">
@@ -342,10 +413,10 @@
                 <input class="filterText form-control" type="text" id="AdministratorName" value="@((filter != null) ? filter.AdministratorName : string.Empty)" />
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("DocumentTypeID", new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "filter form-control" })
+           
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("DocumentStates", new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" })
+                
             </div>
             <div class="col-md-1">
 
@@ -386,6 +457,7 @@
         </div>
     </div>
 
+    @*class="collapse"*@
     <div id="section-filter-plus2" class="collapse">
         <div class="row">
             <div class="col-md-1">
@@ -408,25 +480,25 @@
             </div>*@
 
             <div class="col-md-2">
-                @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.ProjectID, new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("DivisionID", new SelectList(ViewBag.Divisions, "ID", "Name"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.DivisionID, new SelectList(ViewBag.Divisions, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("AppSystemID", new SelectList(ViewBag.AppSystems, "ID", "Name"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.AppSystemID, new SelectList(ViewBag.AppSystems, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.WorkplaceID, new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "filter form-control" })
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownList("ReadType", new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.ReadType, new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "filter form-control" })
+            </div >
 
-            </div>
             <div class="col-md-2">
 
             </div>
@@ -435,40 +507,14 @@
             </div>
         </div>
 
-
-        @*<div class="row">
-
-            <div class="col-md-1">
-
-            </div>*@
-
-            @*<div class="col-md-2">
-                @Html.DropDownList("ProjectID", new SelectList(ViewBag.Projects, "ID", "Name"), new { @class = "filter form-control" })
-            </div>
-
-            <div class="col-md-2">
-                @Html.DropDownList("DivisionID", new SelectList(ViewBag.Divisions, "ID", "Name"), new { @class = "filter form-control" })
-            </div>
-
-            <div class="col-md-2">
-                @Html.DropDownList("AppSystemID", new SelectList(ViewBag.AppSystems, "ID", "Name"), new { @class = "filter form-control" })
-            </div>
-
-            <div class="col-md-2">
-                @Html.DropDownList("WorkplaceID", new SelectList(ViewBag.Workplaces, "ID", "Name"), new { @class = "filter form-control" })
-            </div>*@
-
-        @*</div>*@
-
-
     </div>
 
-        
+
 
     <div class="row">
 
         <div class="col-md-1">
-            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus3" id="btnCollapse3">
+            <button type = "button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus3" id="btnCollapse3">
                 <span class="glyphicon glyphicon-collapse-down"></span> +
             </button>
         </div>
@@ -513,22 +559,25 @@
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="EffeciencyDateFrom" class="filter form-control" placeholder="Od" />
+                @*@Html.TextBoxFor(m => m.EffeciencyDateFrom, new { @class = "filter form-control", @placeholder = "Od" })*@
+
+                <input type="text" id="EffeciencyDateFrom" class="filter form-control" placeholder="Od" value="@((filter != null) ? filter.EffeciencyDateFrom : null)"/>
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="EffeciencyDateTo" class="filter form-control" placeholder="Do" />
+                <input type="text" id="EffeciencyDateTo" class="filter form-control" placeholder="Do" value="@((filter != null) ? filter.EffeciencyDateTo : null)"/>
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="NextReviewDateFrom" class="filter form-control" placeholder="Od" />
+                <input type="text" id="NextReviewDateFrom" class="filter form-control" placeholder="Od" value="@((filter != null) ? filter.NextReviewDateFrom : null)"/>
             </div>
 
             <div class="col-md-2">
-                <input type="text" id="NextReviewDateTo" class="filter form-control" placeholder="Do" />
+                <input type="text" id="NextReviewDateTo" class="filter form-control" placeholder="Do" value="@((filter != null) ? filter.NextReviewDateTo : null)"/>
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
+                @*@Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })*@
+                @Html.DropDownListFor(m => m.Revision, new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-1">
 

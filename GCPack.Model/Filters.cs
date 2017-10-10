@@ -51,7 +51,7 @@ namespace GCPack.Model
         public int? DivisionID { get; set; }
         public int? AppSystemID { get; set; }
         public int? WorkplaceID { get; set; }
-
+        public bool Reset { get; set; }
         public DateTime? EffeciencyDateFrom { get; set; }
         public DateTime? EffeciencyDateTo { get; set; }
 
@@ -62,6 +62,8 @@ namespace GCPack.Model
         public int? StateID { get; set; }
 
         public string Revision { get; set; }
+
+        public string ReviewNecessaryChange { get; set; }
 
 
     }

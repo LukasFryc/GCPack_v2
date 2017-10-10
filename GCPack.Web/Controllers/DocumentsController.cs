@@ -34,13 +34,15 @@ namespace GCPack.Web.Controllers
         [AuthorizeAttributeGC(Roles = "user,admin,supervisor,poweruser")]
         public ActionResult Index(DocumentFilter filter)
         {
+            
             // TODO: dopsat filtrovani - pridat do filtru userId pro ktereho se vyberou pouze jeho dokumenty
             ICollection<DocumentModel> documents = new HashSet<DocumentModel>();
             ICollection<Item> documentTypes = documentService.GetDocumentTypes();
 
             Session["documentFilter"] = filter;
+            if (filter.Reset) Session["documentFilter"] = null;
 
-            if (filter.DocumentTypeID != null && filter.DocumentTypeID != 0) {
+            //if (filter.DocumentTypeID != null && filter.DocumentTypeID != 0) {
 
                 // TODO: Zvazit upravu cislenikovych trid o dedeni z tridy item
                 // TODO: Napreklad pri volani funkce documentService.GetDocumentTypes se varci IColection<Item>
@@ -54,9 +56,9 @@ namespace GCPack.Web.Controllers
                 // if (DocumentTypeID.HasValue) v2 = DocumentTypeID.Value;
                 //DocumentTypeModel  choiceDocumentType = documentService.GetDocumentType(v2);
 
-               Item choiceDocumentType = documentTypes.Where(dc => dc.ID ==filter.DocumentTypeID).Select(dc => dc).FirstOrDefault();
-               choiceDocumentType.OrderBy = -1;
-            }
+               //Item choiceDocumentType = documentTypes.Where(dc => dc.ID ==filter.DocumentTypeID).Select(dc => dc).FirstOrDefault();
+               //choiceDocumentType.OrderBy = -1;
+            //}
 
             //ICollection<Item> documentSortType = new HashSet<Item>(); ;
             //documentSortType.Add(new Item { ID = 0, Code = "",  OrderBy = 0, Value = "Sestupně" });
@@ -69,10 +71,11 @@ namespace GCPack.Web.Controllers
             //documentSort.Add(new Item { ID = 4, Code = "EffeciencyDate", OrderBy = 0, Value = "Data účinnosti" });
             //ViewBag.DocumentSort = documentSort.OrderBy(dt => dt.OrderBy);
 
-            ICollection<Item> archivType = new HashSet<Item>(); ;
-            archivType.Add(new Item { ID = 0, Code = "all", OrderBy = 2, Value = "Všechny" });
-            archivType.Add(new Item { ID = 1, Code = "1", OrderBy = 1, Value = "Je v archívu" });
-            archivType.Add(new Item { ID = 2, Code = "0", OrderBy = 0, Value = "Není v archívu" });
+
+            ICollection<Item> ReviewNecessaryChange = new HashSet<Item>(); ;
+            ReviewNecessaryChange.Add(new Item { ID = 0, Code = "all", OrderBy = 1, Value = "Všechny" });
+            ReviewNecessaryChange.Add(new Item { ID = 1, Code = "necessaryChange", OrderBy = 2, Value = "Nutná změně" });
+            ViewBag.ReviewNecessaryChange = ReviewNecessaryChange.OrderBy(rt => rt.OrderBy);
 
 
             //ICollection<UserModel> users = new HashSet<UserModel>();
@@ -91,10 +94,9 @@ namespace GCPack.Web.Controllers
             readType.Add(new Item { ID = 0, Code = "all", OrderBy = 0, Value = "Všechny" });
             readType.Add(new Item { ID = 2, Code = "read", OrderBy = 1, Value = "Seznámeno" });
             readType.Add(new Item { ID = 1, Code = "unread", OrderBy = 2, Value = "Neseznámeno" });
-            //readType.Add(new Item { ID = 3, Code = "unreadafterterm", OrderBy = 3, Value = "Neseznámeno po termínu" });
             ViewBag.ReadType = readType.OrderBy(dt => dt.OrderBy);
 
-            documentTypes.Add(new Item { ID = 0, OrderBy = 0, Value = "Všechny dokumenty" });
+            documentTypes.Add(new Item { ID = 0, OrderBy = -1, Value = "Všechny typy" });
             ViewBag.DocumentTypes = documentTypes.OrderBy(dt => dt.OrderBy);
 
             ICollection<DocumentStateModel> documentStates = new HashSet<DocumentStateModel>();
@@ -130,7 +132,7 @@ namespace GCPack.Web.Controllers
             //@WorkplaceID int
 
             // ViewBag.Message = Message;
-            return View(documents);
+            return View(filter);
             //DocumentFilter filterModel = new DocumentFilter() { WorkplaceID = 1, AppSystemID = 1, StateID = 2 };
             //return View(filterModel);
 
@@ -192,7 +194,7 @@ namespace GCPack.Web.Controllers
             // filter.EffeciencyDateFrom = string.IsNullOrEmpty(filter.EffeciencyDateFrom.ToString())
             //? (DateTime?)null
             //: DateTime.Parse(filter.EffeciencyDateFrom.ToString());
-            Session["documentFilter"] = filter;
+        
             filter.ForUserID = UserRoles.GetUserId();
             Session["documentFilter"] = filter;
 

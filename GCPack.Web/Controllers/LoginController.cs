@@ -67,7 +67,8 @@ namespace GCPack.Web.Controllers
                     return this.Redirect(rawUrl);
                 }
                 {
-                    return this.RedirectToAction("Index", "Home");
+                    //return this.RedirectToAction("Index", "Documents", new DocumentFilter() { StateID = 2, Revision = "p", Reset=true});
+                    return RedirectToAction("Index", "Documents", new DocumentFilter() { StateID = 2, Revision = "p", Reset = true });
                 }
             }
 

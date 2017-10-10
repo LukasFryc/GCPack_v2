@@ -36,11 +36,11 @@
   
                 @ReadType varchar(10) = 'all',     
   
-                      @StateID int,   
+                @StateID int,   
   
-                           @Revision varchar(3) = 'all'    
-  
-         
+				@Revision varchar(3) = 'all',
+				
+				@ReviewNecassaryChange varchar(15) = 'all'    
   
 AS          
   
@@ -357,7 +357,34 @@ ISNULL(@AppSystemID,0) = 0 OR
   
                      (ISNULL(@Revision,'') = '' ) OR (D.Revision = @Revision)  
   
-)            
+)     
+
+    AND    
+  
+ (   
+  
+     --     hledani dle typu ReviewNecessaryChange       
+  
+             --@ReviewNecassaryChange = 'all'
+
+  
+              --       (ISNULL(@ReviewNecassaryChange,'') = '' ) OR (D.Revision = @Revision)  
+  
+	--(CASE @ReviewNecassaryChange
+ --        WHEN 'all' THEN 1=1
+ --        WHEN 'necessaryChange' THEN (CASE WHEN D.ReviewNecassaryChange = 1 )
+
+ --    END
+  
+	--(CASE WHEN @ReviewNecassaryChange != 'all' THEN D.ReviewNecessaryChange = 1)
+
+	
+
+	@ReviewNecassaryChange = 'all' OR          
+  
+                     (ISNULL(@ReviewNecassaryChange,'') = '' ) OR (D.ReviewNecessaryChange = 1 )  
+
+)        
   
    AND          
   

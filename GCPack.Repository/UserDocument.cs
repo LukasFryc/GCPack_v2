@@ -19,7 +19,6 @@ namespace GCPack.Repository
         public int UserId { get; set; }
         public System.DateTime Created { get; set; }
     
-        public virtual Document Document { get; set; }
         public virtual User User { get; set; }
     }
 }
