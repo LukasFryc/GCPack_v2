@@ -404,16 +404,22 @@ namespace GCPack.Repository
             return result;
         }
 
-            public void Readed(int documentID, int userID)
+        public void Readed(int documentID, int userID)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                db.ReadConfirmations.Add(new ReadConfirmation() {
-                    DocumentID = documentID,
-                    UserID = userID,
-                    ReadDate = DateTime.Now
-                });
-                db.SaveChanges();
+                var readConfirms = db.ReadConfirmations.Where(s => s.DocumentID == documentID && s.UserID == userID).Select(s => s).FirstOrDefault();
+                if (readConfirms == null)
+                {
+                    db.ReadConfirmations.Add(new ReadConfirmation()
+                    {
+                        DocumentID = documentID,
+                        UserID = userID,
+                        ReadDate = DateTime.Now
+                    });
+                    db.SaveChanges();
+                }
+
             }
         }
 

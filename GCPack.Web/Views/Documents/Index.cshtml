@@ -3,13 +3,20 @@
 @{DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"]; }
 
 @{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
-@{var dateAndTime = DateTime.Now;
-    var date = dateAndTime.Date;}
 
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+
+<style>
+
+    .blue-border {
+        border: 3px solid #3276B1 !important;
+    }
+    
+</style>
+
 @if (ViewBag.Message != null)
 {
     <script>
@@ -23,17 +30,59 @@
     </script>
 }
     <script>
+
+        //function doSomething(this) {
+        //    if ($(this).val() !== '') {  //assuming the form doesn't have some fields populated by default.
+        //        $(this).addClass('green-border');
+        //    } else {
+        //        $(this).removeClass('green-border');
+        //    }
+        //}
+
+        function setColorCompleted(param) {
+
+            if ($(param).val() !== '') {
+                $(param).addClass('blue-border');
+            } else {
+                $(param).removeClass('blue-border');
+            }
+
+
+            if ($(param).val() != 0) {
+                $(param).addClass('blue-border');
+            } else {
+                $(param).removeClass('blue-border');
+            }
+
+            if ($(param).val() == 'all') {
+                $(param).removeClass('blue-border');
+            } else {
+                
+            }
+        }
+
         var timeoutHandle;
-        var orderBy = '';
+        var orderBy = 'NumberA';
         $(document).ready(function () {
-            GetDocuments();
-            // vsechnz talcitka na trideni jsou zalozany na  css class sortBy
+
+                GetDocuments();
+                // vsechnz talcitka na trideni jsou zalozany na  css class sortBy
                 $('.sortBy').click(
                     function () {
                         orderBy = $(this).attr('sortBy');
                         GetDocuments();
                     }
                 );
+
+                $('.filterText, .filter').each(function () {
+                    setColorCompleted(this);
+                });
+                
+                 $(function () {
+                     $('.filterText, .filter').on('keyup change', function () {
+                        setColorCompleted(this);
+                    });
+                });
 
                 $('.filterText').keyup(function () {
                     GetDocuments();
@@ -43,21 +92,12 @@
                     GetDocuments();
                 });
 
-                //$('#DocumentTypeID , #ProjectID, #DivisionID, #AppSystemID, #WorkplaceID').change(function () {
-                //    GetDocuments();
-                //});
-
-                //$('#EffeciencyDateFrom,#EffeciencyDateTo,#NextReviewDateFrom,#NextReviewDateTo,#ReadType').change(function () {
-                //    GetDocuments();
-                //});
-
-
             });
 
         function GetDocuments() {
                 // nastaven 500mlisec spoydeni na cekani bna vlozeni vstupu z klavesnice
                 if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
-
+                            
                 timeoutHandle = setTimeout(
                     function () {
 
@@ -167,19 +207,46 @@
         $(document).ready(function () {
 
 
-            if ($("#ProjectID").val() != 0) {
+            if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorName").val() != '') {
+                $("#section-filter-plus1").collapse('show');
+            }
+
+            if ($("#ProjectID").val() != 0 || $("#DivisionID").val() != 0 || $("#AppSystemID").val() != 0 || $("#WorkplaceID").val() != 0) {
                 $("#section-filter-plus2").collapse('show');
             }
+
+            if ($("#EffeciencyDateFrom").val() != '' || $("#EffeciencyDateTo").val() != '' || $("#NextReviewDateFrom").val() != '' || $("#NextReviewDateTo").val() != '') {
+                $("#section-filter-plus3").collapse('show');
+            }
+
+            $("#section-filter-plus0").on("hide.bs.collapse", function () {
+                $("#btnCollapse0").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
+
+                $("#DocumentTypeID").val(0);
+                $("#StateID").val(0);
+                $("#ReviewNecessaryChange").val('all');
+                $("#Revision").val('all');
+                $("#ReadType").val('all');
+                
+                $('.filterText, .filter').each(function () {
+                    setColorCompleted(this);
+                });
+
+                GetDocuments();
+
+            });
+
 
             $("#section-filter-plus1").on("hide.bs.collapse", function () {
                 $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
                 $("#Name").val('');
                 $("#Number").val('');
                 $("#AdministratorName").val('');
-                $("#DocumentTypeID").val(0);
                 
-             
-                //$("#section-filter-plus2").trigger("hide.bs.collapse");
+
+                $('.filterText, .filter').each(function () {
+                    setColorCompleted(this);
+                });
 
                 GetDocuments();
              
@@ -195,17 +262,14 @@
                 $("#DivisionID").val('0');
                 $("#AppSystemID").val('0');
                 $("#WorkplaceID").val('0');
-                $("#ReadType").val('all');
 
-                $("#projectsFilter").val('');
-                $("#divisionsFilter").val('');
-                $("#appSystemsFilter").val('');
-                $("#workplacesFilter").val('');
-                
 
-                //$('#section-filter-plus2').hide();
+
+                $('.filterText, .filter').each(function () {
+                    setColorCompleted(this);
+                });
+
                 GetDocuments();
-
 
             });
 
@@ -217,12 +281,17 @@
                 $("#EffeciencyDateTo").val('');
                 $("#NextReviewDateFrom").val('');
                 $("#NextReviewDateTo").val('');
-                $("#Revision").val('all');
-                
-                //$('#section-filter-plus2').hide();
+            
+                $('.filterText, .filter').each(function () {
+                    setColorCompleted(this);
+                });
                 GetDocuments();
 
 
+            });
+
+            $("#section-filter-plus0").on("show.bs.collapse", function () {
+                $("#btnCollapse0").html('<span class="glyphicon glyphicon-collapse-up"></span> -');
             });
 
             $("#section-filter-plus1").on("show.bs.collapse", function () {
@@ -293,7 +362,6 @@
 
             $.datepicker.setDefaults($.datepicker.regional['cs']);
 
-
         });
 
 
@@ -308,30 +376,30 @@
     @*--------*@
     <div class="row">
         <div class="col-md-1">
-            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus0" id="btnCollapse1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus0" id="btnCollapse0">
                 <span class="glyphicon glyphicon-collapse-down"></span> +
             </button>
         </div>
 
         <div class="col-md-2">
-            <label for="DocumentTypeID">Typ dokumentu</label>
+            <label for="DocumentTypeID">Typ</label>
         </div>
         <div class="col-md-2">
-            <label for="DocumentStates">Stav dokumentu</label>
+            <label for="DocumentStates">Stav</label>
+        </div>
+        <div class="col-md-2">
+            <label for="ReadType">Typ revize</label>
         </div>
         <div class="col-md-2">
             <label for="ReviewNecessaryChange">Nutná změna</label>
         </div>
-        <div class="col-md-2">
-          
-        </div>
 
         <div class="col-md-2">
-            
+            <label for="ReadType">Seznámeno</label>
         </div>
 
         <div class="col-md-1">
-            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus0" id="btnCollapse1">
+            <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus0" id="btnCollapse0">
                 <span class="glyphicon glyphicon-collapse-down"></span> +
             </button>
         </div>
@@ -348,22 +416,19 @@
                 @Html.DropDownListFor(m => m.StateID, new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-2">
+                @Html.DropDownListFor(m => m.Revision, new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
+            </div>
+            <div class="col-md-2">
                 @Html.DropDownListFor(m => m.ReviewNecessaryChange, new SelectList(ViewBag.ReviewNecessaryChange, "Code", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-2">
-
-            </div>
-            <div class="col-md-2">
-                <!-- Timto zpusobem muzes upravit vsechny selectBoxy-->
-                
+                @Html.DropDownListFor(m => m.ReadType, new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-1">
 
             </div>
         </div>
     </div>
-
-
 
     @*------*@
 
@@ -376,10 +441,10 @@
         </div>
 
         <div class="col-md-2">
-            <label for="Number">Název</label>
+            <label for="Name">Číslo</label>
         </div>
         <div class="col-md-2">
-            <label for="Name">Číslo</label>
+            <label for="Number">Název</label>
         </div>
         <div class="col-md-2">
             <label for="AdministratorName">Správce</label>
@@ -398,22 +463,22 @@
             </button>
         </div>
     </div>
-    <div id="section-filter-plus1" class="collapse in">
+    <div id="section-filter-plus1" class="collapse">
         <div class="row">
             <div class="col-md-1">
 
             </div>
             <div class="col-md-2">
-                <input class="filterText form-control" type="text" id="Name" value="@((filter != null) ? filter.Name : string.Empty)" />
+                <input class="filterText form-control" type="text" id="Number" value="@((filter != null) ? filter.Number : string.Empty)" />
             </div>
             <div class="col-md-2">
-                <input class="filterText form-control" type="text" id="Number" value="@((filter != null) ? filter.Number : string.Empty)" />
+                <input class="filterText form-control" type="text" id="Name" value="@((filter != null) ? filter.Name : string.Empty)" />
             </div>
             <div class="col-md-2">
                 <input class="filterText form-control" type="text" id="AdministratorName" value="@((filter != null) ? filter.AdministratorName : string.Empty)" />
             </div>
             <div class="col-md-2">
-           
+                
             </div>
             <div class="col-md-2">
                 
@@ -448,7 +513,7 @@
             <label for="WorkplaceID">Pracoviště</label>
         </div>
         <div class="col-md-2">
-            <label for="ReadType">Seznámeno</label>
+            
         </div>
         <div class="col-md-1">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="collapse" data-target="#section-filter-plus2" id="btnCollapse2">
@@ -496,7 +561,7 @@
             </div>
 
             <div class="col-md-2">
-                @Html.DropDownListFor(m => m.ReadType, new SelectList(ViewBag.ReadType, "Code", "Value"), new { @class = "filter form-control" })
+
             </div >
 
             <div class="col-md-2">
@@ -525,21 +590,19 @@
         </div>
 
         <div class="col-md-2">
-            @*<label for="EffeciencyDateTo">Datum účinnosti do</label>*@
 
         </div>
 
         <div class="col-md-4">
             <label for="NextReviewDateFrom">Příští datum přezkoumání</label>
-
         </div>
 
         <div class="col-md-2">
-            @*<label for="NextReviewDateTo">Příští datum přezkoumání do</label>*@
+            
         </div>
 
         <div class="col-md-2">
-            <label for="ReadType">Typ revize</label>
+
         </div>
 
         <div class="col-md-1">
@@ -559,8 +622,6 @@
             </div>
 
             <div class="col-md-2">
-                @*@Html.TextBoxFor(m => m.EffeciencyDateFrom, new { @class = "filter form-control", @placeholder = "Od" })*@
-
                 <input type="text" id="EffeciencyDateFrom" class="filter form-control" placeholder="Od" value="@((filter != null) ? filter.EffeciencyDateFrom : null)"/>
             </div>
 
@@ -576,8 +637,6 @@
                 <input type="text" id="NextReviewDateTo" class="filter form-control" placeholder="Do" value="@((filter != null) ? filter.NextReviewDateTo : null)"/>
             </div>
             <div class="col-md-2">
-                @*@Html.DropDownList("RevisionType", new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })*@
-                @Html.DropDownListFor(m => m.Revision, new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-1">
 

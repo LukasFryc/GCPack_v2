@@ -6,69 +6,586 @@
     ViewBag.Title = "Details";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using GCPack.Model;
+<script>
+    var timeoutHandle;
+    var selectedUsers = [];
+    $(document).ready(function () {
+
+        jQuery.validator.methods["date"] = function (value, element) { return true; }
+
+        // nize uvedene nebude jiz potreba - reseno scriptem lukasuv kousek 15.9.2017
+        //$('.btn').click(function () {
+        //    $('#Action').val($(this).prop("id"));
+        //});
+
+        // LF lukasuv kousek 15.9.2017
+        $('.btnAction').click(function () {
+            $('#Action').val($(this).prop("id"));
+            $('#myForm').submit();
+        });
+
+        $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#ReviewDate").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#NextReviewDate").datepicker({ dateFormat: 'dd/mm/yy' });
+        $("#EndDate").datepicker({ dateFormat: 'dd/mm/yy' });
+
+        //https://stackoverflow.com/questions/494958/how-do-i-localize-the-jquery-ui-datepicker
+        $.datepicker.regional['cs'] = {
+            closeText: 'Zavřít',
+            prevText: '&#x3c;Dříve',
+            nextText: 'Později&#x3e;',
+            currentText: 'Nyní',
+            monthNames: ['leden', 'únor', 'březen', 'duben', 'květen', 'červen', 'červenec', 'srpen',
+                'září', 'říjen', 'listopad', 'prosinec'
+            ],
+            monthNamesShort: ['led', 'úno', 'bře', 'dub', 'kvě', 'čer', 'čvc', 'srp', 'zář', 'říj', 'lis', 'pro'],
+            dayNames: ['neděle', 'pondělí', 'úterý', 'středa', 'čtvrtek', 'pátek', 'sobota'],
+            dayNamesShort: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+            dayNamesMin: ['ne', 'po', 'út', 'st', 'čt', 'pá', 'so'],
+            weekHeader: 'Týd',
+            dateFormat: 'dd/mm/yy',
+            firstDay: 1,
+            isRTL: false,
+            showMonthAfterYear: false,
+            yearSuffix: ''
+        };
+
+        $.datepicker.setDefaults($.datepicker.regional['cs']);
+
+
+        $("#tabs").tabs();
+
+        $('#filter').keyup(function () {
+            GetUsers();
+        });
+
+        $('#cancelChanges').click(function () {
+            $("#success-alert").fadeTo(1000, 500).slideUp(500, function () {
+                $("#success-alert").slideUp(500);
+                document.location.href = '/Documents';
+            });
+        });
+
+        $('#jobPosition').change(function () {
+            GetUsers();
+        });
+
+        $("#RemoveSelectedUsers").click(function () {
+            $("#SelectedUsers :selected").each(function () {
+                $(this).remove();
+            });
+            GetUsers();
+        });
+
+        $('#saveDocument, #newVersion, #registerDocument, #revisionNoAction, #revisionChanges').click(function () {
+            var form = $(this).closest('form')
+            $('.categories option').prop('selected', true);
+            $('#SelectedUsers option').prop('selected', true);
+        });
+
+        $('#AddUserToList').click(function () {
+            $("#FilteredUsers :selected").each(function (index, user) {
+                $('#SelectedUsers').append('<option value="' + user.value + '">' + user.text + '</option>');
+            });
+
+            GetUsers();
+        });
+
+
+        GetUsers();
+
+        $('.removeFile').click(function () {
+            $('#DeleteFileItems').val($('#DeleteFileItems').val() + $(this).attr('fileId') + ',');
+            $(this).closest(".row").remove();
+        });
+
+        $('.downloadFile').click(function () {
+
+        });
+
+        $('#actionTestModal').click(function () {
+            //$('#myModal').modal('show');
+            $('#myModal').modal();
+            return false;
+        });
+
+        //$('#myModal').modal('show');
+
+        $('#stornoModalSave').click(function () {
+            quota = $("#quotas").val();
+            //alert(quota);
+            $('#HelpText').val(quota);
+            $('#myForm').submit();
+
+        });
+
+        $('#stornoModalClose').click(function () {
+
+        });
+
+        $('#myModal').on('shown', function () {
+            $("#quotas").focus();
+        })
+
+        $("#myForm").submit(function (event) {
+
+            testik = $('#HelpText').val()
+            //alert(testik);
+            //event.preventDefault(); je shodnz s return false
+            //return false
+        });
+
+
+
+
+
+        function GetUsers() {
+            if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
+
+            timeoutHandle = setTimeout(
+                function () {
+                    selectedUsers = [];
+                    $("#SelectedUsers").children().each(function () {
+                        selectedUsers.push($(this).val());
+                    });
+                    $('#FilteredUsers').empty();
+
+                    var AllPath = AppRoot + "/user/getUsers";
+                    //alert(AllPath);
+
+                    $.getJSON(AppRoot + "/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
+                        .done(function (users) {
+
+                            for (var user in users) {
+                                $('#FilteredUsers').append($('<option>', {
+                                    value: users[user].ID,
+                                    text: users[user].LastName + ' ' + users[user].FirstName
+                                }));
+                            }
+
+                        })
+                        .fail(function (jqxhr, textStatus, error) {
+                            var err = textStatus + ", " + error;
+                            console.log("Request Failed: " + err);
+                        });
+
+
+                },
+                500);
+        }
+    });
+
+</script>
+
+
+
+<style>
+    ; .row {
+        margin-bottom: 10px;
+    }
+
+    .categories {
+        width: 100%;
+    }
+
+    /*barva aktivníhoi ouška tabulky*/
+    .ui-tabs .ui-tabs-nav li.ui-tabs-active {
+        margin-bottom: -1px;
+        padding-bottom: 1px;
+        background: #3276B1;
+    }
+
+    .modra {
+        color: #3276B1;
+    }
+</style>
 
 <h2>@Model.Title</h2>
-
+@Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Annotation)
-        </dt>
+    @using (Html.BeginForm("Readed", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
+    {
+        <input type="hidden" name="documentID" value="@Model.ID" />
+        <input type="hidden" name="Action" id="Action" />
+        <input type="hidden" name="StateID" id="StateID" value="@Model.StateID" />
+        <input type="hidden" name="ID" value="@Model.ID" />
+        <input type="hidden" name="type" value="@ViewBag.Type" />
+        <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
+        <input type="hidden" name="ParentID" value="@Model.ParentID" />
+        <input type="hidden" name="HelpText" id="HelpText" />
 
-        <dd>
-            @Html.DisplayFor(model => model.Annotation)
-        </dd>
-        <dd>
-            <div>
-                @if (@Model.FileItems.Count > 0)
+        @*<div < div = "success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>*@
+
+        <div id="tabs">
+
+            <ul>
+
+                <li><a href="#tabs-1">Dokument</a></li>
+
+                <li><a href="#tabs-3">Soubory</a></li>
+                @*<li><a href="#tabs-4">Přiřazené osoby k dokumentu</a></li>*@
+                <li><a href="#tabs-5">Kategorie</a></li>
+                @if (Model.AllUsers > 0)
                 {
-                <h3>Soubory k dokumentu</h3>
-                    foreach (var file in @Model.FileItems)
-                    {
-                    <div class="row">
-                        <div class="col-md-2">
-                            @file.Name
-                        </div>
-                        <div class="col-md-4">
-                            <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@file.ID" class="btn btn-default btn-sm downloadFile">
-                                <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
-                            </a>
-                        </div>
-                    </div>
-                    }
+                    <li><a href="#tabs-6">Záznamy o seznámení</a></li>
                 }
-                else
+                @if (Model.ReviewNecessaryChangeComment != "")
                 {
-                    <h4>Nejsou přiřazeny žádné dokumenty</h4>
+                    <li><a href="#tabs-7">Nutné změny</a></li>
                 }
-            </div>
-        </dd>
-        @if (Model.CanConfirmRead)
-        {
-            if (Model.ReadDate != null)
-            {
-                <h1>Seznámeno s dokumentem dne @Model.ReadDate</h1>
-            }
-            else
-            {
+            </ul>
+            @*-------tabs1 = pole dokumentu*@
+            <div id="tabs-1">
                 <div class="row">
-                    <div class="col-md-10">
-                    @using (Html.BeginForm("Readed", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data" }))
-                    {
-                        <input type="hidden" name="documentID" value="@Model.ID" />
-                        <input type="submit" value="Seznámení s dokumentem" id="readed" class="btn btn-success" />
-                    }
+                    <label class="control-label col-md-2" for="Title">Název</label>
+                    <div class="col-md-4">
+                        @*@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název dokumentu" } })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger", required = "required" })*@
+                        @Html.HiddenFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název" } })
+                        @Model.Title
+
+                    </div>
+                    <label class="control-label col-md-2 modra" for="DocumentTypeID">Stav dokumentu</label>
+                    <div class="col-md-4 modra">
+                        @Model.DocumentStateName
+
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
+                    <div class="col-md-4">
+                        @Html.HiddenFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
+                        @Model.DocumentNumber
+                        @Html.HiddenFor(model => model.IssueNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo vydání" } })
+                        <strong>  (Vydání  </strong> @Model.IssueNumber <strong> ) </strong>
+                        @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
+                    </div>
+                    <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
+                    <div class="col-md-4">
+                        @*@Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })*@
+                        @Html.HiddenFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Účinnost" } })
+                        @Model.EffeciencyDate
+                    </div>
+
+                </div>
+                <div class="row">
+                    <label class="control-label col-md-2" for="Revision">Typ revize</label>
+                    <div class="col-md-4">
+                        @Model.Revision
+                        <input type="hidden" name="Revision" value="@Model.Revision" />
+                    </div>
+                    <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
+                    <div class="col-md-4">
+                        @*@Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })*@
+                        @Html.HiddenFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Revidovat" } })
+                        @Model.ReviewDate
+                    </div>
+
+                </div>
+                <div class="row">
+                    <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
+                    <div class="col-md-4">
+                        <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
+                        @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true })
+                    </div>
+                    <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
+                    <div class="col-md-4">
+                        @*@Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })*@
+                        @Html.HiddenFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Další revize" } })
+                        @Model.NextReviewDate
+                    </div>
+
+
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+
+                    </div>
+                    <label class="control-label col-md-2" for="EndDate">Konec platnosti</label>
+                    <div class="col-md-4">
+                        @*@Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })*@
+                        @Html.HiddenFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Datum ukončení platnosti" } })
+                        @Model.EndDate
                     </div>
                 </div>
-            }
-        }
-        else
-        {
-            <div>Tento uživatel není v seznamu uživatelů dokumentu.</div>
-        }
-    </dl>
+
+                @*<div class="row">
+                        <label class="control-label col-md-2" for="DocumentTypeID">Stav dokumentu</label>
+                        <div class="col-md-10">
+                            @Model.DocumentStateName
+
+                        </div>
+                    </div>*@
+
+                <div class="row">
+                    <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
+                    <div class="col-md-10">
+                        @if (ViewBag.TypeModel.AdministratorID != 0)
+                        {
+                            <p>Z typu dokumentu: @Model.DocumentAdministrator</p>
+
+                        }
+                        else
+                        {
+                            <p>Vybraná osoba &nbsp;</p>
+                                @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"));
+                        }
+                        <br />
+
+                    </div>
+                </div>
+                <div class="row">
+                    <label class="control-label col-md-2" for="Title">Anotace</label>
+
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.Annotation)
+                        <p style="white-space: pre-line">@Model.Annotation</p>
+
+                    </div>
+
+                </div>
+            </div>
+            @*-------tabs6 = 6. rozdělovník = záznamy seznámení*@
+            @if (Model.AllUsers > 0)
+            {
+                <div id="tabs-6">
+
+                    @*<table class="table" style="margin-top:20px">
+                            <tr>
+                                <th>
+                                    Jméno
+                                </th>
+                                <th>
+                                    Příjmení
+
+                                </th>
+                                <th>
+                                    Datum seznámení
+                                </th>
+                            </tr>
+                        </table>*@
+
+
+
+                    @{ bool existAsUserReader = false; }
+                    @if (Model.UsersInDocument != null && Model.UsersInDocument.AllUsers != null)
+                    {
+                        foreach (var item in @Model.UsersInDocument.AllUsers.OrderBy(au => au.LastName).Select(au => au))
+                        {
+                            existAsUserReader = false;
+                            if (Model.UsersInDocument.UsersRead != null)
+                            {
+
+                                foreach (var itemUR in @Model.UsersInDocument.UsersRead)
+                                {
+                                    if (itemUR.User.ID == item.ID)
+                                    {
+                                        existAsUserReader = true;
+
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                @itemUR.User.FirstName
+                                            </div>
+                                            <div class="col-md-2">
+                                                @itemUR.User.LastName
+                                            </div>
+                                            <div class="col-md-2">
+                                                @itemUR.DateRead.ToShortDateString()
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                            if (existAsUserReader == false)
+                            {
+
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        @item.FirstName
+                                    </div>
+                                    <div class="col-md-2">
+                                        @item.LastName
+                                    </div>
+                                    <div class="col-md-2">
+
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                        }
+
+            <div id="tabs-3">
+                @*<hr />*@
+                @*<dl class="dl-horizontal">*@
+
+                <dd>
+                    <div>
+                        @if (@Model.FileItems.Count > 0)
+                        {
+                            <h3>Přílohy</h3>
+                            foreach (var file in @Model.FileItems)
+                            {
+                                <div class="row">
+                                    <div class="col-md-2">
+                                        @file.Name
+                                    </div>
+                                    <div class="col-md-4">
+                                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@file.ID" class="btn btn-default btn-sm downloadFile">
+                                            <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
+                                        </a>
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            <h4>Žádné přílohy</h4>
+                        }
+                    </div>
+                </dd>
+
+            </div>
+
+            @*záložka kategorie*@
+            <div id="tabs-5">
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <b>Vybrané projekty</b><br />
+                        <select multiple name="SelectedProjectsID" id="SelectedProjects" class="categories">
+                            @if (Model.SelectedProjectsID != null)
+                            {
+                                foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
+                                {
+                                    <option value="@project.ID">@project.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <b>Vybraná střediska</b><br />
+                        <select multiple name="SelectedDivisionsID" id="SelectedDivisions" class="categories">
+                            @if (Model.SelectedDivisionsID != null)
+                            {
+                                foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
+                                {
+                                    <option value="@division.ID">@division.Name</option>
+                                }
+                            }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <b>Vybrané systémy</b><br />
+                        <select multiple name="SelectedAppSystemsID" id="SelectedAppSystems" class="categories">
+                            @if (Model.SelectedAppSystemsID != null)
+                            {
+                                foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Where(p => Model.SelectedAppSystemsID.Contains(p.ID)).Select(p => p))
+                                {
+                                    <option value="@appSystem.ID">@appSystem.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-10">
+                        <b>Vybrané pracovní místa</b><br />
+                        <select multiple name="SelectedWorkplacesID" id="SelectedWorkplaces" class="categories">
+                            @if (Model.SelectedWorkplacesID != null)
+                            {
+                                foreach (WorkplaceModel workplace in ((ICollection<WorkplaceModel>)ViewBag.Workplaces).Where(p => Model.SelectedWorkplacesID.Contains(p.ID)).Select(p => p))
+                                {
+                                    <option value="@workplace.ID"> @workplace.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+            </div>
+
+
+            @*záložka Nutná změna*@
+            <div id="tabs-7">
+                <div class="row">
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.ReviewNecessaryChangeComment)
+                        <p style="white-space: pre-line">@Model.ReviewNecessaryChangeComment</p>
+                        @*@Html.TextBoxFor(m => m.ReviewNecessaryChangeComment, new { @readonly = "readonly" })*@
+                        @*@Html.EditorFor(m => m.ReviewNecessaryChangeComment, new { htmlAttributes = new { @readonly = "readonly" } })*@
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+        @*<p>
+                @Html.ActionLink("Zpět", "Index")
+            </p>*@
+                        @*butony-start*@
+                        <input type="hidden" name="ID" id="ID" />
+                        <div style="clear:both;margin-bottom:10px"> </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <nav class="navbar navbar-btn">
+                                    <div class="container-fluid">
+                                        <ul class="nav navbar-nav">
+                                            <li style="padding-right:5px">
+                                                <button class="btn btn-danger navbar-btn btnAction" id="cancelChanges">Zpět</button>
+                                            </li>
+                                            @if (Model.DocumentStateCode == "Registered" & Model.CanConfirmRead & Model.ReadDate == null)
+                                            {
+                                                <li style="padding-right:5px">
+                                                    <button class="btn btn-primary navbar-btn btnAction" id="readed">Seznámit</button>
+                                                </li>
+
+
+                                            }
+
+                                        </ul>
+
+
+                                    </div>
+                                </nav>
+                            </div>
+                        </div>
+
+                            @*butony-end*@
+                            <div>
+                                @if (Model.CanConfirmRead)
+                                {
+                                    if (Model.ReadDate != null)
+                                    {
+                                        <h2 class="modra">Aktuální uživatel se seznámil dne @Model.ReadDate</h2>
+                                    }
+
+                                }
+                                else
+                                {
+                                    <div>Aktuální uživatel není v rozdělovníku.</div>
+                                }
+
+
+                            </div>
+
+                        }
 </div>
-<p>
-    @Html.ActionLink("Zpět", "Index")
-</p>

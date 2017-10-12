@@ -178,8 +178,19 @@ namespace GCPack.Web.Controllers
 
         public ActionResult Details(int documentId)
         {
+            //int userId = UserRoles.GetUserId();
+            //return View(documentService.GetDocument(documentId, userId));
+
             int userId = UserRoles.GetUserId();
-            return View(documentService.GetDocument(documentId, userId));
+            DocumentModel document = documentService.GetDocument(documentId, userId);
+            DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
+            ViewBag.TypeModel = typeModel;
+            ViewBag.Documents = document;
+            ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
+            ViewBag.Type = "Detail";
+            InitCodeLists();
+            return View("Details", document);
+
         }
 
         public ActionResult Registered(int documentID)
@@ -202,15 +213,31 @@ namespace GCPack.Web.Controllers
             return Json(documents, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Readed(int documentID)
-        {
-            // seznameni s dokumentem
-            int userId = UserRoles.GetUserId();
+        //public ActionResult Readed(int documentID)
+        //{
+        //    // seznameni s dokumentem
+        //    int userId = UserRoles.GetUserId();
 
-            documentService.Readed(documentID, userId);
-            return View("Details",documentService.GetDocument(documentID, userId));
-            
-            
+        //    documentService.Readed(documentID, userId);
+        //    return View("Details",documentService.GetDocument(documentID, userId));
+
+
+        //}
+
+        public ActionResult Readed(int documentID, string Action)
+        {
+            int userId = UserRoles.GetUserId();
+            //DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+
+            //if (Action == "cancelChanges") return RedirectToAction("Index", filter);
+            if (Action == "readed")
+            {
+                // seznameni s dokumentem
+                documentService.Readed(documentID, userId);
+            }
+            //return View("Details", documentService.GetDocument(documentID, userId));
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+            return RedirectToAction("Index", filter);
         }
 
         public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action, string HelpText)
@@ -246,8 +273,6 @@ namespace GCPack.Web.Controllers
                             document.IssueNumber = 1;
                             documentService.AddDocument(document, fileNames);
                             documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
-                            break;
-                        case "cancelChanges":
                             break;
                         default:
                             document.IssueNumber = 1;
