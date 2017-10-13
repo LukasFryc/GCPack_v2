@@ -1,4 +1,8 @@
-﻿ALTER TABLE [dbo].[Document]  DROP COLUMN TESTIK;
+﻿Alter table document add ReviewNecessaryChangeComment [varchar](max) NULL
+go
+alter table document add ownerID int
+go
+ALTER TABLE [dbo].[Document]  DROP COLUMN TESTIK;
 go
 ALTER TABLE [dbo].[Document] ADD PreviousStateID int null;
 ALTER TABLE [dbo].[Document] WITH CHECK ADD  CONSTRAINT [FK_Documents_PreviousState] FOREIGN KEY([PreviousStateID])

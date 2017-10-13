@@ -19,7 +19,7 @@ namespace GCPack.Repository
         public int JobPositionId { get; set; }
         public System.DateTime Created { get; set; }
     
-        public virtual Document Document { get; set; }
         public virtual JobPosition JobPosition { get; set; }
+        public virtual Document Document { get; set; }
     }
 }

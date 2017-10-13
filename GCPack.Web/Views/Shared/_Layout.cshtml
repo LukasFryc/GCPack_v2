@@ -41,17 +41,21 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Uvodní stránka", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Úvodní stránka", "Index", "Home")</li>
                     @*<li>@Html.ActionLink("Dokumenty", "Index", "Documents")</li>*@
 
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Dokumenty<span class="caret"></span></a>
                         <ul class="dropdown-menu">
 
+                            <li>
+                                @Html.ActionLink("Všech typů", "Index", "Documents", new DocumentFilter() { DocumentTypeID = 0, StateID = 2, Revision = "p", Reset = true }, null)
+
+                            </li>
                             @foreach (var item in GCPack.Helper.GetDocumentTypeItems())
                             {
                                 <li>
-                                    @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() {DocumentTypeID = item.ID, StateID = 2, Revision = "P"}, null)
+                                    @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() {DocumentTypeID = item.ID, StateID = 2, Revision = "p", Reset = true }, null)
 
                                 </li>
                             }
@@ -68,7 +72,7 @@
                                 <li>
 
 
-                                    @Html.ActionLink(item.Value, "Add", "Documents", new { DocumentTypeID = item.ID }, null)
+                                    @Html.ActionLink(item.Value, "Add", "Documents", new { DocumentTypeID = item.ID}, null)
                                     
                                 </li>
                             }
@@ -85,7 +89,7 @@
                             <li>@Html.ActionLink("Pracovní pozice", "JobPositionIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Projekty", "ProjectIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Pracovní místa", "WorkplaceIndex", "CodeLists")</li>
-                            <li>@Html.ActionLink("Test emailu", "SendMail", "Documents")</li>
+                            @*<li>@Html.ActionLink("Test emailu", "SendMail", "Documents")</li>*@
                             
                         </ul>
                     </li>
@@ -98,7 +102,7 @@
 
                     @if (!HttpContext.Current.User.Identity.IsAuthenticated)
                     {
-                    <li>@Html.ActionLink("Prihlaseni", "Index", "Login")</li>
+                    <li>@Html.ActionLink("Přihlášení uživatele", "Index", "Login")</li>
                     }
                     else
                     {
