@@ -1,0 +1,39 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        Implicitni
+        <p>@DateTime.Now</p>
+        <p>@DateTime.UtcNow</p>
+
+        Explicitni vyrazy
+        <p>Last week this time: @(DateTime.Now - TimeSpan.FromDays(7))</p>
+
+        Implicitni vyrazi nemuzou obsahovat mezery:
+        <p>Last week: @DateTime.Now - TimeSpan.FromDays(7)</p>
+
+        Nastaveni explicitnich promennych
+        @{
+            public class UserX
+            {
+                public string name { get; set; }
+                public int age { get; set; }
+            }
+
+            UserX user = new UserX() { name = "Joe", age = 40 };
+        }
+
+        <p>Name @(user.age)</p>
+
+    </div>
+</body>
+</html>
