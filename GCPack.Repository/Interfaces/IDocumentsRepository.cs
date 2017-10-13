@@ -37,7 +37,7 @@ namespace GCPack.Repository.Interfaces
         ICollection<int> GetWorkplacesFromDocument(int documentId);
         void SaveListCodes(DocumentModel document);
         UsersInDocument GetUsersInDocument(int documentID);
-        void ChangeRevison(DocumentModel document);
+        void ChangeRevison(DocumentModel document, string revisionType);
 
         //void Archived(DocumentModel document, bool archiv);
 
@@ -48,6 +48,6 @@ namespace GCPack.Repository.Interfaces
         void ReviewNecessaryChange(DocumentModel document, string comment, string userName);
 
         void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState);
-
+        
     }
 }

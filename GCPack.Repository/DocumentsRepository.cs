@@ -459,12 +459,12 @@ namespace GCPack.Repository
             }
         }
 
-        public void ChangeRevison(DocumentModel document)
+        public void ChangeRevison(DocumentModel document, string revisionType)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
                 var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
-                dbDocument.Revision = "R";
+                dbDocument.Revision = revisionType;
                 db.SaveChanges();
             }
         }

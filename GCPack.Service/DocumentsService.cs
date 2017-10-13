@@ -100,7 +100,7 @@ namespace GCPack.Service
             document.Archived = false;
 
             // odeslani emailu vsem prirazenym osobam v dokumentu
-            documentsRepository.ChangeRevison(oldDocument);
+            documentsRepository.ChangeRevison(oldDocument,"R");
             //EditDocument(oldDocument, null);
             document = AddDocument(document, fileNames);
             
@@ -141,8 +141,8 @@ namespace GCPack.Service
             {
                 DocumentModel oldDocument = documentsRepository.GetDocument(document.ParentID, userID);
                 document.DocumentNumber = oldDocument.DocumentNumber;
-                oldDocument.Revision = "N";
-                documentsRepository.EditDocument(oldDocument);
+                
+                documentsRepository.ChangeRevison(oldDocument,"N");
             }
 
             // stav revize dokumentu se prepne na P
