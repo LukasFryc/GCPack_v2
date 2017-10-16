@@ -1,0 +1,28 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <div>
+        Implicitni
+        <p>@DateTime.Now</p>
+        <p>@DateTime.UtcNow</p>
+
+        Explicitni vyrazy
+        <p>Last week this time: @(DateTime.Now - TimeSpan.FromDays(7))</p>
+
+        Implicitni vyrazi nemuzou obsahovat mezery:
+        <p>Last week: @DateTime.Now - TimeSpan.FromDays(7)</p>
+
+        Nastaveni explicitnich promennych
+
+    </div>
+</body>
+</html>

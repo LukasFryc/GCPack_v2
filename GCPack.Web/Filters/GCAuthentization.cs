@@ -18,7 +18,7 @@ namespace GCPack.Web.Filters
         string Id { get; set; }
         string UserName { get; set; }
     }
-
+    /*
     public class MyCustomPrincipal : MyIPrincipal
     {
         public IIdentity Identity { get; private set; }
@@ -33,6 +33,7 @@ namespace GCPack.Web.Filters
         public string UserName { get; set; }
         public int IsAdmin { get; set; }
     }
+    */
 
     public class GCAuthentization : FilterAttribute, IAuthenticationFilter
     {
@@ -50,7 +51,7 @@ namespace GCPack.Web.Filters
             // protoze uzivatel jeste neni prihlaseny
 
             if (context.ActionDescriptor.ControllerDescriptor.ControllerName == "Login") return; 
-            MyCustomPrincipal cp = null;
+            //MyCustomPrincipal cp = null;
 
             // pokud existuje autentizacni cookie, tak ji pouziji
             var authCookie = context.HttpContext.Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -73,8 +74,8 @@ namespace GCPack.Web.Filters
 
                     if (aCookie != null)
                     {
-                        cp = new MyCustomPrincipal(authCookie.Name);
-                        cp.Id = aCookie.UserData;
+                        //cp = new MyCustomPrincipal(authCookie.Name);
+                        //cp.Id = aCookie.UserData;
                         user = userService.GetUser(aCookie.UserData);
                     }
                     
