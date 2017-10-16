@@ -272,6 +272,7 @@ namespace GCPack.Web.Controllers
                         case "registerDocument":
                             document.IssueNumber = 1;
                             documentService.AddDocument(document, fileNames);
+                            fileNames = null;
                             documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
                             break;
                         default:

@@ -159,7 +159,7 @@ namespace GCPack.Service
             document = EditDocument(document, fileNames);
 
             documentsRepository.SetNumberOfDocument(document.DocumentTypeID);
-            SaveFiles(document, fileNames);
+            //SaveFiles(document, fileNames);
 
             // odeslani emailu vsem zaregistrovanym uzivatelum v dokumentu
             UsersInDocument usersInDoc = documentsRepository.GetUsersInDocument(document.ID);
