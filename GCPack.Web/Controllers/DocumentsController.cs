@@ -258,7 +258,16 @@ namespace GCPack.Web.Controllers
             {
                 if (this.Request.Files[i].ContentLength > 0)
                 {
-                    string filePath = folderPath + this.Request.Files[i].FileName;
+                    string strFileName = this.Request.Files[i].FileName
+                        .Replace(":", string.Empty)
+                        .Replace("'", string.Empty)
+                        .Replace(";", string.Empty)
+                        .Replace("*", string.Empty)
+                        .Replace(@"/", string.Empty)
+                        .Replace(@"\", string.Empty)
+                        .Replace(">", string.Empty)
+                        .Replace("<", string.Empty);
+                    string filePath = folderPath + strFileName;
                     fileNames.Add(filePath);
                     this.Request.Files[i].SaveAs(filePath);
                 }

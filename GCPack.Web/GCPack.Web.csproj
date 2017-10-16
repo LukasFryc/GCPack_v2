@@ -312,7 +312,6 @@
     <Content Include="Views\CodeLists\WorkplaceIndex.cshtml" />
     <Content Include="Views\CodeLists\WorkplaceEdit.cshtml" />
     <Content Include="Views\Documents\Edit2.cshtml" />
-    <Content Include="Views\Shared\Scripts.cshtml" />
     <Content Include="Views\Testing\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
