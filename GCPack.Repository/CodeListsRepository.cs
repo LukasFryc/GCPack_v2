@@ -198,6 +198,16 @@ namespace GCPack.Repository
             }
         }
 
+        public void DocumentTypeDelete(int id)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                db.DocumentTypes.RemoveRange(db.DocumentTypes.Where(d => d.ID == id));
+                db.SaveChanges();
+
+            }
+        }
+
         public ICollection<WorkplaceModel> GetWorkplaces()
         {
             using (GCPackContainer db = new GCPackContainer())
@@ -254,5 +264,7 @@ namespace GCPack.Repository
                 
             }
         }
+
+        
     }
 }

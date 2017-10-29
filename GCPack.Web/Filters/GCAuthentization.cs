@@ -18,22 +18,6 @@ namespace GCPack.Web.Filters
         string Id { get; set; }
         string UserName { get; set; }
     }
-    /*
-    public class MyCustomPrincipal : MyIPrincipal
-    {
-        public IIdentity Identity { get; private set; }
-        public bool IsInRole(string role) {
-            return true;
-        }
-        public MyCustomPrincipal(string email)
-        {
-            this.Identity = new GenericIdentity(email);
-        }
-        public string Id { get; set; }
-        public string UserName { get; set; }
-        public int IsAdmin { get; set; }
-    }
-    */
 
     public class GCAuthentization : FilterAttribute, IAuthenticationFilter
     {
@@ -51,7 +35,7 @@ namespace GCPack.Web.Filters
             // protoze uzivatel jeste neni prihlaseny
 
             if (context.ActionDescriptor.ControllerDescriptor.ControllerName == "Login") return; 
-            //MyCustomPrincipal cp = null;
+            
 
             // pokud existuje autentizacni cookie, tak ji pouziji
             var authCookie = context.HttpContext.Request.Cookies[FormsAuthentication.FormsCookieName];
@@ -74,8 +58,6 @@ namespace GCPack.Web.Filters
 
                     if (aCookie != null)
                     {
-                        //cp = new MyCustomPrincipal(authCookie.Name);
-                        //cp.Id = aCookie.UserData;
                         user = userService.GetUser(aCookie.UserData);
                     }
                     
@@ -85,6 +67,7 @@ namespace GCPack.Web.Filters
                         IList<Claim> listOfClaims = new List<Claim>() {
                         new Claim(ClaimTypes.Name,user.UserName),
                         new Claim("Role", user.Roles),
+                        new Claim("FirstName", user.FirstName),
                         new Claim("UserName", user.LastName + " " + user.FirstName),
                         new Claim("UserId", user.ID.ToString())};
                         ClaimsIdentity identita = new ClaimsIdentity(listOfClaims, "User identity");

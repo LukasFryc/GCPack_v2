@@ -121,5 +121,10 @@ namespace GCPack.Service
         {
             return codeListsRepository.GetDocumentStates();
         }
+
+        public void DocumentTypesDelete(int id)
+        {
+            codeListsRepository.DocumentTypeDelete(id);
+        }
     }
 }

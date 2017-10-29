@@ -215,6 +215,12 @@ namespace GCPack.Repository
 
         public DocumentModel GetDocument(int documentId, int? userID)
         {
+            // LF 
+            // UserId - se zde prebira pouze  u edit a detail dokumentu a to v contoleru, prebira se y aktualne prihlasene osoby
+            // timto se yajisti i napr to, ye uyivatel s roli User se nedostane zadnym zpusobem na dokumenty 
+            // kter jsou v jinem stavu nez Registered a jsou typ revize = p
+            // nejde to obejit parametrz z prohlizece
+            
             DocumentFilter filter = new DocumentFilter() { DocumentID = documentId, ForUserID = userID };
             DocumentModel document = GetDocuments(filter).FirstOrDefault();
             return document;
@@ -228,15 +234,173 @@ namespace GCPack.Repository
             }
         }
 
+
+        public ICollection<DocumentModel> GetDocuments_linq(DocumentFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
+
+                if (!string.IsNullOrEmpty(filter.StateCode)) filter.StateID = GetDocumentState(filter.StateCode); // lF 25.10.2017
+
+                if (filter.DocumentID == null) filter.DocumentID = 0;
+
+                filter.ItemPerPage = 10000;
+
+                var documents = (
+                    from d in db.Documents
+
+                    select d);
+
+                // generovani where podminek
+                if (filter.DocumentID != 0) documents = documents.Where(d => d.ID == filter.DocumentID);
+                if (filter.StateID != 0 && filter.StateID != null) documents = documents.Where(d => d.StateID == filter.StateID);
+                if (filter.Revision != "all" && filter.Revision != null) documents = documents.Where(d => d.Revision == filter.Revision);
+                if (filter.ReviewNecessaryChange != "all" && filter.ReviewNecessaryChange != null) documents = documents.Where(d => d.ReviewNecessaryChange == true);
+
+                if (!string.IsNullOrEmpty(filter.Name)) documents = documents.Where(d => d.Title.Contains(filter.Name));
+                if (!string.IsNullOrEmpty(filter.Number)) documents = documents.Where(d => d.DocumentNumber.Contains(filter.Number));
+                if (filter.DocumentTypeID != 0 && filter.DocumentTypeID != null) documents = documents.Where(d => d.DocumentTypeID == filter.DocumentTypeID);
+
+
+
+
+                if (filter.ProjectID != 0 && filter.ProjectID != null)
+                    documents = documents.Where(
+                        d =>
+                            db.ProjectDocuments.Where(pd => pd.ProjectID == filter.ProjectID).Select(pd => pd.DocumentID)
+                            .Contains(d.ID)
+                            );
+
+                if (filter.DivisionID != 0 && filter.DivisionID != null)
+                    documents = documents.Where(
+                        d =>
+                            db.DivisionDocuments.Where(dd => dd.DivisionID == filter.DivisionID).Select(dd => dd.DocumentID)
+                            .Contains(d.ID)
+                            );
+                if (filter.AppSystemID != 0 && filter.AppSystemID != null)
+                    documents = documents.Where(
+                        d =>
+                            db.SystemDocuments.Where(sd => sd.ID_System == filter.AppSystemID).Select(sd => sd.DocumentID)
+                            .Contains(d.ID)
+                            );
+
+                if (filter.WorkplaceID != 0 && filter.WorkplaceID != null)
+                    documents = documents.Where(
+                        d =>
+                            db.WorkplaceDocuments.Where(wp => wp.WorkplaceID == filter.WorkplaceID).Select(wp => wp.DocumentID)
+                            .Contains(d.ID)
+                            );
+
+                if (filter.NextReviewDateFrom != null)
+                    documents = documents.Where(d => filter.NextReviewDateFrom <= d.NextReviewDate);
+
+                if (filter.NextReviewDateTo != null)
+                {
+                    filter.NextReviewDateTo = filter.NextReviewDateTo.Value.AddHours(23).AddMinutes(59).AddSeconds(59);
+                    documents = documents.Where(d => filter.NextReviewDateTo >= d.NextReviewDate);
+                }
+
+                if (filter.EffeciencyDateFrom != null)
+                    documents = documents.Where(d => filter.EffeciencyDateFrom <= d.EffeciencyDate);
+
+                if (filter.EffeciencyDateTo != null)
+                {
+                    filter.EffeciencyDateTo = filter.EffeciencyDateTo.Value.AddHours(23).AddMinutes(59).AddSeconds(59);
+                    documents = documents.Where(d => filter.EffeciencyDateTo >= d.EffeciencyDate);
+                }
+
+                if (filter.ReadType == "read")
+                {
+                    documents = documents.Where(d => d.ReadConfirmations.Where(rc => rc.UserID == filter.ForUserID).Select(rc => rc.DocumentID).Contains(d.ID));
+                }
+
+                if (filter.ReadType == "unread")
+                {
+                    documents = documents.Where(d => !d.ReadConfirmations.Where(rc => rc.UserID == filter.ForUserID).Select(rc => rc.DocumentID).Contains(d.ID));
+                }
+
+                if (!string.IsNullOrEmpty(filter.AdministratorName))
+                { documents =
+                    documents.Where(d =>
+                    (d.AdministratorID == 0 && 
+                        (
+                            d.DocumentType.User.FirstName.Contains (filter.AdministratorName) ||
+                            d.DocumentType.User.LastName.Contains(filter.AdministratorName)
+                        )) ||
+                     (d.AdministratorID != 0 && 
+                        (
+                            db.Users.Where (u => u.FirstName.Contains(filter.AdministratorName) ||
+                            u.LastName.Contains(filter.AdministratorName)).Select(u => u.ID).Contains(d.AdministratorID) 
+                        )
+                     )
+                    );
+                }
+
+                switch (filter.OrderBy)
+                {
+                    case "NameA":
+                        documents = documents.OrderBy(d => d.Title);
+                        break;
+                    case "NameD":
+                        documents = documents.OrderByDescending(d => d.Title);
+                        break;
+                    case "NumberA":
+                        documents = documents.OrderBy(d => d.DocumentNumber).ThenBy(d => d.IssueNumber); 
+                        break;
+                    case "NumberD":
+                        documents = documents.OrderByDescending(d => d.DocumentNumber).ThenBy(d => d.IssueNumber); 
+                        break;
+                    case "RevisionA":
+                        documents = documents.OrderBy(d => d.EffeciencyDate);
+                        break;
+                    case "RevisionD":
+                        documents = documents.OrderByDescending(d => d.EffeciencyDate);
+                        break;
+                    default:
+                        documents = documents.OrderBy(d => d.DocumentNumber).ThenBy(d=>d.IssueNumber);
+                        break;
+                }
+
+                // tyka se strankovani: documents.Skip(filter.Page * filter.ItemPerPage).Take (filter.ItemPerPage)
+
+                ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documents.Skip(filter.Page * filter.ItemPerPage).Take (filter.ItemPerPage));
+
+                foreach (DocumentModel document in docs)
+                {
+                    if (document.AdministratorID == 0)
+                    {
+                        document.DocumentAdministrator =
+                            db.DocumentTypes.Where(d => d.ID == document.DocumentTypeID).Select(d => d.User.FirstName + " " + d.User.LastName).FirstOrDefault();
+                    }
+                    else
+                    {
+                        document.DocumentAdministrator =
+                            db.Users.Where(u => u.ID == document.AdministratorID).Select(u => u.FirstName + " " + u.LastName).FirstOrDefault();
+                    }
+
+                    document.AllUsers = db.JobPositionDocuments.Where(jpd => jpd.DocumentId == document.ID).Count() + db.UserDocuments.Where(ud => ud.DocumentId == document.ID).Count();
+                    document.UsersRead = db.ReadConfirmations.Where(ud => ud.DocumentID == document.ID).Count();
+
+
+                }
+
+                return docs;
+            }
+        }
+
+
         public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
                 filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
 
+                if (!string.IsNullOrEmpty(filter.StateCode)) filter.StateID = GetDocumentState(filter.StateCode); // lF 25.10.2017
+
                 if (filter.DocumentID==null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments16_Result> documentsResult = db.GetDocuments16(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments16_Result>();
+                ICollection<GetDocuments17_Result> documentsResult = db.GetDocuments17(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments17_Result>();
                 ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
                 return docs;
             }

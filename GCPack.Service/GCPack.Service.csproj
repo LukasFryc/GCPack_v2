@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="CodeListsService.cs" />
     <Compile Include="DocumentsService.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Interfaces\ILogEventService.cs" />
     <Compile Include="Interfaces\ICodeListsService.cs" />
     <Compile Include="Interfaces\IDocumentsService.cs" />

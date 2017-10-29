@@ -40,3 +40,8 @@ select
     height: 500px;
     overflow: auto;
 }
+
+.clsDisabled {
+    background-color: #ddd;
+    pointer-events: none;
+}

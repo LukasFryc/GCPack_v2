@@ -26,6 +26,12 @@ namespace GCPack.Web.Controllers
             return View(documentTypes);
         }
 
+        public ActionResult DocumentTypesDelete(int id)
+        {
+            codeListsService.DocumentTypesDelete(id);
+            return RedirectToAction("DocumentTypesIndex");
+        }
+
         public ActionResult DocumentTypesEdit(int ID)
         {
             ViewBag.Title = "Editace typu dokumentu";
@@ -94,6 +100,14 @@ namespace GCPack.Web.Controllers
             codeListsService.AppSystemDelete(id);
             return RedirectToAction("AppSystemIndex");
         }
+        //// documentType
+        
+        //public ActionResult DocumentTypesDelete(int id)
+        //{
+        //    codeListsService.DocumentTypesDelete(id);
+        //    return RedirectToAction("DocumentTypeIndex");
+        //}
+
 
         // JOBPOSITIONS
         public ActionResult JobPositionIndex()

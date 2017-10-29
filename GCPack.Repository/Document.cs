@@ -43,12 +43,13 @@ namespace GCPack.Repository
         public Nullable<int> IssueNumber { get; set; }
         public Nullable<int> ParentID { get; set; }
         public Nullable<bool> ReviewNecessaryChange { get; set; }
-        public Nullable<int> OwnerID { get; set; }
+        public Nullable<int> AuthorID { get; set; }
         public string ReviewNecessaryChangeComment { get; set; }
         public Nullable<int> PreviousStateID { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<DivisionDocument> DivisionDocuments { get; set; }
+        public virtual DocumentType DocumentType { get; set; }
         public virtual DocumentState DocumentState { get; set; }
         public virtual DocumentState DocumentState1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -65,5 +66,7 @@ namespace GCPack.Repository
         public virtual ICollection<SystemDocument> SystemDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkplaceDocument> WorkplaceDocuments { get; set; }
+        public virtual User User { get; set; }
+        public virtual User User1 { get; set; }
     }
 }

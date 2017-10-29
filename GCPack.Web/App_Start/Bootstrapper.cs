@@ -39,6 +39,7 @@ namespace GCPack.Web.App_Start
         }
         public static void ConfigureWebApiContainer(ContainerBuilder containerBuilder)
         {
+            // dependency injection container
             // LF
             // zde se konfiguruje IOC 
             // IOC je navrhovy vzor pro vytvareni instanci trid
@@ -47,6 +48,8 @@ namespace GCPack.Web.App_Start
             containerBuilder.RegisterType<CodeListsRepository>().As<ICodeListsRepository>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<LogEventsService>().As<ILogEventsService>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<LogEventsRepository>().As<ILogEventsRepository>().AsImplementedInterfaces().InstancePerRequest();
+            
+
 
             containerBuilder.RegisterType<DocumentsRepository>().As<IDocumentsRepository>().AsImplementedInterfaces().InstancePerRequest();
             containerBuilder.RegisterType<MailService>().As<IMailService>().AsImplementedInterfaces().InstancePerRequest();

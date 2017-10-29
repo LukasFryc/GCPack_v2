@@ -9,10 +9,22 @@
 @using GCPack.Model;
 
 <style>
+    ; .row {
+        margin-bottom: 10px;
+    }
+
     .ui-tabs .ui-tabs-nav li.ui-tabs-active {
         margin-bottom: -1px;
         padding-bottom: 1px;
         background: #3276B1;
+         
+    }
+    .modra {
+        color: #3276B1;
+       
+    }
+    .sedaPozadi {
+        background: #F5F5F5;
     }
 </style>
 
@@ -32,8 +44,8 @@
         $('.btnAction').click(function () {
 
             $('#Action').val($(this).prop("id"));
-
-            if ($(this).prop("id") == "reviewNecessaryChanges") {
+            $('form').prop('action', $(this).prop("id"));
+            if ($(this).prop("id") == "reviewNecessaryChange") {
 
                 $("#myModalP1").html("");
                 $("#myModalP2").html("");
@@ -222,7 +234,93 @@
     });
 
 </script>
+@*script pro kategorie viz tab 5*@
+<script>
+    $(document).ready(function () {
+        $('#addProjects').click(
+            function () {
+                ChangeItems('#AllProjects', '#SelectedProjects');
+            });
+        $('#removeProjects').click(
+            function () {
+                ChangeItems('#SelectedProjects', '#AllProjects');
+            });
+        $('#addDivisions').click(
+            function () {
+                ChangeItems('#AllDivisions', '#SelectedDivisions');
+            });
+        $('#removeDivisions').click(
+            function () {
+                ChangeItems('#SelectedDivisions', '#AllDivisions');
+            });
 
+        $('#addAppSystems').click(
+            function () {
+                ChangeItems('#AllAppSystems', '#SelectedAppSystems');
+            });
+        $('#removeAppSystems').click(
+            function () {
+                ChangeItems('#SelectedAppSystems', '#AllAppSystems');
+            });
+
+        $('#addWorkplaces').click(
+            function () {
+                ChangeItems('#AllWorkplaces', '#SelectedWorkplaces');
+            });
+        $('#removeWorkplaces').click(
+            function () {
+                ChangeItems('#SelectedWorkplaces', '#AllWorkplaces');
+            });
+
+        $('#divisionsFilter').keyup(function () {
+            filterCodeList($(this).val(), '#AllDivisions');
+        });
+
+        $('#projectsFilter').keyup(function () {
+            filterCodeList($(this).val(), '#AllProjects');
+        });
+
+        $('#appSystemsFilter').keyup(function () {
+            filterCodeList($(this).val(), '#AllAppSystems');
+        });
+
+        $('#workplacesFilter').keyup(function () {
+            filterCodeList($(this).val(), '#AllWorkplaces');
+        });
+
+
+        function filterCodeList(filter, codeList) {
+            $(codeList + ' option').each(function () {
+                if ($(this).text().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            })
+        };
+
+    });
+
+    function ChangeItems(source, target) {
+        $(source + " :selected").each(function (index, item) {
+            $(target).append('<option value="' + item.value + '">' + item.text + '</option>');
+            $(item).remove();
+        });
+
+        SortItems(source);
+        SortItems(target);
+    }
+
+    function SortItems(source) {
+        var selectList = $(source + ' option');
+        var sortSelectList = selectList.sort(function (a, b) {
+            return a.text.localeCompare(b.text);
+        });
+        $(source).html(sortSelectList);
+    }
+
+
+</script>
 
 <style>
     .row {
@@ -236,7 +334,7 @@
 <h2>@ViewBag.Title</h2>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-    @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
+    @using (Html.BeginForm("", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
     {
         <input type="hidden" name="Action" id="Action" />
         <input type="hidden" name="StateID" id="StateID" value="@Model.StateID"/>
@@ -244,6 +342,8 @@
         <input type="hidden" name="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
         <input type="hidden" name="ParentID" value="@Model.ParentID"/>
+        <input type="hidden" name="AuthorID" value="@Model.AuthorID" />
+        
         <input type="hidden" name="HelpText"  id="HelpText" />
 
         <div id="success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>
@@ -262,27 +362,411 @@
                     <li><a href="#tabs-7">Nutné změny</a></li>
                 }
             </ul>
+           
+         
+                <div id="tabs-1">
+                    <div class="row">
+                        <label class="control-label col-md-2" for="Title">Název</label>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.Title, new {htmlAttributes = new { @class = "form-control", @placeholder = "Název dokumentu" } })
+                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger", required = "required" })
+                        </div>
+                        <label class="control-label col-md-2 modra" for="DocumentTypeID">Stav dokumentu</label>
+                        <div class="col-md-4 modra">
+                            @Model.DocumentStateName
+
+                        </div>
+                       
+
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
+                        <div class="col-md-4">
+                            @Html.HiddenFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
+                            @Model.DocumentNumber
+                            @Html.HiddenFor(model => model.IssueNumber, new { htmlAttributes = new {  @class = "form-control", @placeholder = "Číslo vydání" } })
+                            <strong>  (Vydání  </strong> @Model.IssueNumber <strong> ) </strong>                          
+                            @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
+                        </div>
+                        <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-md-2" for="Revision">Typ revize</label>
+                        <div class="col-md-4">
+                            @Model.Revision
+                            <input type="hidden" name="Revision" value="@Model.Revision" />
+                        </div>
+                        <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })
+                        </div>
+                       
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
+                        <div class="col-md-4">
+                            <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
+                            @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true })
+                        </div>
+                        <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })
+                        </div>
+                        
+
+                    </div>
+
+                    @*<div class="row">
+                        <label class="control-label col-md-2" for="DocumentTypeID">Stav dokumentu</label>
+                        <div class="col-md-10">
+                            @Model.DocumentStateName
+
+                        </div>
+                    </div>*@
+
+                    <div class="row">
+                        <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
+                        <div class="col-md-4">
+                            @*@if (ViewBag.TypeModel.AdministratorID != 0)
+                            {
+                                <p>Z typu dokumentu: @Model.DocumentAdministrator</p>
+
+                            }
+                            else
+                            {*@
+                                @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"), new { @class = "form-control", @placeholder = "Správce dokumentu" } )
+                                @Html.ValidationMessageFor(m => m.AdministratorID, "", new { @class = "text-danger", required = "required" })
+                            @*}*@
+                            <br />
+
+                        </div>
+                        <label class="control-label col-md-2" for="EndDate">Konec platnosti</label>
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label class="control-label col-md-2" for="Title">Anotace</label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(model => model.Annotation, new { @class = "form-control annotationArea", @placeholder = "Poznámka k dokumentu" })
+                            @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tabs-3">
+
+                    <div class="row">
+                        <label class="control-label col-md-4" for="Title">Přiřazené soubory k dokumentu</label>
+                    </div>
+
+                    @foreach (var item in @Model.FileItems)
+                    {
+                            <div class="row">
+                                <div class="col-md-2">
+                                    @item.Name
+                                </div>
+                                <div class="col-md-6">
+                                @if (Model.DocumentStateCode == "New")
+                                {
+                                    <a href="#" class="btn btn-default btn-sm removeFile" fileId="@item.ID">
+                                        <span class="glyphicon glyphicon-remove"></span> Smazat
+                                    </a>
+                                    }
+                                    <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@item.ID" class="btn btn-default btn-sm downloadFile" fileId="@item.ID">
+                                        <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
+                                    </a>
+                                </div>
+                            </div>
+                        }
+    
+            @if (Model.DocumentStateCode == "New" )
+            {
+                    <div class="row" style="margin-top:30px">
+                        <label class="control-label col-md-4" for="Title">Přidat nové soubory</label>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-10">
+                            <input type="file" name="file1" id="file1" value="Přidat soubor" class="form-control" />
+                          <br />
+                            <input type="file" name="file2" id="file2" value="Přidat soubor" class="form-control" />
+                            <br />
+                            <input type="file" name="file3" id="file3" value="Přidat soubor" class="form-control" />
+                           @* <input type="file" name="file3" id="file3" value="Přidat soubor" class="btn btn-default" />*@
+                        </div>
+                    </div>
+            }
+                </div>                
+
+            <div id="tabs-4">
+                <div class="row">
+                    @*<div class="col-md-10">*@
+                        <div style="margin-bottom:20px">
+
+                            <div class="col-md-2">
+                                <b>Pracovní pozice</b>
+                            </div>
+                            <div class="col-md-8">
+                                @foreach (GCPack.Model.JobPositionModel job in ViewBag.JobPositions)
+                                {
+                                    string isChecked = (Model.JobPositionIDs != null && Model.JobPositionIDs.Contains(job.ID)) ? "checked" : "";
+                                    <div>
+                                        <input type="checkbox" name="JobPositionIDs" value="@job.ID" @isChecked /> @job.Name
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    @*</div>*@
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <b>Přiřazení uživatelé k dokumentu</b><br />
+                        <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes">
+                            @if (@Model.Users != null)
+                            {
+                                foreach (var item in @Model.Users)
+                                {
+                                    <option value="@item.ID">@item.LastName  @item.FirstName</option>
+                                }
+                            }
+                        </select>
+
+                    </div>
+                    <div class="col-md-4">
+
+                        <input type="button" value="Odebrat osoby z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
+                    </div>
+                </div>
+                @* </div>
+            <div>*@
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="ui-widget">
+                            <label for="filter">Filtr: </label>
+                            <input id="filter">
+                            <label for="jobPosition">Pracovní pozice: </label>
+                            <select id="jobPosition">
+                                <option value="0">Všechny</option>
+                                @foreach (var item in ViewBag.JobPositions)
+                                {
+                                <option value="@item.ID">@item.Name</option>
+                                }
+                            </select>
+                        </div>
+
+                        <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes"></select>
+                        @*<br />*@
+                        
+                    @*</div>
+
+                </div>*@
+
+            </div>
+                    <div class="col-md-4">
+                        <input type="button" value="Přiřadit osoby k dokumentu" id="AddUserToList" class="btn btn-default" />
+                    </div>
+            </div>
+
+            </div>
+
+
+                <div id="tabs-5">
+                    <div class="row">
+                        <b>Projekty</b><br />
+                        <div class="col-md-4 sedaPozadi">
+                           
+                            <input type="text" id="projectsFilter" />
+                            <select multiple name="AllProjects" id="AllProjects" class="categories">
+                                @if (Model.SelectedProjectsID != null)
+                                {
+                                    foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => !Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
+                                    {
+                                        <option value="@project.ID">@project.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Select(p => p))
+                                    {
+                                        <option value="@project.ID">@project.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <input type="button" id="addProjects" value=">" /><br />
+                            <input type="button" id="removeProjects" value="<" />
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <b>Vybrané projekty</b><br />
+                            <select multiple name="SelectedProjectsID" id="SelectedProjects" class="categories">
+                                @if (Model.SelectedProjectsID != null)
+                                {
+                                    foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
+                                    {
+                                        <option value="@project.ID">@project.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <div class="row">
+                        <b>Střediska</b><br />
+                        <div class="col-md-4  sedaPozadi">
+                          
+                            <input type="text" id="divisionsFilter" />
+                            <select multiple name="AllDivisions" id="AllDivisions" class="categories">
+                                @if (Model.SelectedDivisionsID != null)
+                                {
+                                    foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => !Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
+                                    {
+                                        <option value="@division.ID">@division.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Select(p => p))
+                                    {
+                                        <option value="@division.ID">@division.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <input type="button" id="addDivisions" value=">" /><br />
+                            <input type="button" id="removeDivisions" value="<" />
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <b>Vybraná střediska</b><br />
+                            <select multiple name="SelectedDivisionsID" id="SelectedDivisions" class="categories">
+                                @if (Model.SelectedDivisionsID != null)
+                                {
+                                    foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
+                                    {
+                                        <option value="@division.ID">@division.Name</option>
+                                    }
+                                }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <b>Systémy</b><br />
+                        <div class="col-md-4 sedaPozadi">
+                           
+                            <input type="text" id="appSystemsFilter" />
+                            <select multiple name="AllAppSystems" id="AllAppSystems" class="categories">
+                                @if (Model.SelectedAppSystemsID != null)
+                                {
+                                    foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Where(p => !Model.SelectedAppSystemsID.Contains(p.ID)).Select(aps => aps))
+                                    {
+                                        <option value="@appSystem.ID">@appSystem.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Select(aps => aps))
+                                    {
+                                        <option value="@appSystem.ID">@appSystem.Name</option>
+                                    }
+                                }
+
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <input type="button" id="addAppSystems" value=">" /><br />
+                            <input type="button" id="removeAppSystems" value="<" />
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <b>Vybrané systémy</b><br />
+                            <select multiple name="SelectedAppSystemsID" id="SelectedAppSystems" class="categories">
+                                @if (Model.SelectedAppSystemsID != null)
+                                {
+                                    foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Where(p => Model.SelectedAppSystemsID.Contains(p.ID)).Select(p => p))
+                                    {
+                                        <option value="@appSystem.ID">@appSystem.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <b>Pracovní místa</b><br />
+                        <div class="col-md-4 sedaPozadi">
+                         
+                            <input type="text" id="workplacesFilter" />
+                            <select multiple name="AllWorkplaces" id="AllWorkplaces" class="categories">
+                                @if (Model.SelectedWorkplacesID != null)
+                                {
+                                    foreach (WorkplaceModel workplace in ((ICollection<WorkplaceModel>)ViewBag.Workplaces).Where(p => !Model.SelectedWorkplacesID.Contains(p.ID)).Select(aps => aps))
+                                    {
+                                        <option value="@workplace.ID"> @workplace.Name</option>
+                                    }
+                                }
+                                else
+                                {
+                                    foreach (WorkplaceModel workplace in ((ICollection<WorkplaceModel>)ViewBag.Workplaces).Select(aps => aps))
+                                    {
+                                        <option value="@workplace.ID">@workplace.Name</option>
+                                    }
+
+                                }
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+
+                            <input type="button" id="addWorkplaces" value=">" /><br />
+                            <input type="button" id="removeWorkplaces" value="<" />
+                        </div>
+
+
+                        <div class="col-md-4">
+                            <b>Vybrané pracovní místa</b><br />
+                            <select multiple name="SelectedWorkplacesID" id="SelectedWorkplaces" class="categories">
+                                @if (Model.SelectedWorkplacesID != null)
+                                {
+                                    foreach (WorkplaceModel workplace in ((ICollection<WorkplaceModel>)ViewBag.Workplaces).Where(p => Model.SelectedWorkplacesID.Contains(p.ID)).Select(p => p))
+                                    {
+                                        <option value="@workplace.ID"> @workplace.Name</option>
+                                    }
+                                }
+                            </select>
+                        </div>
+                    </div>
+
+
+
+
+
+                </div>
+                
             @if (Model.AllUsers > 0)
             {
                 <div id="tabs-6">
-                    
-                    @*<table class="table" style="margin-top:20px">
-                        <tr>
-                            <th>
-                                Jméno
-                            </th>
-                            <th>
-                                Příjmení
-                                
-                            </th>
-                            <th>
-                                Datum seznámení
-                            </th>
-                        </tr>
-                    </table>*@
 
 
-                    
                     @{ bool existAsUserReader = false; }
                     @if (Model.UsersInDocument != null && Model.UsersInDocument.AllUsers != null)
                     {
@@ -333,9 +817,10 @@
 
                         }
                     }
-                 </div>
-                }
-            <div id="tabs-7">               
+                </div>
+            }
+
+               <div id="tabs-7">
                 <div class="row">
                     <div class="col-md-10">
                         @Html.HiddenFor(model => model.ReviewNecessaryChangeComment)
@@ -346,456 +831,10 @@
                     </div>
                 </div>
             </div>
-            @*}*@
-                <div id="tabs-1">
-                    <div class="row">
-                        <label class="control-label col-md-2" for="Title">Název</label>
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.Title, new {htmlAttributes = new { @class = "form-control", @placeholder = "Název dokumentu" } })
-                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger", required = "required" })
-                        </div>
-                        <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
-                        <div class="col-md-4">
-                            @Html.HiddenFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
-                            @Model.DocumentNumber
-                            @Html.HiddenFor(model => model.IssueNumber, new { htmlAttributes = new {  @class = "form-control", @placeholder = "Číslo vydání" } })
-                            <strong>  (Vydání  </strong> @Model.IssueNumber <strong> ) </strong>                          
-                            @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
-                        </div>
-                        <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label class="control-label col-md-2" for="Revision">Typ revize</label>
-                        <div class="col-md-4">
-                            @Model.Revision
-                            <input type="hidden" name="Revision" value="@Model.Revision" />
-                        </div>
-                        <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
-                        <div class="col-md-4">
-                            <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
-                            @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true })
-                        </div>
-                        <label class="control-label col-md-2" for="EndDate">Konec platnosti</label>
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <label class="control-label col-md-2" for="DocumentTypeID">Stav dokumentu</label>
-                        <div class="col-md-10">
-                            @Model.DocumentStateName
-
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
-                        <div class="col-md-10">
-                            @if (ViewBag.TypeModel.AdministratorID != 0)
-                            {
-                                <p>Z typu dokumentu: @Model.DocumentAdministrator</p>
-
-                            }
-                            else
-                            {
-                                <p>Vybraná osoba &nbsp;</p>
-                                @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"));
-                            }
-                            <br />
-
-                        </div>
-                    </div>
-                    <div class="row">
-                        <label class="control-label col-md-2" for="Title">Anotace</label>
-                        <div class="col-md-6">
-                            @Html.TextAreaFor(model => model.Annotation, new { @class = "form-control annotationArea", @placeholder = "Poznámka k dokumentu" })
-                            @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
-                <div id="tabs-3">
-
-                    <div class="row">
-                        <label class="control-label col-md-4" for="Title">Přiřazené soubory k dokumentu</label>
-                    </div>
-
-                    @foreach (var item in @Model.FileItems)
-                {
-                        <div class="row">
-                            <div class="col-md-2">
-                                @item.Name
-                            </div>
-                            <div class="col-md-4">
-                                <a href="#" class="btn btn-default btn-sm removeFile" fileId="@item.ID">
-                                    <span class="glyphicon glyphicon-remove"></span> Smazat
-                                </a>
-                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@item.ID" class="btn btn-default btn-sm downloadFile" fileId="@item.ID">
-                                    <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
-                                </a>
-                            </div>
-                        </div>
-                    }
+         </div>
 
 
-                    <div class="row" style="margin-top:30px">
-                        <label class="control-label col-md-4" for="Title">Přidat nové soubory</label>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-10">
-                            <input type="file" name="file1" id="file1" value="Přidat soubor" class="btn btn-default" />
-                            <br />
-                            <input type="file" name="file2" id="file2" value="Přidat soubor" class="btn btn-default" />
-                            <br />
-                            <input type="file" name="file3" id="file3" value="Přidat soubor" class="btn btn-default" />
-                        </div>
-                    </div>
-                </div>
-                <script>
-                    $(document).ready(function () {
-                        $('#addProjects').click(
-                            function () {
-                                ChangeItems('#AllProjects', '#SelectedProjects');
-                            });
-                        $('#removeProjects').click(
-                            function () {
-                                ChangeItems('#SelectedProjects', '#AllProjects');
-                            });
-                        $('#addDivisions').click(
-                            function () {
-                                ChangeItems('#AllDivisions', '#SelectedDivisions');
-                            });
-                        $('#removeDivisions').click(
-                            function () {
-                                ChangeItems('#SelectedDivisions', '#AllDivisions');
-                            });
-
-                        $('#addAppSystems').click(
-                            function () {
-                                ChangeItems('#AllAppSystems', '#SelectedAppSystems');
-                            });
-                        $('#removeAppSystems').click(
-                            function () {
-                                ChangeItems('#SelectedAppSystems', '#AllAppSystems');
-                            });
-
-                        $('#addWorkplaces').click(
-                            function () {
-                                ChangeItems('#AllWorkplaces', '#SelectedWorkplaces');
-                            });
-                        $('#removeWorkplaces').click(
-                            function () {
-                                ChangeItems('#SelectedWorkplaces', '#AllWorkplaces');
-                            });
-
-                        $('#divisionsFilter').keyup(function () {
-                            filterCodeList($(this).val(), '#AllDivisions');
-                        });
-
-                        $('#projectsFilter').keyup(function () {
-                            filterCodeList($(this).val(), '#AllProjects');
-                        });
-
-                        $('#appSystemsFilter').keyup(function () {
-                            filterCodeList($(this).val(), '#AllAppSystems');
-                        });
-
-                        $('#workplacesFilter').keyup(function () {
-                            filterCodeList($(this).val(), '#AllWorkplaces');
-                        });
-
-
-                        function filterCodeList(filter, codeList) {
-                            $(codeList + ' option').each(function () {
-                                if ($(this).text().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
-                                    $(this).show();
-                                } else {
-                                    $(this).hide();
-                                }
-                            })
-                        };
-
-                    });
-
-                    function ChangeItems(source, target) {
-                        $(source + " :selected").each(function (index, item) {
-                            $(target).append('<option value="' + item.value + '">' + item.text + '</option>');
-                            $(item).remove();
-                        });
-
-                        SortItems(source);
-                        SortItems(target);
-                    }
-
-                    function SortItems(source) {
-                        var selectList = $(source + ' option');
-                        var sortSelectList = selectList.sort(function (a, b) {
-                            return a.text.localeCompare(b.text);
-                        });
-                        $(source).html(sortSelectList);
-                    }
-
-
-                </script>
-
-
-                <div id="tabs-5">
-                    <div class="row">
-                        <div class="col-md-4">
-                            <b>Projekty</b><br />
-                            <input type="text" id="projectsFilter" />
-                            <select multiple name="AllProjects" id="AllProjects" class="categories">
-                                @if (Model.SelectedProjectsID != null)
-                                {
-                                    foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => !Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
-                                    {
-                                        <option value="@project.ID">@project.Name</option>
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Select(p => p))
-                                    {
-                                        <option value="@project.ID">@project.Name</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <input type="button" id="addProjects" value=">" /><br />
-                            <input type="button" id="removeProjects" value="<" />
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <b>Vybrané projekty</b><br />
-                            <select multiple name="SelectedProjectsID" id="SelectedProjects" class="categories">
-                                @if (Model.SelectedProjectsID != null)
-                                {
-                                    foreach (ProjectModel project in ((ICollection<ProjectModel>)ViewBag.Projects).Where(p => Model.SelectedProjectsID.Contains(p.ID)).Select(p => p))
-                                    {
-                                        <option value="@project.ID">@project.Name</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <b>Střediska</b><br />
-                            <input type="text" id="divisionsFilter" />
-                            <select multiple name="AllDivisions" id="AllDivisions" class="categories">
-                                @if (Model.SelectedDivisionsID != null)
-                                {
-                                    foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => !Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
-                                    {
-                                        <option value="@division.ID">@division.Name</option>
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Select(p => p))
-                                    {
-                                        <option value="@division.ID">@division.Name</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <input type="button" id="addDivisions" value=">" /><br />
-                            <input type="button" id="removeDivisions" value="<" />
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <b>Vybraná střediska</b><br />
-                            <select multiple name="SelectedDivisionsID" id="SelectedDivisions" class="categories">
-                                @if (Model.SelectedDivisionsID != null)
-                                {
-                                    foreach (DivisionModel division in ((ICollection<DivisionModel>)ViewBag.Divisions).Where(p => Model.SelectedDivisionsID.Contains(p.ID)).Select(p => p))
-                                    {
-                                        <option value="@division.ID">@division.Name</option>
-                                    }
-                                }
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <b>Systémy</b><br />
-                            <input type="text" id="appSystemsFilter" />
-                            <select multiple name="AllAppSystems" id="AllAppSystems" class="categories">
-                                @if (Model.SelectedAppSystemsID != null)
-                                {
-                                    foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Where(p => !Model.SelectedAppSystemsID.Contains(p.ID)).Select(aps => aps))
-                                    {
-                                        <option value="@appSystem.ID">@appSystem.Name</option>
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Select(aps => aps))
-                                    {
-                                        <option value="@appSystem.ID">@appSystem.Name</option>
-                                    }
-                                }
-
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <input type="button" id="addAppSystems" value=">" /><br />
-                            <input type="button" id="removeAppSystems" value="<" />
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <b>Vybrané systémy</b><br />
-                            <select multiple name="SelectedAppSystemsID" id="SelectedAppSystems" class="categories">
-                                @if (Model.SelectedAppSystemsID != null)
-                                {
-                                    foreach (AppSystemModel appSystem in ((ICollection<AppSystemModel>)ViewBag.AppSystems).Where(p => Model.SelectedAppSystemsID.Contains(p.ID)).Select(p => p))
-                                    {
-                                        <option value="@appSystem.ID">@appSystem.Name</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4">
-                            <b>Pracovní místa</b><br />
-                            <input type="text" id="workplacesFilter" />
-                            <select multiple name="AllWorkplaces" id="AllWorkplaces" class="categories">
-                                @if (Model.SelectedWorkplacesID != null)
-                                {
-                                    foreach (WorkplaceModel workplace in ((ICollection<WorkplaceModel>)ViewBag.Workplaces).Where(p => !Model.SelectedWorkplacesID.Contains(p.ID)).Select(aps => aps))
-                                    {
-                                        <option value="@workplace.ID"> @workplace.Name</option>
-                                    }
-                                }
-                                else
-                                {
-                                    foreach (WorkplaceModel workplace in ((ICollection<WorkplaceModel>)ViewBag.Workplaces).Select(aps => aps))
-                                    {
-                                        <option value="@workplace.ID">@workplace.Name</option>
-                                    }
-
-                                }
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-
-                            <input type="button" id="addWorkplaces" value=">" /><br />
-                            <input type="button" id="removeWorkplaces" value="<" />
-                        </div>
-
-
-                        <div class="col-md-4">
-                            <b>Vybrané pracovní místa</b><br />
-                            <select multiple name="SelectedWorkplacesID" id="SelectedWorkplaces" class="categories">
-                                @if (Model.SelectedWorkplacesID != null)
-                                {
-                                    foreach (WorkplaceModel workplace in ((ICollection<WorkplaceModel>)ViewBag.Workplaces).Where(p => Model.SelectedWorkplacesID.Contains(p.ID)).Select(p => p))
-                                    {
-                                        <option value="@workplace.ID"> @workplace.Name</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-
-
-
-
-
-                </div>
-                <div id="tabs-4">
-                    <div class="row">
-                        <div class="col-md-10">
-                            <div style="margin-bottom:20px">
-
-                                <div class="col-md-2">
-                                    <b>Pracovní pozice</b>
-                                </div>
-                                <div class="col-md-10">
-                                    @foreach (GCPack.Model.JobPositionModel job in ViewBag.JobPositions)
-                                    {
-                                        string isChecked = (Model.JobPositionIDs != null && Model.JobPositionIDs.Contains(job.ID)) ? "checked" : "";
-                                        <div>
-                                            <input type="checkbox" name="JobPositionIDs" value="@job.ID" @isChecked /> @job.Name
-                                        </div>
-                                    }
-                                </div>
-
-
-                                <b>Přiřazení uživatelé k dokumentu</b><br />
-                                <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes">
-                                    @if (@Model.Users != null)
-                                    {
-                                        foreach (var item in @Model.Users)
-                                        {
-                                            <option value="@item.ID">@item.LastName  @item.FirstName</option>
-                                        }
-                                    }
-                                </select>
-                                <br />
-                                <input type="button" value="Odebrat osoby z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
-
-                            </div>
-                            <div>
-
-                                <div class="ui-widget">
-                                    <label for="filter">Filtr: </label>
-                                    <input id="filter">
-                                    <label for="jobPosition">Pracovní pozice: </label>
-                                    <select id="jobPosition">
-                                        <option value="0">Všechny</option>
-                                        @foreach (var item in ViewBag.JobPositions)
-                                        {
-                                            <option value="@item.ID">@item.Name</option>
-                                        }
-                                    </select>
-                                </div>
-
-                                <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes"></select>
-                                <br />
-                                <input type="button" value="Přiřadit osoby k dokumentu" id="AddUserToList" class="btn btn-default" />
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
+         //tlačítka akcí = 1 řádek
                 <input type="hidden" name="ID" id="ID" />
                 <div style="clear:both;margin-bottom:10px"></div>
                 <div class="row">
@@ -832,7 +871,7 @@
                                                         @*<button class="btnAction" id="revisionNoAction">Platný ve stávající formě</button>*@
                                                     </li>
                                                     <li style="padding-right:5px">
-                                                        <a href="#" class="btnAction" id="reviewNecessaryChanges"> Nutná změna</a>
+                                                        <a href="#" class="btnAction" id="reviewNecessaryChange"> Nutná změna</a>
                                                         @*<button class="btn  btn-primary btnAction" id="revisionChanges">Nutná změna</button>*@
                                                     </li>
                                                 </ul>
@@ -851,7 +890,7 @@
                                     @if (Model.DocumentStateCode != "Archived" )
                                     {
                                         <li style="padding-right:5px">
-                                            <button class="btn btn-primary navbar-btn btnAction" id="ArchivDocument">Archivace</button>
+                                            <button class="btn btn-primary navbar-btn btnAction" id="archivDocument">Archivace</button>
                                         </li>
                                     } else 
                                     {
@@ -862,35 +901,14 @@
                                 </ul>
                             </div>
                         </nav>
-
-                        @*<input type="button" value="Zrušit změny" id="cancelChanges" class="btn btn-danger" />
-                        
-                        @if (Model.DocumentStateCode == "New")
-                        {
-                            <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
-                            <input type="submit" value="Zaevidovat" id="registerDocument" class="btn btn-success" />
-                        }
-                        else if (Model.DocumentStateCode == "Registered")
-                        {
-                            
-                            if (Model.Revision == "P")
-                            {
-                                <input type="submit" value="Nové vydání" id="newVersion" class="btn btn-success" />
-                                <input type="submit" value="Platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />
-                                <input type="submit" value="Nutná změna" id="revisionChanges" class="btn btn-success" />
-                            }
-                        }
-
-                       
-                        <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />*@
-                       
                     </div>
                 </div>
-                }
 
 
+       }
 </div>
 
+@*modal okno*@
 <div id="myModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">

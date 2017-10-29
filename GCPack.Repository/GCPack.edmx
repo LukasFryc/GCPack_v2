@@ -47,7 +47,7 @@
           <Property Name="IssueNumber" Type="int" />
           <Property Name="ParentID" Type="int" />
           <Property Name="ReviewNecessaryChange" Type="bit" />
-          <Property Name="OwnerID" Type="int" />
+          <Property Name="AuthorID" Type="int" />
           <Property Name="ReviewNecessaryChangeComment" Type="varchar(max)" />
           <Property Name="PreviousStateID" Type="int" />
         </EntityType>
@@ -255,6 +255,42 @@
             </Principal>
             <Dependent Role="DivisionDocument">
               <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_AdministratorID_User_ID">
+          <End Role="User" Type="Self.User" Multiplicity="1" />
+          <End Role="Document" Type="Self.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="AdministratorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_AuthorID_User_ID">
+          <End Role="User" Type="Self.User" Multiplicity="0..1" />
+          <End Role="Document" Type="Self.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="AuthorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_DocumentType">
+          <End Role="DocumentType" Type="Self.DocumentType" Multiplicity="1" />
+          <End Role="Document" Type="Self.Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="DocumentTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -564,6 +600,18 @@
           <AssociationSet Name="FK_DivisionCategory_RizeneDokumeny" Association="Self.FK_DivisionCategory_RizeneDokumeny">
             <End Role="Document" EntitySet="Document" />
             <End Role="DivisionDocument" EntitySet="DivisionDocument" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_AdministratorID_User_ID" Association="Self.FK_Document_AdministratorID_User_ID">
+            <End Role="User" EntitySet="User" />
+            <End Role="Document" EntitySet="Document" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_AuthorID_User_ID" Association="Self.FK_Document_AuthorID_User_ID">
+            <End Role="User" EntitySet="User" />
+            <End Role="Document" EntitySet="Document" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_DocumentType" Association="Self.FK_Document_DocumentType">
+            <End Role="DocumentType" EntitySet="DocumentType" />
+            <End Role="Document" EntitySet="Document" />
           </AssociationSet>
           <AssociationSet Name="FK_Documents_PreviousState" Association="Self.FK_Documents_PreviousState">
             <End Role="DocumentState" EntitySet="DocumentState" />
@@ -1024,10 +1072,37 @@
             <Parameter Name="StateID" Mode="In" Type="Int32" />
             <Parameter Name="Revision" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="GetDocuments16">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="ReadType" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="Revision" Mode="In" Type="String" />
+            <Parameter Name="ReviewNecassaryChange" Mode="In" Type="String" />
+          </FunctionImport>
           <EntitySet Name="Documents" EntityType="GCPack.Document" />
           <AssociationSet Name="FK_DivisionCategory_RizeneDokumeny" Association="GCPack.FK_DivisionCategory_RizeneDokumeny">
             <End Role="Document" EntitySet="Documents" />
             <End Role="DivisionDocument" EntitySet="DivisionDocuments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_DocumentType" Association="GCPack.FK_Document_DocumentType">
+            <End Role="DocumentType" EntitySet="DocumentTypes" />
+            <End Role="Document" EntitySet="Documents" />
           </AssociationSet>
           <AssociationSet Name="FK_Documents_PreviousState" Association="GCPack.FK_Documents_PreviousState">
             <End Role="DocumentState" EntitySet="DocumentStates" />
@@ -1065,7 +1140,11 @@
             <End Role="Document" EntitySet="Documents" />
             <End Role="WorkplaceDocument" EntitySet="WorkplaceDocuments" />
           </AssociationSet>
-          <FunctionImport Name="GetDocuments16" ReturnType="Collection(GCPack.GetDocuments16_Result)">
+          <AssociationSet Name="FK_DocumentType_User" Association="GCPack.FK_DocumentType_User">
+            <End Role="User" EntitySet="Users" />
+            <End Role="DocumentType" EntitySet="DocumentTypes" />
+          </AssociationSet>
+          <FunctionImport Name="GetDocuments17" ReturnType="Collection(GCPack.GetDocuments17_Result)">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -1088,7 +1167,15 @@
             <Parameter Name="Revision" Mode="In" Type="String" />
             <Parameter Name="ReviewNecassaryChange" Mode="In" Type="String" />
           </FunctionImport>
-        </EntityContainer>
+          <AssociationSet Name="FK_Document_AdministratorID_User_ID" Association="GCPack.FK_Document_AdministratorID_User_ID">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Document_AuthorID_User_ID" Association="GCPack.FK_Document_AuthorID_User_ID">
+            <End Role="User" EntitySet="Users" />
+            <End Role="Document" EntitySet="Documents" />
+          </AssociationSet>
+          </EntityContainer>
         <EntityType Name="AppSystem">
           <Key>
             <PropertyRef Name="ID" />
@@ -1224,6 +1311,9 @@
           <Property Name="JobPositionID" Type="Int32" />
           <NavigationProperty Name="JobPosition" Relationship="GCPack.FK_User_JobPosition" FromRole="User" ToRole="JobPosition" />
           <NavigationProperty Name="LogEvents" Relationship="GCPack.FK_LogEvent_User" FromRole="User" ToRole="LogEvent" />
+          <NavigationProperty Name="DocumentTypes" Relationship="GCPack.FK_DocumentType_User" FromRole="User" ToRole="DocumentType" />
+          <NavigationProperty Name="Documents" Relationship="GCPack.FK_Document_AdministratorID_User_ID" FromRole="User" ToRole="Document" />
+          <NavigationProperty Name="Documents1" Relationship="GCPack.FK_Document_AuthorID_User_ID" FromRole="User" ToRole="Document" />
         </EntityType>
         <Association Name="FK_JobPositionUser_JobPosition">
           <End Type="GCPack.JobPosition" Role="JobPosition" Multiplicity="1" />
@@ -1360,6 +1450,8 @@
           <Property Name="LastNumberOfDocument" Type="Int32" />
           <Property Name="DocumentEfficiencyDays" Type="Int32" />
           <Property Name="InformedInDays" Type="Int32" />
+          <NavigationProperty Name="Documents" Relationship="GCPack.FK_Document_DocumentType" FromRole="DocumentType" ToRole="Document" />
+          <NavigationProperty Name="User" Relationship="GCPack.FK_DocumentType_User" FromRole="DocumentType" ToRole="User" />
         </EntityType>
         <EntityType Name="DivisionDocument">
           <Key>
@@ -1520,10 +1612,11 @@
           <Property Name="IssueNumber" Type="Int32" />
           <Property Name="ParentID" Type="Int32" />
           <Property Name="ReviewNecessaryChange" Type="Boolean" />
-          <Property Name="OwnerID" Type="Int32" />
+          <Property Name="AuthorID" Type="Int32" />
           <Property Name="ReviewNecessaryChangeComment" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="PreviousStateID" Type="Int32" />
           <NavigationProperty Name="DivisionDocuments" Relationship="GCPack.FK_DivisionCategory_RizeneDokumeny" FromRole="Document" ToRole="DivisionDocument" />
+          <NavigationProperty Name="DocumentType" Relationship="GCPack.FK_Document_DocumentType" FromRole="Document" ToRole="DocumentType" />
           <NavigationProperty Name="DocumentState" Relationship="GCPack.FK_Documents_PreviousState" FromRole="Document" ToRole="DocumentState" />
           <NavigationProperty Name="DocumentState1" Relationship="GCPack.FK_Documents_State" FromRole="Document" ToRole="DocumentState" />
           <NavigationProperty Name="Files" Relationship="GCPack.FK_File_RizeneDokumeny" FromRole="Document" ToRole="File" />
@@ -1533,6 +1626,8 @@
           <NavigationProperty Name="Signatures" Relationship="GCPack.FK_Signature_RizeneDokumeny" FromRole="Document" ToRole="Signature" />
           <NavigationProperty Name="SystemDocuments" Relationship="GCPack.FK_SystemCategory_RizeneDokumeny" FromRole="Document" ToRole="SystemDocument" />
           <NavigationProperty Name="WorkplaceDocuments" Relationship="GCPack.FK_WorkplaceDocument_Document" FromRole="Document" ToRole="WorkplaceDocument" />
+          <NavigationProperty Name="User" Relationship="GCPack.FK_Document_AdministratorID_User_ID" FromRole="Document" ToRole="User" />
+          <NavigationProperty Name="User1" Relationship="GCPack.FK_Document_AuthorID_User_ID" FromRole="Document" ToRole="User" />
         </EntityType>
         <Association Name="FK_DivisionCategory_RizeneDokumeny">
           <End Type="GCPack.Document" Role="Document" Multiplicity="1" />
@@ -1543,6 +1638,18 @@
             </Principal>
             <Dependent Role="DivisionDocument">
               <PropertyRef Name="DocumentID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_DocumentType">
+          <End Type="GCPack.DocumentType" Role="DocumentType" Multiplicity="1" />
+          <End Type="GCPack.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DocumentType">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="DocumentTypeID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1654,7 +1761,19 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments16_Result">
+        <Association Name="FK_DocumentType_User">
+          <End Type="GCPack.User" Role="User" Multiplicity="0..1" />
+          <End Type="GCPack.DocumentType" Role="DocumentType" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="DocumentType">
+              <PropertyRef Name="AdministratorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="GetDocuments17_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1672,7 +1791,7 @@
           <Property Type="Int32" Name="IssueNumber" Nullable="true" />
           <Property Type="Int32" Name="ParentID" Nullable="true" />
           <Property Type="Boolean" Name="ReviewNecessaryChange" Nullable="true" />
-          <Property Type="Int32" Name="OwnerID" Nullable="true" />
+          <Property Type="Int32" Name="AuthorID" Nullable="true" />
           <Property Type="String" Name="ReviewNecessaryChangeComment" Nullable="true" />
           <Property Type="Int32" Name="PreviousStateID" Nullable="true" />
           <Property Type="Int32" Name="CanEdit" Nullable="false" />
@@ -1687,7 +1806,31 @@
           <Property Type="Int32" Name="AllUsers" Nullable="true" />
           <Property Type="Int32" Name="DocumentOwnerID" Nullable="true" />
         </ComplexType>
-      </Schema>
+        <Association Name="FK_Document_AdministratorID_User_ID">
+          <End Type="GCPack.User" Role="User" Multiplicity="1" />
+          <End Type="GCPack.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="AdministratorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Document_AuthorID_User_ID">
+          <End Type="GCPack.User" Role="User" Multiplicity="0..1" />
+          <End Type="GCPack.Document" Role="Document" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="User">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Document">
+              <PropertyRef Name="AuthorID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
@@ -1927,7 +2070,7 @@
               <MappingFragment StoreEntitySet="Document">
                 <ScalarProperty Name="PreviousStateID" ColumnName="PreviousStateID" />
                 <ScalarProperty Name="ReviewNecessaryChangeComment" ColumnName="ReviewNecessaryChangeComment" />
-                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
                 <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />
@@ -1947,9 +2090,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments16" FunctionName="GCPack.Store.GetDocuments">
+          <FunctionImportMapping FunctionImportName="GetDocuments17" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments16_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments17_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
@@ -1967,7 +2110,7 @@
                 <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />
                 <ScalarProperty Name="ParentID" ColumnName="ParentID" />
                 <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
-                <ScalarProperty Name="OwnerID" ColumnName="OwnerID" />
+                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
                 <ScalarProperty Name="ReviewNecessaryChangeComment" ColumnName="ReviewNecessaryChangeComment" />
                 <ScalarProperty Name="PreviousStateID" ColumnName="PreviousStateID" />
                 <ScalarProperty Name="CanEdit" ColumnName="CanEdit" />
