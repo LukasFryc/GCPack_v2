@@ -14,6 +14,12 @@ namespace GCPack.Repository
     
     public partial class DocumentType
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public DocumentType()
+        {
+            this.Documents = new HashSet<Document>();
+        }
+    
         public int ID { get; set; }
         public string Name { get; set; }
         public Nullable<int> AdministratorID { get; set; }
@@ -28,5 +34,9 @@ namespace GCPack.Repository
         public Nullable<int> LastNumberOfDocument { get; set; }
         public Nullable<int> DocumentEfficiencyDays { get; set; }
         public Nullable<int> InformedInDays { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Document> Documents { get; set; }
+        public virtual User User { get; set; }
     }
 }

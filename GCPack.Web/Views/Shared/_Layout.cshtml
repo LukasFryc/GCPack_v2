@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using GCPack.Model;
+@using GCPack.Web.Filters;
+@using GCPack;
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -27,7 +31,6 @@
 
 </head>
 <body>
-    @using GCPack.Model
     
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
@@ -44,73 +47,75 @@
                     <li>@Html.ActionLink("Úvodní stránka", "Index", "Home")</li>
                     @*<li>@Html.ActionLink("Dokumenty", "Index", "Documents")</li>*@
 
+                    @if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin,DocAdmin,Author,User"))
+                    {
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Dokumenty<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+
+                                <li>
+                                    @Html.ActionLink("Všech typů", "Index", "Documents", new DocumentFilter() { DocumentTypeID = 0, StateCode = "Registered", StateID = 2, Revision = "p", Reset = true }, null)
+
+                                </li>
+                                @foreach (var item in GCPack.Helper.GetDocumentTypeItems())
+                                {
+                                    <li>
+                                        @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() {DocumentTypeID = item.ID, StateCode = "Registered", StateID = 2, Revision = "p", Reset = true }, null)
+
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+
+                @if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin,DocAdmin,Author"))
+                {
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Dokumenty<span class="caret"></span></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Nový dokument <span class="caret"></span></a>
                         <ul class="dropdown-menu">
 
-                            <li>
-                                @Html.ActionLink("Všech typů", "Index", "Documents", new DocumentFilter() { DocumentTypeID = 0, StateID = 2, Revision = "p", Reset = true }, null)
-
-                            </li>
                             @foreach (var item in GCPack.Helper.GetDocumentTypeItems())
                             {
                                 <li>
-                                    @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() {DocumentTypeID = item.ID, StateID = 2, Revision = "p", Reset = true }, null)
-
+                                    @Html.ActionLink(item.Value, "Add", "Documents", new { DocumentTypeID = item.ID }, null)
                                 </li>
                             }
                         </ul>
                     </li>
 
+                }
 
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Nový dokument <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            
-                            @foreach (var item in GCPack.Helper.GetDocumentTypeItems())
-                            {
-                                <li>
-
-
-                                    @Html.ActionLink(item.Value, "Add", "Documents", new { DocumentTypeID = item.ID}, null)
-                                    
-                                </li>
-                            }
-                            </ul>
-                    </li>
-
+                @if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin"))
+                {
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Číselníky<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Typy dokumentů", "DocumentTypesIndex", "CodeLists")</li>
-                            <li>@Html.ActionLink("Osoby", "Index", "User")</li>
+                            @if (GCPack.Web.Filter.UserRoles.HasRole("SystemAdmin"))
+                            {
+                                <li>@Html.ActionLink("Administrace uživatelů", "Index", "User")</li>
+                            }
                             <li>@Html.ActionLink("Systém", "AppSystemIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Střediska", "DivisionIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Pracovní pozice", "JobPositionIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Projekty", "ProjectIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Pracovní místa", "WorkplaceIndex", "CodeLists")</li>
                             @*<li>@Html.ActionLink("Test emailu", "SendMail", "Documents")</li>*@
-                            
+
                         </ul>
                     </li>
+                }
 
-                    @if (GCPack.Web.Filter.UserRoles.HasRole("SystemAdministrator"))
-                    {
-                        <li>@Html.ActionLink("Administrace uživatelů", "Index", "User")</li>
-                    }
-                    
-
-                    @if (!HttpContext.Current.User.Identity.IsAuthenticated)
-                    {
+                @if (!HttpContext.Current.User.Identity.IsAuthenticated)
+                {
                     <li>@Html.ActionLink("Přihlášení uživatele", "Index", "Login")</li>
-                    }
-                    else
-                    {
-                        <li>@Html.ActionLink("Odhlášení uživatele", "Logout", "Login")</li>
-                    }
+                }
+                else
+                {
+                    <li>@Html.ActionLink("Odhlášení uživatele", "Logout", "Login")</li>
+                }
 
                     
-                    @*<p class="nav navbar-text navbar-right">@GCPack.Web.Filter.UserRoles.UserName(), Role: @GCPack.Web.Filter.UserRoles.GetUserRoles().ToString()</p>*@
                     <p class="nav navbar-text navbar-right">@GCPack.Web.Filter.UserRoles.UserName()</p>
                     
                 </ul>

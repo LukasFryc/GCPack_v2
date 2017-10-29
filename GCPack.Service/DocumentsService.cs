@@ -102,7 +102,7 @@ namespace GCPack.Service
             // odeslani emailu vsem prirazenym osobam v dokumentu
             documentsRepository.ChangeRevison(oldDocument,"R");
             //EditDocument(oldDocument, null);
-            document = AddDocument(document, fileNames);
+            document = AddDocument(document, fileNames, userId);
             
             // preulozit i soubory ??? - zatim nee 
 
@@ -228,6 +228,27 @@ namespace GCPack.Service
 
         public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
         {
+
+            UserModel user = userService.GetUser((int) filter.ForUserID);
+
+            switch (user.Roles)
+            {
+                case "SystemAdmin":
+                    break;
+                case "SuperDocAdmin":
+                    break;
+                case "DocAmin":
+                    break;
+                case "Author":
+                    break;
+                case "User":
+                    // nastaveni filtru pro uzivatele
+                    //filter.ForUserID = null;
+                    filter.StateID = documentsRepository.GetDocumentState("Registered"); // pouze zaevidovane
+                    filter.Revision = "p"; // pouze platne
+                    break;
+            }
+
             return documentsRepository.GetDocuments(filter);
         }
 
@@ -243,8 +264,9 @@ namespace GCPack.Service
 
 
 
-        public DocumentModel AddDocument(DocumentModel document, ICollection<string> files)
+        public DocumentModel AddDocument(DocumentModel document, ICollection<string> files, int userID)
         {
+            document.AuthorID = userID;
 
             // nastaveni stavu dokumentu na novy
             document.StateID = documentsRepository.GetDocumentState("New");

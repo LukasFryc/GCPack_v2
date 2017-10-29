@@ -5,7 +5,7 @@ namespace GCPack.Service.Interfaces
 {
     public interface IDocumentsService
     {
-        DocumentModel AddDocument(DocumentModel document, ICollection<string> files);
+        DocumentModel AddDocument(DocumentModel document, ICollection<string> files, int userID);
         DocumentModel EditDocument(DocumentModel document, ICollection<string> files);
         DocumentModel GetDocument(int documentId, int userID);
         ICollection<DocumentModel> GetDocuments(DocumentFilter filter);

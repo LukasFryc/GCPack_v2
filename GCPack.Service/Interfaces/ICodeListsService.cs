@@ -55,5 +55,9 @@ namespace GCPack.Service.Interfaces
         // DocumentSates
         ICollection<DocumentStateModel> GetDocumentStates();
 
+
+        // documentType
+        void DocumentTypesDelete(int id);
+
     }
 }

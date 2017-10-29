@@ -1,5 +1,7 @@
 ﻿@model GCPack.Model.DocumentFilter
 @using GCPack.Model;
+@using GCPack;
+
 @{DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"]; }
 
 @{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
@@ -122,7 +124,8 @@
                             NextReviewDateFrom: $('#NextReviewDateFrom').val(),
                             NextReviewDateTo: $('#NextReviewDateTo').val(),
                             ReadType: $('#ReadType').val(),
-                            StateID: $('#StateID').val(),
+                            //StateID: $('#StateID').val(),
+                            StateCode: $('#StateCode').val(),
                             Revision: $('#Revision').val(),
                             //Archiv: $('#Archiv').val(),
                             ReviewNecessaryChange: $('#ReviewNecessaryChange').val()
@@ -223,7 +226,8 @@
                 $("#btnCollapse0").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
 
                 $("#DocumentTypeID").val(0);
-                $("#StateID").val(0);
+                //$("#StateID").val(0);
+                $("#StateCode").val('all');
                 $("#ReviewNecessaryChange").val('all');
                 $("#Revision").val('all');
                 $("#ReadType").val('all');
@@ -371,6 +375,7 @@
 
 
 </script>
+
 <div style="background-color:#D1D1D1; padding-left:5px; padding-top:5px" >
 
     @*--------*@
@@ -413,10 +418,11 @@
                 @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { @class = "filter form-control" })                
             </div>
             <div class="col-md-2">
-                @Html.DropDownListFor(m => m.StateID, new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" })
+                @*@Html.DropDownListFor(m => m.StateID, new SelectList(ViewBag.DocumentStates, "ID", "Name"), new { @class = "filter form-control" + Helper.IsAccessCSSClass("SA,SuperDocAdmin,DocAdmin,Author", "noDisabled") })*@
+                @Html.DropDownListFor(m => m.StateCode, new SelectList(ViewBag.DocumentStates, "Code", "Name"), new { @class = "filter form-control" + Helper.IsAccessCSSClass("SystemAdmin,SuperDocAdmin,DocAdmin,Author", "noDisabled") })
             </div>
             <div class="col-md-2">
-                @Html.DropDownListFor(m => m.Revision, new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.Revision, new SelectList(ViewBag.RevisionType, "Code", "Value"), new { @class = $"filter form-control  { Helper.IsAccessCSSClass("SystemAdmin,SuperDocAdmin,DocAdmin,Author", "noDisabled") }" })
             </div>
             <div class="col-md-2">
                 @Html.DropDownListFor(m => m.ReviewNecessaryChange, new SelectList(ViewBag.ReviewNecessaryChange, "Code", "Value"), new { @class = "filter form-control" })

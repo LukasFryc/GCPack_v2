@@ -48,6 +48,7 @@ namespace GCPack.Repository
 
                 UserModel user = Mapper.Map<UserModel>(us);
                 user.RoleIDs = us.UserRoles.Select(ur => ur.RoleId).ToList<short>();
+                user.Roles = us.UserRoles.Select(ur => ur.Role.RoleCode).FirstOrDefault();
                 return user;
             }
         }
@@ -182,7 +183,7 @@ namespace GCPack.Repository
 
             return user;
         }
-            public ICollection<UserModel> GetUsers(UserFilter filter)
+        public ICollection<UserModel> GetUsers(UserFilter filter)
         {
             using (GCPackContainer db = new GCPackContainer())
             {

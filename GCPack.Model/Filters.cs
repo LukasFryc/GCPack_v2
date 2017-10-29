@@ -60,6 +60,7 @@ namespace GCPack.Model
 
         public string ReadType { get; set; }
         public int? StateID { get; set; }
+        public string StateCode { get; set; }  // 25.10.2017 LF 
 
         public string Revision { get; set; }
 

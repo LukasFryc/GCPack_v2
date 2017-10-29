@@ -44,8 +44,8 @@
         $('.btnAction').click(function () {
 
             $('#Action').val($(this).prop("id"));
-
-            if ($(this).prop("id") == "reviewNecessaryChanges") {
+            $('form').prop('action', $(this).prop("id"));
+            if ($(this).prop("id") == "reviewNecessaryChange") {
 
                 $("#myModalP1").html("");
                 $("#myModalP2").html("");
@@ -334,7 +334,7 @@
 <h2>@ViewBag.Title</h2>
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
-    @using (Html.BeginForm("Save", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
+    @using (Html.BeginForm("", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
     {
         <input type="hidden" name="Action" id="Action" />
         <input type="hidden" name="StateID" id="StateID" value="@Model.StateID"/>
@@ -342,6 +342,8 @@
         <input type="hidden" name="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
         <input type="hidden" name="ParentID" value="@Model.ParentID"/>
+        <input type="hidden" name="AuthorID" value="@Model.AuthorID" />
+        
         <input type="hidden" name="HelpText"  id="HelpText" />
 
         <div id="success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>
@@ -432,16 +434,16 @@
                     <div class="row">
                         <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
                         <div class="col-md-4">
-                            @if (ViewBag.TypeModel.AdministratorID != 0)
+                            @*@if (ViewBag.TypeModel.AdministratorID != 0)
                             {
                                 <p>Z typu dokumentu: @Model.DocumentAdministrator</p>
 
                             }
                             else
-                            {
-                                <p>Vybraná osoba &nbsp;</p>
-                                @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"));
-                            }
+                            {*@
+                                @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"), new { @class = "form-control", @placeholder = "Správce dokumentu" } )
+                                @Html.ValidationMessageFor(m => m.AdministratorID, "", new { @class = "text-danger", required = "required" })
+                            @*}*@
                             <br />
 
                         </div>
@@ -486,8 +488,8 @@
                             </div>
                         }
     
-@if (Model.DocumentStateCode == "New" )
-{
+            @if (Model.DocumentStateCode == "New" )
+            {
                     <div class="row" style="margin-top:30px">
                         <label class="control-label col-md-4" for="Title">Přidat nové soubory</label>
                     </div>
@@ -501,7 +503,7 @@
                            @* <input type="file" name="file3" id="file3" value="Přidat soubor" class="btn btn-default" />*@
                         </div>
                     </div>
-}
+            }
                 </div>                
 
             <div id="tabs-4">
@@ -869,7 +871,7 @@
                                                         @*<button class="btnAction" id="revisionNoAction">Platný ve stávající formě</button>*@
                                                     </li>
                                                     <li style="padding-right:5px">
-                                                        <a href="#" class="btnAction" id="reviewNecessaryChanges"> Nutná změna</a>
+                                                        <a href="#" class="btnAction" id="reviewNecessaryChange"> Nutná změna</a>
                                                         @*<button class="btn  btn-primary btnAction" id="revisionChanges">Nutná změna</button>*@
                                                     </li>
                                                 </ul>
@@ -899,28 +901,6 @@
                                 </ul>
                             </div>
                         </nav>
-
-                        @*<input type="button" value="Zrušit změny" id="cancelChanges" class="btn btn-danger" />
-                        
-                        @if (Model.DocumentStateCode == "New")
-                        {
-                            <input type="submit" value="Uložit" id="saveDocument" class="btn btn-success" />
-                            <input type="submit" value="Zaevidovat" id="registerDocument" class="btn btn-success" />
-                        }
-                        else if (Model.DocumentStateCode == "Registered")
-                        {
-                            
-                            if (Model.Revision == "P")
-                            {
-                                <input type="submit" value="Nové vydání" id="newVersion" class="btn btn-success" />
-                                <input type="submit" value="Platný ve stávající formě" id="revisionNoAction" class="btn btn-success" />
-                                <input type="submit" value="Nutná změna" id="revisionChanges" class="btn btn-success" />
-                            }
-                        }
-
-                       
-                        <input type="submit" value="Tisk dokumentu" id="print" class="btn btn-success" />*@
-                       
                     </div>
                 </div>
 

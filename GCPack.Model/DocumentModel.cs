@@ -49,8 +49,10 @@ namespace GCPack.Model
         public string DocumentStateCode { get; set; }
         public string Revision { get; set; }
         public int StateID { get; set; }
+       
+        [Range(1, int.MaxValue, ErrorMessage = "Musí být vyplněn správce dokumentu.")]
         public int AdministratorID { get; set; }
-        public int OwnerID { get; set; }
+        public int AuthorID { get; set; }
 
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> EffeciencyDate { get; set; }

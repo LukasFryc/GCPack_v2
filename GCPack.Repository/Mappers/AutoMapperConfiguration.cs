@@ -32,19 +32,20 @@ namespace GCPack.Repository.Mappers
             CreateMap<RoleModel, Role>().ReverseMap();
             CreateMap<JobPosition, JobPositionModel>().ReverseMap();
             CreateMap<Document, DocumentModel>().ReverseMap();
+            //DocumentTypeID
             CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
             CreateMap<File, FileItem>().ReverseMap();
-            CreateMap<GetDocuments16_Result, DocumentModel>()
+            CreateMap<GetDocuments17_Result, DocumentModel>()
                 .ForMember(dr => dr.DocumentStateCode, m => m.MapFrom(dt => dt.DocumentStateCode))
                 .ForMember(dr => dr.DocumentStateName, m => m.MapFrom(dt => dt.DocumentStateName))
-                .ForMember(dr => dr.OwnerID, m => m.MapFrom(dt => dt.DocumentOwnerID))
+                .ForMember(dr => dr.AuthorID, m => m.MapFrom(dt => dt.DocumentOwnerID))
                 .ReverseMap();
             CreateMap<DocumentType, Item>()
                 .ForMember(i => i.Value, m => m.MapFrom(dt => dt.Name));
             CreateMap<UserModel, Item>()
                 .ForMember(i => i.Value, m => m.MapFrom(um => um.LastName + " " + um.FirstName));
             CreateMap<RoleModel, Item>()
-                .ForMember(i => i.Value, m => m.MapFrom(r => r.RoleDescription))
+                .ForMember(i => i.Value, m => m.MapFrom(r => r.RoleName))
                 .ForMember(i => i.ID, m => m.MapFrom(r => r.RoleId));
         }
 

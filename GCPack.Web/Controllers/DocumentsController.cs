@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GCPack.Web.Filter;
 using GCPack.Web.Filters;
 using GCPack.Model;
 using GCPack.Service.Interfaces;
 using System.IO;
-using GCPack.Web.Filter;
+using System.Data.Entity.Core.Objects;
 
 namespace GCPack.Web.Controllers
 {
@@ -16,6 +17,7 @@ namespace GCPack.Web.Controllers
         private readonly IDocumentsService documentService;
         private readonly IUsersService userService;
         private readonly ICodeListsService codeListService;
+
         public DocumentsController(IDocumentsService documentService, IUsersService userService, ICodeListsService codeListService)
         {
             this.documentService = documentService;
@@ -23,15 +25,8 @@ namespace GCPack.Web.Controllers
             this.codeListService = codeListService;
         }
 
-        [AuthorizeAttributeGC(Roles = "documentOwner,documentAdmin")]
-        public ActionResult Edit2(int DocumentID, string Message)
-        {
-            return View();
-        }
-
-
-        // GET: Documents
-        [AuthorizeAttributeGC(Roles = "user,admin,supervisor,poweruser")]
+        
+        [GCAuthorizeAttribute(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,User,Author")]
         public ActionResult Index(DocumentFilter filter)
         {
             
@@ -72,7 +67,7 @@ namespace GCPack.Web.Controllers
             //ViewBag.DocumentSort = documentSort.OrderBy(dt => dt.OrderBy);
 
 
-            ICollection<Item> ReviewNecessaryChange = new HashSet<Item>(); ;
+            ICollection<Item> ReviewNecessaryChange = new HashSet<Item>();
             ReviewNecessaryChange.Add(new Item { ID = 0, Code = "all", OrderBy = 1, Value = "Všechny" });
             ReviewNecessaryChange.Add(new Item { ID = 1, Code = "necessaryChange", OrderBy = 2, Value = "Nutná změně" });
             ViewBag.ReviewNecessaryChange = ReviewNecessaryChange.OrderBy(rt => rt.OrderBy);
@@ -104,7 +99,7 @@ namespace GCPack.Web.Controllers
             //DocumentStateModel documentState = new DocumentStateModel();
             //documentState = documentStates.Where(p => p.ID = ((filter != null && filter.StateID != null) ? filter.StateID : string.Empty)).Select(p => p).FirstOrDefault(); 
 
-            documentStates.Add(new DocumentStateModel() { ID = 0, Name = "Všechny stavy", orderBy = -1 });
+            documentStates.Add(new DocumentStateModel() { ID = 0, Code = "all", Name = "Všechny stavy", orderBy = -1 });
             ViewBag.DocumentStates = documentStates.OrderBy(p => p.orderBy);
 
             ICollection<ProjectModel> projects = new HashSet<ProjectModel>();
@@ -138,7 +133,7 @@ namespace GCPack.Web.Controllers
 
         }
 
-        public void SendMail()
+        private void SendMail()
         {
             string x = System.Configuration.ConfigurationManager.AppSettings[""];
 
@@ -169,13 +164,14 @@ namespace GCPack.Web.Controllers
             documentService.SendEmail();
         }
 
-        public ActionResult GetFile(int fileID)
+        private ActionResult GetFile(int fileID)
         {
             FileItem fileItem = documentService.GetFile(fileID);
             Response.AppendHeader("Content-Disposition", "attachment; filename = " + fileItem.Name);
             return File(fileItem.Data, "attachment");
         }
 
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
         public ActionResult Details(int documentId)
         {
             //int userId = UserRoles.GetUserId();
@@ -193,12 +189,23 @@ namespace GCPack.Web.Controllers
 
         }
 
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentauthorid,documentadminid")]
         public ActionResult Registered(int documentID)
         {
             documentService.ChangeDocumentState(documentID, "Registered");
             return View();
         }
 
+
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin")]
+        public ActionResult GetDocumentsForUser(DocumentFilter filter)
+        {
+            Session["documentFilter"] = filter;
+            ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
+            return Json(documents, JsonRequestBehavior.AllowGet);
+        }
+
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
         public ActionResult GetDocuments(DocumentFilter filter)
         {
 
@@ -213,48 +220,216 @@ namespace GCPack.Web.Controllers
             return Json(documents, JsonRequestBehavior.AllowGet);
         }
 
-        //public ActionResult Readed(int documentID)
-        //{
-        //    // seznameni s dokumentem
-        //    int userId = UserRoles.GetUserId();
-
-        //    documentService.Readed(documentID, userId);
-        //    return View("Details",documentService.GetDocument(documentID, userId));
-
-
-        //}
-
-        public ActionResult Readed(int documentID, string Action)
+        // seznameni s dokumentem
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
+        public ActionResult Readed(int documentID)
         {
             int userId = UserRoles.GetUserId();
-            //DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
-
-            //if (Action == "cancelChanges") return RedirectToAction("Index", filter);
-            if (Action == "readed")
-            {
-                // seznameni s dokumentem
-                documentService.Readed(documentID, userId);
-            }
-            //return View("Details", documentService.GetDocument(documentID, userId));
+            documentService.Readed(documentID, userId);
             DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
             return RedirectToAction("Index", filter);
         }
 
-        public ActionResult Save(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action, string HelpText)
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid,documentauthorid")]
+        public ActionResult RegisterDocument(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string HelpText)
+        {
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+            ICollection<string> fileNames = SaveFiles();
+            int userId = UserRoles.GetUserId();
+
+            if (type == "Add")
+            {
+                
+                document.IssueNumber = 1;
+                documentService.AddDocument(document, fileNames, userId);
+                fileNames = null;
+            }
+            documentService.RegisterDocument(document, fileNames, userId);
+            return RedirectToAction("Index", filter);
+        }
+
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid,documentauthorid")]
+        public ActionResult StornoDocument(DocumentModel document, string HelpText)
+        {
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+            // TODO: LF - duvod storna dat do logu
+            documentService.ChangeDocumentState(document, "Storno");
+            return RedirectToAction("Index", filter);
+        }
+
+        public ActionResult CancelChanges()
+        {
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+            return RedirectToAction("Index", filter);
+        }
+
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid,documentauthorid")]
+        public ActionResult SaveDocument(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string HelpText)
+        {
+
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+            ICollection<string> fileNames = SaveFiles();
+            int userId = UserRoles.GetUserId();
+            
+
+            if (type == "Add")
+            {
+                document.IssueNumber = 1;
+                documentService.AddDocument(document, fileNames, userId);
+            }
+            else if (type == "Edit")
+            {
+                documentService.EditDocument(document, fileNames);
+            }
+            
+            return RedirectToAction("Index", filter);
+        }
+
+        [GCAuthorizeAttribute(Roles = "SystemAdmin,SuperDocAdmin,documentadminid")]
+        public ActionResult ArchivDocument(DocumentModel document, string HelpText)
+        {
+
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+
+            documentService.ChangeDocumentState(document, "Archived");
+            
+            return RedirectToAction("Index", filter);
+        }
+
+        [GCAuthorizeAttribute(Roles = "SystemAdmin,SuperDocAdmin,documentadminid")]
+        public ActionResult DeArchivDocument(DocumentModel document, string HelpText)
+        {
+
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+
+            documentService.ChangeDocumentStateOnPreviousState(document, "");
+
+            return RedirectToAction("Index", filter);
+        }
+
+
+        [GCAuthorizeAttribute(Roles = "SystemAdmin,SuperDocAdmin,documentadminid")]
+        public ActionResult NewVersion(DocumentModel document)
         {
             DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
 
-            if (Action == "cancelChanges") return RedirectToAction("Index", filter);
+            ICollection<string> fileNames = new HashSet<string>();
 
-            //if (Action == "cancelChanges") return RedirectToAction("Index", new { Message = "Dokument nebyl uložen." });
+            documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
 
+            return RedirectToAction("Index", filter);
+        }
+
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid")]
+        public ActionResult ReviewNoAction(DocumentModel document)
+        {
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+
+            documentService.ReviewNoAction(document);
+
+            return RedirectToAction("Index", filter);
+        }
+
+
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid")]
+        public ActionResult ReviewNecessaryChange(DocumentModel document, string HelpText)
+        {
+            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+
+            documentService.ReviewNecessaryChange(document, HelpText, UserRoles.UserName());
+
+            return RedirectToAction("Index", filter);
+        }
+
+        
+
+
+        //[GCAuthorize (Roles = "DocumentAuthor")]
+        //private ActionResult SaveInternal(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string Action, string HelpText)
+        //{
+        //    DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+
+        //    if (Action == "cancelChanges") return RedirectToAction("Index", filter);
+
+        //    //if (Action == "cancelChanges") return RedirectToAction("Index", new { Message = "Dokument nebyl uložen." });
+
+        //    ICollection<string> fileNames = SaveFiles();
+        //    switch (type)
+        //    {
+        //        case "Add":
+        //            // novy dokument ma vzdy cislo vydani 1
+        //            switch (Action)
+        //            {
+        //                case "registerDocument":
+        //                    document.IssueNumber = 1;
+        //                    documentService.AddDocument(document, fileNames);
+        //                    fileNames = null;
+        //                    documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
+        //                    break;
+        //                default:
+        //                    document.IssueNumber = 1;
+        //                    documentService.AddDocument(document, fileNames);
+        //                    break;
+        //            }
+
+        //            break;
+
+        //        case "Edit":
+
+        //            switch (Action)
+        //            {
+        //                case "registerDocument":
+        //                    documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
+        //                    break;
+        //                case "newVersion":
+        //                    documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
+        //                    break;
+        //                case "reviewNoAction":
+        //                    documentService.ReviewNoAction(document);
+        //                    break;
+        //                case "reviewNecessaryChanges":
+
+        //                    //UserRoles.UserName()
+        //                    documentService.ReviewNecessaryChange(document, HelpText, UserRoles.UserName());
+        //                    break;
+        //                case "archivDocument":
+        //                    //documentService.Archived(document, true);
+        //                    documentService.ChangeDocumentState(document, "Archived");
+        //                    break;
+        //                case "deArchivDocument":
+        //                    documentService.ChangeDocumentStateOnPreviousState(document, "");
+        //                    //documentService.Archived(document, false);
+        //                    break;
+        //                case "stornoDocument":
+
+        //                    documentService.ChangeDocumentState(document, "Storno");
+
+        //                    break;
+
+        //                case "cancelChanges":
+        //                    break;
+        //                default:
+        //                    documentService.EditDocument(document, fileNames);
+        //                    break;
+        //            }
+
+
+        //            break;
+        //    }
+
+        //    //return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
+        //    return RedirectToAction("Index", filter);
+        //}
+
+        private ICollection<string> SaveFiles()
+        {
             string folderForFiles = System.Configuration.ConfigurationManager.AppSettings["FileTemp"];
             string guid = Guid.NewGuid().ToString();
             ICollection<string> fileNames = new HashSet<string>();
             string folderPath = folderForFiles + guid + @"\";
             Directory.CreateDirectory(folderPath);
 
-            for (int i = 0;i < this.Request.Files.Count; i++)
+            for (int i = 0; i < this.Request.Files.Count; i++)
             {
                 if (this.Request.Files[i].ContentLength > 0)
                 {
@@ -272,73 +447,9 @@ namespace GCPack.Web.Controllers
                     this.Request.Files[i].SaveAs(filePath);
                 }
             }
-            switch (type)
-            {
-                case "Add":
-                    // novy dokument ma vzdy cislo vydani 1
-                    switch (Action)
-                    {
-                        case "registerDocument":
-                            document.IssueNumber = 1;
-                            documentService.AddDocument(document, fileNames);
-                            fileNames = null;
-                            documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
-                            break;
-                        default:
-                            document.IssueNumber = 1;
-                            documentService.AddDocument(document, fileNames);
-                            break;
-                    }
 
-                    break;
-
-                case "Edit":
-
-                    switch (Action)
-                    {
-                        case "registerDocument":
-                            documentService.RegisterDocument(document, fileNames, UserRoles.GetUserId());
-                            break;
-                        case "newVersion":
-                            documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
-                            break;
-                        case "reviewNoAction":
-                            documentService.ReviewNoAction(document);
-                            break;
-                        case "reviewNecessaryChanges":
-
-                            //UserRoles.UserName()
-                            documentService.ReviewNecessaryChange(document, HelpText, UserRoles.UserName());
-                            break;
-                        case "archivDocument":
-                            //documentService.Archived(document, true);
-                            documentService.ChangeDocumentState(document, "Archived");
-                            break;
-                        case "deArchivDocument":
-                            documentService.ChangeDocumentStateOnPreviousState(document, "");
-                            //documentService.Archived(document, false);
-                            break;
-                        case "stornoDocument":
-
-                            documentService.ChangeDocumentState(document, "Storno");
-
-                            break;
-
-                        case "cancelChanges":
-                            break;
-                        default:
-                            documentService.EditDocument(document, fileNames);
-                            break;
-                    }
-
-                       
-                    break;
-            }
-
-            //return RedirectToAction("Index", new { Message = "Dokument byl uložen." });
-            return RedirectToAction("Index", filter);
+            return fileNames;
         }
-
 
         private void InitCodeLists()
         {
@@ -350,30 +461,50 @@ namespace GCPack.Web.Controllers
             ViewBag.Workplaces = codeListService.GetWorkplaces();
 
         }
-
+                
+        [GCAuthorize (Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author") ]
         public ActionResult Add(int documentTypeID)
         {
             ViewBag.Type = "Nový řízený dokument";
             // TODO: opravit ID = 1, DocumentStateCode, DocumentStateName na GetStateFromCode("New")
-            DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, IssueNumber = 1, DocumentStateCode = "New", DocumentStateName = "Nový"};
+            //DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, IssueNumber = 1, DocumentStateCode = "New", DocumentStateName = "Nový" };
+            DocumentModel document = new DocumentModel() { Revision = "P", IssueNumber = 1, DocumentStateCode = "New", DocumentStateName = "Nový"};
             ViewBag.Documents = document;
-            ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
+
+            
             // opraveno Lukas a Jane 25.7.2017
             ViewBag.Type = "Add";
             document.DocumentTypeID = documentTypeID;
+
             DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
             ViewBag.TypeModel = typeModel;
             InitCodeLists();
 
+
+            // LF  27.10.2017 - administraator id bude vzdy prednastavovan do noveho dokumentu
+            // tj. pokud bude v typu dokumentu vyplnen
+            document.AdministratorID = typeModel.AdministratorID ?? default(int);
+
+            ICollection<Item> administrators = userService.GetUserList(new UserFilter() { });
+            
+            if (document.AdministratorID == 0)
+            {
+                administrators.Add(new Item { ID = 0, Value = "---------"});
+            }
+
+            ViewBag.Administrators = administrators.OrderBy(a => a.Value);
+
             return View("edit",document);
         }
 
+        [GCAuthorize(Roles = "SystemAdmin")]
         public ActionResult Delete(int documentId)
         {
             documentService.DeleteDocument(documentId);
             return RedirectToAction("Index", new { Message = "Dokument byl smazán." });
         }
 
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,documentauthorid,documentadminid")]
         public ActionResult Edit(int documentId)
         {
 
@@ -383,9 +514,9 @@ namespace GCPack.Web.Controllers
             DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
             ViewBag.TypeModel = typeModel;
             ViewBag.Documents = document;
-            ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             ViewBag.Type = "Edit";
-            //ViewBag.ComeBackFilter = 
+            ViewBag.Administrators = userService.GetUserList(new UserFilter() { }).OrderBy(u=>u.Value);
+            
             InitCodeLists();
             return View("edit", document);
         }
