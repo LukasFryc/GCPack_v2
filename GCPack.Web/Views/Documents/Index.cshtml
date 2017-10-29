@@ -204,8 +204,11 @@
 </div>
 
 <script>
+        var WSPager; 
+
         $(document).ready(function () {
 
+            WSPager = $().WSPager({ owner: '#pager', currentPage: 0, itemCount: 10, rowsPerPage: 10, fnGetPage: GetDocuments });
 
             if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorName").val() != '') {
                 $("#section-filter-plus1").collapse('show');
@@ -369,8 +372,8 @@
 
       
 
-
 </script>
+
 <div style="background-color:#D1D1D1; padding-left:5px; padding-top:5px" >
 
     @*--------*@
@@ -647,6 +650,7 @@
     </div>
 
     </div>
+<div class="WSpager" style="float:left;" id="pager"></div>
 
 <table class="table" style="margin-top:20px">
     <tr>
