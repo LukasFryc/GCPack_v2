@@ -216,7 +216,7 @@
 
         $(document).ready(function () {
 
-            WSPager = $().WSPager({ owner: '#pager', currentPage: 0, itemCount: 53, rowsPerPage: 10, fnGetPage: GetDocuments });
+            WSPager = $().WSPager({ owner: '#pager', currentPage: 0, itemCount: 0, rowsPerPage: 10, fnGetPage: GetDocuments });
 
             if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorName").val() != '') {
                 $("#section-filter-plus1").collapse('show');

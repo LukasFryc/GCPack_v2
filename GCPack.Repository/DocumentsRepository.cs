@@ -403,7 +403,15 @@ namespace GCPack.Repository
 
                 ICollection<GetDocuments17_Result> documentsResult = db.GetDocuments17(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments17_Result>();
                 documentCollection.Count = documentsResult.Count();
-                documentCollection.Documents = Mapper.Map<ICollection<DocumentModel>>(documentsResult.Skip((filter.Page - 1) * filter.ItemsPerPage).Take (filter.ItemsPerPage));
+                // v pripade ze se jedna o vyber jednoho dokumentu
+                if (filter.DocumentID != 0)
+                {
+                    filter.ItemsPerPage = 1;
+                    filter.Page = 1;
+                }
+
+                documentCollection.Documents = Mapper.Map<ICollection<DocumentModel>>(documentsResult.Skip((filter.Page - 1) * filter.ItemsPerPage).Take(filter.ItemsPerPage));
+                
                 return documentCollection;
             }
         }

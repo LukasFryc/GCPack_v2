@@ -39,7 +39,7 @@
             pagerHTML += '<span  id="pagesCount" style="margin-left:2px;"></span>';
             pagerHTML += '<img tabIndex="0" alt="Next" class="next" src="/content/images/control_fastforward.png">';
             pagerHTML += '<img tabIndex="0" alt="To end" class="last" src="/content/images/control_end.png">';
-            pagerHTML += '&nbsp;<label><select class="rowsPerPage"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="600">600</option></select> per page</label>';
+            pagerHTML += '&nbsp;<label><select class="rowsPerPage"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="600">600</option></select> na stranku</label>';
             pagerHTML += '</div>';
 
             $(owner).html(pagerHTML);
