@@ -95,6 +95,9 @@
                 });
 
             });
+        var EventFromPager = 0;
+
+
 
         function GetDocuments() {
                 // nastaven 500mlisec spoydeni na cekani bna vlozeni vstupu z klavesnice
@@ -107,7 +110,6 @@
                         //var EffeciencyDateTo = $('#EffeciencyDateTo').val();
                         //var NextReviewDateFrom = $('#NextReviewDateFrom').val();
                         //var NextReviewDateTo = $('#NextReviewDateTo').val();
-
                         var AllPath = AppRoot + "/documents/getDocuments";
                         $.post(AppRoot + "/documents/getDocuments",  {
                             name: $('#Name').val(),
@@ -128,12 +130,15 @@
                             StateCode: $('#StateCode').val(),
                             Revision: $('#Revision').val(),
                             //Archiv: $('#Archiv').val(),
-                            ReviewNecessaryChange: $('#ReviewNecessaryChange').val()
+                            ReviewNecessaryChange: $('#ReviewNecessaryChange').val(),
+                            Page: $('#page').val(),
+                            ItemsPerPage: $('.rowsPerPage').val()
                         } )
 
-                            .done(function (documents) {
+                            .done(function (documentCollection) {
+                                WSPager.SetPager(documentCollection.Count);
                                 $('table .dataRow').remove();
-                                $.each(documents, function (index, doc) {
+                                $.each(documentCollection.Documents, function (index, doc) {
 
                                     var dateStr = "";
 
@@ -211,7 +216,7 @@
 
         $(document).ready(function () {
 
-            WSPager = $().WSPager({ owner: '#pager', currentPage: 0, itemCount: 10, rowsPerPage: 10, fnGetPage: GetDocuments });
+            WSPager = $().WSPager({ owner: '#pager', currentPage: 0, itemCount: 53, rowsPerPage: 10, fnGetPage: GetDocuments });
 
             if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorName").val() != '') {
                 $("#section-filter-plus1").collapse('show');
@@ -656,7 +661,7 @@
 
     </div>
 <div class="WSpager" style="float:left;" id="pager"></div>
-
+<input type="hidden" id="page" name="currentPage" value="1"/>
 <table class="table" style="margin-top:20px">
     <tr>
         <th>

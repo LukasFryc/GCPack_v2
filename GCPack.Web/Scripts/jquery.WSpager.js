@@ -6,7 +6,7 @@
     var callbackFunction;
     var itemCount = 0;
     var masterPlugin;
-    
+    var EventFromPager = false;
     $.fn.extend({
         //plugin name - animatemenu
 
@@ -26,12 +26,13 @@
             var o = options;
             if (o.currentPage == 0 || o.currentPage == '') o.currentPage = 1;
 
-			currentPage = o.currentPage;
+
+            currentPage = $('#page').val() * 1;
             owner = o.owner;
             itemCount = o.itemCount;
             masterPlugin = o.masterPlugin;
 
-            var pagerHTML = '<div class="WSpager" style="float:left;" id="pager">';
+            var pagerHTML = '<div class="WSpager" style="float:right;margin-top:10px" id="pager">';
             pagerHTML += '<img tabIndex="0" alt="To start" class="first" src="/content/images/control_start.png">';
             pagerHTML += '<img tabIndex="0" alt="Previous" class="prev" src="/content/images/control_rewind.png">';
             pagerHTML += '<span  id="currentPage" name="currentPage" style="width:10px;margin-right:2px;">' + currentPage + '</span>/';
@@ -70,6 +71,13 @@
 				}
 			});
 
+            this.SetPager = function (itemsCount) {
+                pagesCount = Math.ceil(itemsCount / rowsPerPage);
+                $('#pagesCount').html(pagesCount + ' (' + itemsCount + ')');
+                if (EventFromPager == false) changePage('first');
+                EventFromPager = false;
+            }
+
             // getAllParameters
             this.GetPostData = function () {
             
@@ -97,9 +105,10 @@
 
             return this;
 
-
             function changePage(type) {
-                var formerCurrentPage = currentPage;
+                EventFromPager = true;
+                currentPage = $('#page').val() * 1;
+                var formerCurrentPage = $('#page').val() * 1;
                 switch (type) {
                     case 'first':
                         currentPage = 0;
@@ -116,6 +125,7 @@
                 }
                 if (currentPage > pagesCount) currentPage = pagesCount;
                 if (currentPage < 1) currentPage = 1;
+                $('#page').val(currentPage);
                 $('#currentPage').html(currentPage);
                 rowsPerPage = $('.rowsPerPage').val();
                 o.fnGetPage();

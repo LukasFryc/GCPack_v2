@@ -226,9 +226,10 @@ namespace GCPack.Service
             return documentsRepository.GetFile(fileID);
         }
 
-        public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
+        public DocumentCollectionModel GetDocuments(DocumentFilter filter)
         {
 
+            
             UserModel user = userService.GetUser((int) filter.ForUserID);
 
             switch (user.Roles)

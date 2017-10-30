@@ -14,7 +14,7 @@ namespace GCPack.Repository.Interfaces
         ICollection<UserModel> GetAddedUsersToDocument(ICollection<int> users, DocumentModel document);
         ICollection<UserModel> GetDeletedUsersFromDocument(ICollection<int> users, DocumentModel document);
         void MapUsersToDocument(ICollection<int> addUsers, DocumentModel document, ICollection<int> deleteUsers);
-        ICollection<DocumentModel> GetDocuments(DocumentFilter filter);
+        DocumentCollectionModel GetDocuments(DocumentFilter filter);
         DocumentModel GetDocument(int documentId, int? userID);
         ICollection<FileItem> GetFiles(int documentId);
         ICollection<UserModel> GetUsersForDocument(int documentId);

@@ -77,7 +77,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                var q = db.Documents.Where(d => d.EffeciencyDate == DateTime.Now).OrderBy(d => d.EffeciencyDate).Skip(filter.Page * filter.ItemPerPage).Take(filter.ItemPerPage).Select(d => d);
+                var q = db.Documents.Where(d => d.EffeciencyDate == DateTime.Now).OrderBy(d => d.EffeciencyDate).Skip(filter.Page * filter.ItemsPerPage).Take(filter.ItemsPerPage).Select(d => d);
                 return Mapper.Map<ICollection<DocumentModel>>(q);
             }
 
@@ -222,7 +222,7 @@ namespace GCPack.Repository
             // nejde to obejit parametrz z prohlizece
             
             DocumentFilter filter = new DocumentFilter() { DocumentID = documentId, ForUserID = userID };
-            DocumentModel document = GetDocuments(filter).FirstOrDefault();
+            DocumentModel document = GetDocuments(filter).Documents.FirstOrDefault();
             return document;
         }
 
@@ -245,7 +245,7 @@ namespace GCPack.Repository
 
                 if (filter.DocumentID == null) filter.DocumentID = 0;
 
-                filter.ItemPerPage = 10000;
+                filter.ItemsPerPage = 10000;
 
                 var documents = (
                     from d in db.Documents
@@ -364,7 +364,7 @@ namespace GCPack.Repository
 
                 // tyka se strankovani: documents.Skip(filter.Page * filter.ItemPerPage).Take (filter.ItemPerPage)
 
-                ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documents.Skip(filter.Page * filter.ItemPerPage).Take (filter.ItemPerPage));
+                ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documents.Skip(filter.Page * filter.ItemsPerPage).Take (filter.ItemsPerPage));
 
                 foreach (DocumentModel document in docs)
                 {
@@ -390,19 +390,21 @@ namespace GCPack.Repository
         }
 
 
-        public ICollection<DocumentModel> GetDocuments(DocumentFilter filter)
+        public DocumentCollectionModel GetDocuments(DocumentFilter filter)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
+                DocumentCollectionModel documentCollection = new DocumentCollectionModel();
                 filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
 
                 if (!string.IsNullOrEmpty(filter.StateCode)) filter.StateID = GetDocumentState(filter.StateCode); // lF 25.10.2017
 
                 if (filter.DocumentID==null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments17_Result> documentsResult = db.GetDocuments17(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments17_Result>();
-                ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documentsResult);
-                return docs;
+                ICollection<GetDocuments17_Result> documentsResult = db.GetDocuments17(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments17_Result>();
+                documentCollection.Count = documentsResult.Count();
+                documentCollection.Documents = Mapper.Map<ICollection<DocumentModel>>(documentsResult.Skip((filter.Page - 1) * filter.ItemsPerPage).Take (filter.ItemsPerPage));
+                return documentCollection;
             }
         }
         // vrati se seznam vsech uzivatelu kteri se mohou odstranit z dokumentu

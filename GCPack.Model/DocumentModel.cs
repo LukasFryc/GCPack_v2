@@ -26,6 +26,16 @@ namespace GCPack.Model
         public byte[] Data { get; set; }
     }
 
+    public class DocumentCollectionModel
+    {
+        public DocumentCollectionModel()
+        {
+            Documents = new HashSet<DocumentModel>();
+        }
+        public ICollection<DocumentModel> Documents { get; set; }
+        public int Count { get; set; }
+    }
+
     public class DocumentModel
     {
         public DocumentModel()
