@@ -9,7 +9,7 @@ namespace GCPack.Model
     public class Filter
     {
         public int Page { get; set; }
-        public int ItemPerPage { get; set; }
+        public int ItemsPerPage { get; set; }
         public string OrderBy { get; set; }
     }
 

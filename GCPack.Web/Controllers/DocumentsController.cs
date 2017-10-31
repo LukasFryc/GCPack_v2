@@ -201,7 +201,7 @@ namespace GCPack.Web.Controllers
         public ActionResult GetDocumentsForUser(DocumentFilter filter)
         {
             Session["documentFilter"] = filter;
-            ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
+            ICollection<DocumentModel> documents = documentService.GetDocuments(filter).Documents;
             return Json(documents, JsonRequestBehavior.AllowGet);
         }
 
@@ -216,8 +216,10 @@ namespace GCPack.Web.Controllers
             filter.ForUserID = UserRoles.GetUserId();
             Session["documentFilter"] = filter;
 
-            ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
-            return Json(documents, JsonRequestBehavior.AllowGet);
+            //ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
+            DocumentCollectionModel documentCollection = documentService.GetDocuments(filter);
+            
+            return Json(documentCollection, JsonRequestBehavior.AllowGet);
         }
 
         // seznameni s dokumentem
