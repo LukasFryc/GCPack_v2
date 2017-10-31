@@ -465,6 +465,9 @@ namespace GCPack.Web.Controllers
         [GCAuthorize (Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author") ]
         public ActionResult Add(int documentTypeID)
         {
+
+            int userId = UserRoles.GetUserId();
+
             ViewBag.Type = "Nový řízený dokument";
             // TODO: opravit ID = 1, DocumentStateCode, DocumentStateName na GetStateFromCode("New")
             //DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, IssueNumber = 1, DocumentStateCode = "New", DocumentStateName = "Nový" };
@@ -485,6 +488,8 @@ namespace GCPack.Web.Controllers
             // tj. pokud bude v typu dokumentu vyplnen
             document.AdministratorID = typeModel.AdministratorID ?? default(int);
 
+            document.AuthorID = userId;
+
             ICollection<Item> administrators = userService.GetUserList(new UserFilter() { });
             
             if (document.AdministratorID == 0)
@@ -504,7 +509,7 @@ namespace GCPack.Web.Controllers
             return RedirectToAction("Index", new { Message = "Dokument byl smazán." });
         }
 
-        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,documentauthorid,documentadminid")]
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentauthorid,documentadminid")]
         public ActionResult Edit(int documentId)
         {
 

@@ -54,6 +54,9 @@ namespace GCPack.Model
         public int AdministratorID { get; set; }
         public int AuthorID { get; set; }
 
+        // LF 30.10.2017 doplneno pro nacitani autora z procedury
+        public string AuthorName { get; set; }
+
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         public Nullable<System.DateTime> EffeciencyDate { get; set; }
 

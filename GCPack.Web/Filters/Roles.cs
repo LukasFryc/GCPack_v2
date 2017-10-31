@@ -37,10 +37,18 @@ using GCPack.Model;
             {
                 Roles = "," + System.Convert.ToString(principal.Claims.SingleOrDefault(c => c.Type == "Role").Value) + ",";
             }
-            
+
+
+            // LF 30.10.2017 upravena z duvodu rozdilneho volani url z indexu (ve url se pouziva documentid)
+            // yatimco na jiz otevrenem dokument k edirtaci exituje pouze  field ID,coz se pouziva napr pri ukladani 
+            // i pri napr autorizaci v autorizacnim atributu 
             string documentID = HttpContext.Current.Request["ID"];
+            if (string.IsNullOrEmpty(documentID)) documentID = HttpContext.Current.Request["documentid"];
+
 
             if (!string.IsNullOrEmpty(documentID)) documentID = documentID.Replace(",", "");
+
+           
 
             int UserId = -1;
             string UserName = "";
@@ -62,8 +70,15 @@ using GCPack.Model;
                 switch (role)
                 {
                     case "documentauthorid":
-                        DocumentModel dm3 = Helper.GetDocument(System.Convert.ToInt32(documentID), UserId);
-                        access = (access == true) ? true : (dm3.AuthorID == UserId);
+                        // LF 30.10.2017 osetrni pripadu kdz dokument je novy a nema ID
+                        if (documentID!="0") { 
+                            // Getdocument totiz vraci firstordefault tj pokud mu dame hledat dokument s ID 0 pak vracel dokument napr s id 18
+                            DocumentModel dm3 = Helper.GetDocument(System.Convert.ToInt32(documentID), UserId);
+                            access = (access == true) ? true : (dm3.AuthorID == UserId);
+                        } else
+                        {
+                            access = true;
+                        }
                         break;
                     case "documentadminid":
                         DocumentModel dm2 = Helper.GetDocument(System.Convert.ToInt32(documentID), UserId);
