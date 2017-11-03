@@ -38,7 +38,8 @@ namespace GCPack.Repository.Mappers
             CreateMap<GetDocuments17_Result, DocumentModel>()
                 .ForMember(dr => dr.DocumentStateCode, m => m.MapFrom(dt => dt.DocumentStateCode))
                 .ForMember(dr => dr.DocumentStateName, m => m.MapFrom(dt => dt.DocumentStateName))
-                .ForMember(dr => dr.AuthorID, m => m.MapFrom(dt => dt.DocumentOwnerID))
+                // LF 30.10.2017 - zruseno naplnovani AuthorID podle ownera, owner jako tako v aplikaci RD nebude figurovat
+                //.ForMember(dr => dr.AuthorID, m => m.MapFrom(dt => dt.DocumentOwnerID))
                 .ReverseMap();
             CreateMap<DocumentType, Item>()
                 .ForMember(i => i.Value, m => m.MapFrom(dt => dt.Name));
