@@ -41,7 +41,20 @@ select
     overflow: auto;
 }
 
+/*
+JH 31.10.2017 vyuzito ve filtru document\view\index pro znemozneni zmeny stavu a typu revize pro roli User - volano ve funkci 
+IsAccessCSSClass
+*/
 .clsDisabled {
     background-color: #ddd;
     pointer-events: none;
+}
+
+/*
+JH 31.10.2017 vyuzito na tlacitkach document\view\edit, detail pro skryti akci dle role prihlasenho uzivatele - volano ve funkci 
+IsAccessCSSClass
+*/
+
+.clsHhidden {
+    visibility: hidden
 }

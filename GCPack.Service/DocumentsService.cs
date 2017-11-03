@@ -126,7 +126,7 @@ namespace GCPack.Service
         }
 
         // zaevidovani dokumentu
-        
+
         public DocumentModel RegisterDocument(DocumentModel document, ICollection<string> fileNames, int userID)
         {
             // dokument se nastavi na platny
@@ -141,8 +141,8 @@ namespace GCPack.Service
             {
                 DocumentModel oldDocument = documentsRepository.GetDocument(document.ParentID, userID);
                 document.DocumentNumber = oldDocument.DocumentNumber;
-                
-                documentsRepository.ChangeRevison(oldDocument,"N");
+
+                documentsRepository.ChangeRevison(oldDocument, "N");
             }
 
             // stav revize dokumentu se prepne na P
@@ -152,9 +152,11 @@ namespace GCPack.Service
             DocumentTypeModel documentType = GetDocumentType(document.DocumentTypeID);
             document.NextReviewDate = DateTime.Now.AddYears(documentType.ValidityInYears);
 
-            // nastaveni ucinnosti dokumentu po schvaleni
-            document.EffeciencyDate = DateTime.Now.AddDays(documentType.DocumentEfficiencyDays);
-
+            // nastaveni ucinnosti dokumentu po schvaleni, pokud nebylo zadáno (JH 31.10.2017)
+            if(document.EffeciencyDate == null)
+            { 
+                document.EffeciencyDate = DateTime.Now.AddDays(documentType.DocumentEfficiencyDays);
+            }
             // zmena revize dokumentu
             document = EditDocument(document, fileNames);
 

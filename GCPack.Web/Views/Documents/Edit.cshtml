@@ -1,12 +1,15 @@
 ﻿@model GCPack.Model.DocumentModel
 
+
 @{string AppRoot = System.Configuration.ConfigurationManager.AppSettings["AppRoot"];}
 
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@using GCPack.Web.Filter;
 @using GCPack.Model;
+@using GCPack;
 
 <style>
     
@@ -37,6 +40,31 @@
 
         jQuery.validator.methods["date"] = function (value, element) { return true; } 
 
+        //jQuery('#myForm').validate({
+        //    ignore: ".ignore",
+        //    invalidHandler: function (e, validator) {
+        //        if (validator.errorList.length)
+        //        {
+        //            alert('maka');
+        //            //$('#tabs a[href="#' + jQuery(validator.errorList[0].element).closest(".tab-pane").attr('id') + '"]').tab('show')
+        //        }
+        //    }
+        //});
+
+        
+        //$('#tabs-1').blur(function () {
+        //    //$('input').valid();
+        //    alert('maka');
+
+        //});
+
+        //$('input').blur(function () {
+        //    //$('input').valid();
+        //    alert('maka');
+
+        //});
+        
+
         // nize uvedene nebude jiz potreba - reseno scriptem lukasuv kousek 15.9.2017
         //$('.btn').click(function () {
         //    $('#Action').val($(this).prop("id"));
@@ -47,6 +75,26 @@
 
             $('#Action').val($(this).prop("id"));
             $('form').prop('action', $(this).prop("id"));
+
+            //if ($(this).prop("id") == "saveDocument") {
+            //    var form = $("#myForm");
+            //    form.validate();
+
+            //    var title = $("#Title");
+            //    title.validate();
+
+            //    if (title.valid() == false) {
+            //        alert ("nemas vyplneny nayev")
+            //        return false;
+            //    }
+
+            //    if (form.valid() == false) {
+            //        return false;
+            //    }
+            //}
+                
+                
+
             if ($(this).prop("id") == "reviewNecessaryChange") {
 
                 $("#myModalP1").html("");
@@ -340,6 +388,8 @@
     {
         <input type="hidden" name="Action" id="Action" />
         <input type="hidden" name="StateID" id="StateID" value="@Model.StateID"/>
+        <input type="hidden" name="DocumentStateCode" id="DocumentStateCode" value="@Model.DocumentStateCode" />
+
         <input type="hidden" name="ID" value="@Model.ID" />
         <input type="hidden" name="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
@@ -455,6 +505,19 @@
                         @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
                     </div>
                 </div>
+
+                @if (Model.IssueNumber > 1)
+                {
+                    <div class="row">
+                        <label class="control-label col-md-2" for="Title">Popis změny</label>
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(model => model.IssueChangeComment, new { @class = "form-control annotationArea", @placeholder = "Popis změny v tomto vydání" })
+                            @Html.ValidationMessageFor(model => model.IssueChangeComment, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+                
+
                 <div class="row">
                     <label class="control-label col-md-2" for="Title">Anotace</label>
                     <div class="col-md-8">
@@ -462,6 +525,7 @@
                         @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
                     </div>
                 </div>
+
             </div>
             @* prirazene soubory k rizenemu dokumentu*@
             <div id="tabs-3">
@@ -790,9 +854,12 @@
                                             </div>
                                             <div class="col-md-2">
                                                 @itemUR.User.LastName
+                                                
                                             </div>
                                             <div class="col-md-2">
                                                 @itemUR.DateRead.ToShortDateString()
+                                               
+                                                
                                             </div>
                                         </div>
                                     }
@@ -849,12 +916,18 @@
                             </li>
                             @if (Model.DocumentStateCode == "New")
                             {
-                                <li style="padding-right:5px">
-                                    <button class="btn btn-primary navbar-btn btnAction" id="saveDocument">Uložit</button>
-                                </li>
-                                <li style="padding-right:5px">
-                                    <button class="btn btn-primary navbar-btn btnAction" id="registerDocument">Zaevidovat</button>
-                                </li>
+                                if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin,documentadminid,documentauthorid"))
+                                {
+                                    <li style="padding-right:5px">
+                                   
+                                        <button class="btn btn-primary navbar-btn btnAction " id="saveDocument">Uložit</button>
+                                    </li>
+                               
+                                    <li style="padding-right:5px">
+                                    
+                                        <button class="btn btn-primary navbar-btn btnAction" id="registerDocument">Zaevidovat</button>
+                                    </li>
+                                }
 
                             }
                             else if (Model.DocumentStateCode == "Registered")
@@ -862,43 +935,49 @@
 
                                 if (Model.Revision == "P")
                                 {
-                                    <li style="padding-right:5px">
-                                        <button class="btn btn-primary navbar-btn btnAction" id="newVersion">Nové vydání</button>
-                                    </li>
-                                    <li style="padding-right:5px">
-                                        <button class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Přezkoumání<span class="caret"></span></button>
-                                        <ul class="dropdown-menu">
-                                            <li style="padding-right:5px">
-                                                <a href="#" class="btnAction" id="reviewNoAction"> Platný ve stávající formě</a>
-                                                @*<button class="btnAction" id="revisionNoAction">Platný ve stávající formě</button>*@
-                                            </li>
-                                            <li style="padding-right:5px">
-                                                <a href="#" class="btnAction" id="reviewNecessaryChange"> Nutná změna</a>
-                                                @*<button class="btn  btn-primary btnAction" id="revisionChanges">Nutná změna</button>*@
-                                            </li>
-                                        </ul>
-                                    </li>
+                                    if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin,documentadminid"))
+                                    { 
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="newVersion">Nové vydání</button>
+                                        </li>
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Přezkoumání<span class="caret"></span></button>
+                                            <ul class="dropdown-menu">
+                                                <li style="padding-right:5px">
+                                                    <a href="#" class="btnAction" id="reviewNoAction"> Platný ve stávající formě</a>
+                                                </li>
+                                                <li style="padding-right:5px">
+                                                    <a href="#" class="btnAction" id="reviewNecessaryChange"> Nutná změna</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    }
                                 }
                             }
-                            @if (Model.DocumentStateCode == "New" | Model.DocumentStateCode == "Registered")
-                            {
-                                <li style="padding-right:5px">
-                                    <button class="btn btn-primary navbar-btn btnAction" id="stornoDocument">Storno</button>
-                                </li>
-                                      
 
-                            }
+                            @if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin,documentadminid"))
+                            {
+                                    if (Model.DocumentStateCode == "New" | Model.DocumentStateCode == "Registered")
+                                    {
 
-                            @if (Model.DocumentStateCode != "Archived" )
-                            {
-                                <li style="padding-right:5px">
-                                    <button class="btn btn-primary navbar-btn btnAction" id="archivDocument">Archivace</button>
-                                </li>
-                            } else 
-                            {
-                                <li style="padding-right:5px">
-                                    <button class="btn btn-primary navbar-btn btnAction" id="deArchivDocument">Dearchivace</button>
-                                </li>
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="stornoDocument">Storno</button>
+                                        </li>
+
+                                    }
+
+                                    if (Model.DocumentStateCode != "Archived")
+                                    {
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="archivDocument">Archivace</button>
+                                        </li>
+                                    }
+                                    else
+                                    {
+                                        <li style="padding-right:5px">
+                                            <button class="btn btn-primary navbar-btn btnAction" id="deArchivDocument">Dearchivace</button>
+                                        </li>
+                                    }
                             }
                         </ul>
                     </div>

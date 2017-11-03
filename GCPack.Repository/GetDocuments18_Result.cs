@@ -11,7 +11,7 @@ namespace GCPack.Repository
 {
     using System;
     
-    public partial class GetDocuments17_Result
+    public partial class GetDocuments18_Result
     {
         public Nullable<long> row { get; set; }
         public int ID { get; set; }
@@ -33,6 +33,8 @@ namespace GCPack.Repository
         public Nullable<int> AuthorID { get; set; }
         public string ReviewNecessaryChangeComment { get; set; }
         public Nullable<int> PreviousStateID { get; set; }
+        public int MainID { get; set; }
+        public string IssueChangeComment { get; set; }
         public int CanEdit { get; set; }
         public int CanRevision { get; set; }
         public Nullable<System.DateTime> Created { get; set; }

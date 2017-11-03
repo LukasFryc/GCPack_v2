@@ -63,7 +63,10 @@ namespace GCPack.Service
         {
             var user = usersRepository.GetUser(userID);
             user.JobPositions = usersRepository.GetJobPositionIDs(userID);
+            //user.JobPositionsAll = usersRepository.GetJobPositionsUser(userID);
             user.JobPositions = (user.JobPositions == null) ? new HashSet<int>() : user.JobPositions;
+            //user.JobPositionsName = 
+
             return user;
         }
 
@@ -76,6 +79,11 @@ namespace GCPack.Service
         {
             return usersRepository.GetJobPositions();
         }
+
+        //public JobPositionModel GetJobPosition(int ID)
+        //{
+        //    return usersRepository.GetJobPosition(ID);
+        //}
 
         // vraci se jednoducha kolekce uzivatelu - ID , Value
         public ICollection<Item> GetUserList(UserFilter filter)

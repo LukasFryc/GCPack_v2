@@ -64,6 +64,20 @@ namespace GCPack.Repository
             }
         }
 
+        //LF 1.11.2017
+        public ICollection<JobPositionUser> GetJobPositionsUser(int userID)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var jobPositionUsers = (from u in db.JobPositionUsers
+                                      where u.UserId == userID
+                                      select u);
+                
+                return Mapper.Map<ICollection<JobPositionUser>>(jobPositionUsers);
+            }
+        }
+
+
         public UserModel GetUser(string ticket)
         {
             using (GCPackContainer db = new GCPackContainer())
@@ -125,6 +139,15 @@ namespace GCPack.Repository
                 return Mapper.Map<ICollection<JobPositionModel>>(db.JobPositions.Select(jp => jp));
             }
         }
+
+        //LF 1.11.2017 doplneno pro navrat konkretni pracovni pozice
+        //public JobPositionModel GetJobPosition(int ID)
+        //{
+        //    using (GCPackContainer db = new GCPackContainer())
+        //    {
+        //        return Mapper.Map<JobPositionModel>(db.JobPositions.Select(jp => jp).Where(jp=>jp.ID==ID).FirstOrDefault());
+        //    }
+        //}
 
         public ICollection<RoleModel> GetRoles()
         {

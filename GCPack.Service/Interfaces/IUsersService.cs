@@ -16,5 +16,6 @@ namespace GCPack.Service.Interfaces
         UserModel GetUser(int userId);
         UserModel SaveUser(UserModel user);
         void DeleteUser(int userId);
+        //JobPositionModel GetJobPosition(int ID);
     }
 }

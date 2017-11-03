@@ -190,10 +190,22 @@ namespace GCPack.Web.Controllers
         }
 
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentauthorid,documentadminid")]
-        public ActionResult Registered(int documentID)
+        public ActionResult Registered(DocumentModel document)
         {
-            documentService.ChangeDocumentState(documentID, "Registered");
-            return View();
+            if (ModelState.IsValid)
+            { 
+                documentService.ChangeDocumentState(document.ID, "Registered");
+                return View();
+            }
+            //return View("Edit",document);
+            if (document.ID == 0)
+            {
+                return Add(document.DocumentTypeID);
+            }
+            else
+            {
+                return Edit(document.ID);
+            }
         }
 
 
@@ -235,19 +247,34 @@ namespace GCPack.Web.Controllers
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid,documentauthorid")]
         public ActionResult RegisterDocument(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string HelpText)
         {
-            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
-            ICollection<string> fileNames = SaveFiles();
-            int userId = UserRoles.GetUserId();
-
-            if (type == "Add")
+            if (ModelState.IsValid)
             {
-                
-                document.IssueNumber = 1;
-                documentService.AddDocument(document, fileNames, userId);
-                fileNames = null;
+                DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+                ICollection<string> fileNames = SaveFiles();
+                int userId = UserRoles.GetUserId();
+
+                if (type == "Add")
+                {
+
+                    document.IssueNumber = 1;
+                    documentService.AddDocument(document, fileNames, userId);
+                    fileNames = null;
+                }
+                documentService.RegisterDocument(document, fileNames, userId);
+                return RedirectToAction("Index", filter);
             }
-            documentService.RegisterDocument(document, fileNames, userId);
-            return RedirectToAction("Index", filter);
+
+            //return View("Edit",document);
+            if (document.ID == 0)
+            {
+                return Add(document.DocumentTypeID);
+            }
+            else
+            {
+                return Edit(document.ID);
+            }
+
+
         }
 
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid,documentauthorid")]
@@ -268,23 +295,37 @@ namespace GCPack.Web.Controllers
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid,documentauthorid")]
         public ActionResult SaveDocument(DocumentModel document, IEnumerable<HttpPostedFileBase> upload, string type, string HelpText)
         {
+            // TODO: LF 1.11.2017 nutno doresit validaci 
+            if (ModelState.IsValid)
+            {
+                DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
+                ICollection<string> fileNames = SaveFiles();
+                int userId = UserRoles.GetUserId();
 
-            DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
-            ICollection<string> fileNames = SaveFiles();
-            int userId = UserRoles.GetUserId();
+
+                if (type == "Add")
+                {
+                    document.IssueNumber = 1;
+                    documentService.AddDocument(document, fileNames, userId);
+                }
+                else if (type == "Edit")
+                {
+                    documentService.EditDocument(document, fileNames);
+                }
+
+                return RedirectToAction("Index", filter);
+            }
+
+            //return View("Edit",document);
+            if (document.ID==0){
+                return Add(document.DocumentTypeID);
+            } else
+            {
+                return Edit(document.ID);
+            }
             
 
-            if (type == "Add")
-            {
-                document.IssueNumber = 1;
-                documentService.AddDocument(document, fileNames, userId);
-            }
-            else if (type == "Edit")
-            {
-                documentService.EditDocument(document, fileNames);
-            }
-            
-            return RedirectToAction("Index", filter);
+
         }
 
         [GCAuthorizeAttribute(Roles = "SystemAdmin,SuperDocAdmin,documentadminid")]
@@ -527,6 +568,11 @@ namespace GCPack.Web.Controllers
             InitCodeLists();
             return View("edit", document);
         }
+
+        //public JobPositionModel GetJobPosition(int ID)
+        //{
+        //    return userService.GetJobPosition(ID);
+        //}
 
     }
 }

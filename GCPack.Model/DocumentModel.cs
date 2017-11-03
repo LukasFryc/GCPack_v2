@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
+//using System.Web;
+
 namespace GCPack.Model
 {
     public enum DocumentAdminType
@@ -36,12 +38,17 @@ namespace GCPack.Model
         public int Count { get; set; }
     }
 
-    public class DocumentModel
+    public class DocumentModel : IValidatableObject
     {
         public DocumentModel()
         {
             FileItems = new HashSet<FileItem>();
         }
+
+        // LF 2.11.2017 Action - doplneno do modelu jen proto abych mohl delat validaci na vyplneni pole IssueCommentChange
+        // pokud kliknu na registredDocument
+        public string Action { get; set; }
+
 
         public int ID { get; set; }
         [Required(ErrorMessage = "Musí být vyplněn název dokumentu.")]
@@ -97,9 +104,27 @@ namespace GCPack.Model
         public int IssueNumber { get; set; } // číslo vydání
         public int ParentID { get; set; }   // odkaz na předchozího 
 
+        public int MainID { get; set; }   // odkaz na vsechny vydani stejneho cisla, tj ID prvniho vydani ktere protika vsemi ostatnimi vydanimi
         public bool ReviewNecessaryChange { get; set; } // 1 je nutna zmena
 
-        public string ReviewNecessaryChangeComment { get; set; } // 1 je nutna zmena
+        public string ReviewNecessaryChangeComment { get; set; } // 
+
+        public string IssueChangeComment { get; set; } // zmena pri novem vydani text
+
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            List<ValidationResult> res = new List<ValidationResult>();
+
+            if ( this.Action == "registerDocument" && this.DocumentStateCode =="New" && this.IssueNumber>1 && string.IsNullOrEmpty(this.IssueChangeComment))
+            {
+                ValidationResult mss = new ValidationResult("IssueChangeComment musí být v vyplněn!");
+                res.Add(mss);
+            }
+            return res;
+        }
+
+
+
     }
 
 
@@ -109,4 +134,6 @@ namespace GCPack.Model
 
 
 
+
 }
+

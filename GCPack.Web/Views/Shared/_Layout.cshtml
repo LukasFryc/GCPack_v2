@@ -24,6 +24,9 @@
 #nav li:hover > ul{
     display : block;
 }
+
+         ​
+
     </style>
     <script>
         <!-- AppRoot -->
@@ -44,12 +47,15 @@
                 @Html.ActionLink("GC System a.s.", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
             <div class="navbar-collapse collapse">
+
+                
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Úvodní stránka", "Index", "Home")</li>
                     @*<li>@Html.ActionLink("Dokumenty", "Index", "Documents")</li>*@
 
                     @if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin,DocAdmin,Author,User"))
                     {
+
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Dokumenty<span class="caret"></span></a>
                             <ul class="dropdown-menu">
@@ -61,7 +67,7 @@
                                 @foreach (var item in GCPack.Helper.GetDocumentTypeItems())
                                 {
                                     <li>
-                                        @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() {DocumentTypeID = item.ID, StateCode = "Registered", StateID = 2, Revision = "p", Reset = true }, null)
+                                        @Html.ActionLink(item.Value, "Index", "Documents", new DocumentFilter() { DocumentTypeID = item.ID, StateCode = "Registered", StateID = 2, Revision = "p", Reset = true }, null)
 
                                     </li>
                                 }
@@ -107,18 +113,19 @@
                     </li>
                 }
 
+                
+
                 @if (!HttpContext.Current.User.Identity.IsAuthenticated)
                 {
-                    <li>@Html.ActionLink("Přihlášení uživatele", "Index", "Login")</li>
+                    <li id="login">@Html.ActionLink("Přihlášení uživatele", "Index", "Login")</li>
                 }
                 else
                 {
-                    <li>@Html.ActionLink("Odhlášení uživatele", "Logout", "Login")</li>
+                    <li id="login">@Html.ActionLink("Odhlášení uživatele", "Logout", "Login")</li>
                 }
 
-                    
-                    <p class="nav navbar-text navbar-right">@GCPack.Web.Filter.UserRoles.UserName()</p>
-                    
+                <p class="nav navbar-text navbar-right">@GCPack.Web.Filter.UserRoles.UserName()</p>
+                
                 </ul>
             </div>
         </div>

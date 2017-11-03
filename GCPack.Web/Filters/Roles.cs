@@ -71,7 +71,8 @@ using GCPack.Model;
                 {
                     case "documentauthorid":
                         // LF 30.10.2017 osetrni pripadu kdz dokument je novy a nema ID
-                        if (documentID!="0") { 
+                        if (documentID != "0" && documentID != null)
+                        { 
                             // Getdocument totiz vraci firstordefault tj pokud mu dame hledat dokument s ID 0 pak vracel dokument napr s id 18
                             DocumentModel dm3 = Helper.GetDocument(System.Convert.ToInt32(documentID), UserId);
                             access = (access == true) ? true : (dm3.AuthorID == UserId);
@@ -81,11 +82,19 @@ using GCPack.Model;
                         }
                         break;
                     case "documentadminid":
-                        DocumentModel dm2 = Helper.GetDocument(System.Convert.ToInt32(documentID), UserId);
-                        // AdministratorID
-                        // access = (access == true) ? true : (dm2.DocumentAdministrator.Contains(UserName));
-                        access = (access == true) ? true : (dm2.AdministratorID == UserId);
+                        if (documentID != "0" && documentID != null)
+                        {
+                            DocumentModel dm2 = Helper.GetDocument(System.Convert.ToInt32(documentID), UserId);
+                            access = (access == true) ? true : (dm2.AdministratorID == UserId);
+                            // AdministratorID
+                            // access = (access == true) ? true : (dm2.DocumentAdministrator.Contains(UserName));
+                        }
+                        else
+                        {
+                            access = true;
+                        }
                         break;
+
                 }
             }
             return access;

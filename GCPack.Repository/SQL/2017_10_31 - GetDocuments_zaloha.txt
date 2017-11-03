@@ -1,0 +1,193 @@
+﻿CREATE PROCEDURE [dbo].[GetDocuments]        
+                @forUserID int = null,            
+                @documentID int = 0,            
+                @Name varchar(50),            
+                @Number varchar(50),            
+                @Administrator varchar(50),            
+                @OrderBy varchar(50),            
+                @DocumentTypeID int,            
+                @Page int,            
+                @ItemsPerPage int,            
+                @ProjectID int,          
+                @DivisionID int,            
+                @AppSystemID int,            
+                @WorkplaceID int,         
+                @NextReviewDateFrom datetime,         
+                @NextReviewDateTo datetime,         
+                @EffeciencyDateFrom datetime,         
+                @EffeciencyDateTo datetime,         
+                @ReadType varchar(10) = 'all',       
+                @StateID int,     
+    @Revision varchar(3) = 'all',  
+    @ReviewNecassaryChange varchar(15) = 'all'      
+AS            
+-- GetDocuments 1,0,null,null,null,null,0,0,100,0,0,0,0,null,null,null,null,'all',null,'N'     
+--     annotation se bude vrace pouze pokud se jedna o nacteni je jednoho dokumentu            
+       SELECT TOP (@ItemsPerPage) * FROM (            
+       SELECT  ROW_NUMBER() OVER (                         
+  ORDER BY            
+       (CASE @OrderBy            
+              WHEN 'NameA'            
+              THEN Title            
+              WHEN 'NumberA'            
+              THEN DocumentNumber            
+              WHEN 'RevisionD'            
+              THEN CAST (CAST (ReviewDate AS NUMERIC(10,0)) AS VARCHAR(10))            
+              WHEN 'AdminA'            
+              THEN            
+              CASE DT.AdministratorID            
+              WHEN 0 THEN            
+                     AdminDocType.LastName + ' ' + AdminDocType.FirstName            
+              ELSE            
+                     AdminPerson.LastName + ' ' + AdminPerson.FirstName            
+              END            
+       END ) ASC,            
+       (CASE @OrderBy            
+              WHEN 'NameD'            
+              THEN Title             
+              WHEN 'NumberD'            
+              THEN DocumentNumber            
+              WHEN 'RevisionA'            
+              THEN CAST (CAST (ReviewDate AS NUMERIC(10,0)) AS VARCHAR(10))            
+              WHEN 'AdminD'            
+              THEN            
+              CASE DT.AdministratorID            
+              WHEN 0 THEN            
+                     AdminDocType.LastName + ' ' + AdminDocType.FirstName            
+              ELSE            
+                     AdminPerson.LastName + ' ' + AdminPerson.FirstName            
+              END            
+       END ) DESC            
+  ) row ,D.*, 0 CanEdit, 0 CanRevision,            
+              dbo.GetAssignDateUserToDocument (D.ID,@forUserID) Created,            
+              RC.ReadDate,            
+              -- uzivatel muze potvrdit ze precetl rizeny dokument (je k nemu prirazen)            
+              CASE WHEN            
+                     dbo.GetAssignDateUserToDocument (D.ID,@forUserID) IS NULL            
+              THEN 0 ELSE 1 END CanConfirmRead,            
+              CASE DT.AdministratorID            
+              WHEN 0 THEN            
+                     AdminPerson.LastName + ' ' + AdminPerson.FirstName            
+              ELSE            
+                     AdminDocType.LastName + ' ' + AdminDocType.FirstName            
+              END            
+           DocumentAdministrator,            
+     DS.Name AS DocumentStateName,            
+     DS.Code AS DocumentStateCode,         
+                           -- jen Ti uzivatele kteri se seznamili a zaroven jsou prirazeni dokumentu    
+                (SELECT count(*) from ReadConfirmation WHERE DocumentID = d.ID    
+                                  AND ReadConfirmation.UserID IN (    
+                      SELECT UserID FROM UserDocument UD WHERE UD.DocumentID = d.ID         
+                UNION         
+                                SELECT UserID FROM JobPositionDocument JPD         
+                                INNER JOIN JobPositionUser JPU ON JPD.JobPositionId = JPU.JobPositionId         
+                                WHERE JPD.DocumentId = d.ID    
+                                  )    
+                           ) UsersRead,         
+                (SELECT count(*) AU FROM (         
+                                SELECT UserID FROM UserDocument UD WHERE UD.DocumentID = d.ID         
+                                UNION         
+                                SELECT UserID FROM JobPositionDocument JPD         
+                                INNER JOIN JobPositionUser JPU ON JPD.JobPositionId = JPU.JobPositionId         
+                                WHERE JPD.DocumentId = d.ID ) T1 ) AllUsers,    
+                           D.AuthorID as DocumentOwnerID                         
+       FROM Document D            
+        LEFT JOIN ReadConfirmation RC ON RC.DocumentID = D.ID AND RC.UserID = @forUserID            
+              INNER JOIN DocumentType DT ON DT.ID = D.DocumentTypeID            
+              LEFT JOIN [User] AdminPerson ON AdminPerson.ID = D.AdministratorID            
+              LEFT JOIN [User] AdminDocType ON AdminDocType.ID = DT.AdministratorID            
+     INNER JOIN DocumentState DS ON DS.ID = D.StateID            
+       WHERE            
+              -- overeni ze uzivatel ma pristup k dokumentu            
+              (            
+                     (@forUserID IS NULL) OR            
+                     (DocumentAdminType = 0 AND DT.AdministratorID = @forUserID ) OR            
+                     (DocumentAdminType = 1 AND D.AdministratorID = @forUserID) OR            
+                     (NOT dbo.GetAssignDateUserToDocument (D.ID,@forUserID) IS NULL) -- existuje zaznam v ReadConfirmation pro tento dokument uzivatel je prirazen k dokumentu            
+      OR             
+      (EXISTS (select * from UserRoles ur             -- uzivatel je prirazen do nejake role ktera neni typu User - pouze tito uzivatele maji pristup jen k dokumentum            
+      inner join roles r on ur.roleid = r.roleid   -- z rozdelovniku            
+      where ur.UserID = @forUserID and rolecode <> 'User'            
+       ))            
+              ) AND            
+              (      -- pokud se filtruje na konkretni dokument            
+                     @documentID = 0 OR D.ID = @documentID            
+              ) AND            
+              (            
+                     -- hledani v nazvu dokumentu            
+                     ISNULL(@Name,'') = '' OR D.Title LIKE '%' + @Name + '%'            
+              ) AND            
+              (            
+ --     hledani v cisle dokumentu            
+                     ISNULL(@Number,'') = '' OR D.DocumentNumber LIKE '%' + @Number + '%'            
+              ) AND            
+      (            
+                     --     hledani v typu dokumentu            
+                     ISNULL(@DocumentTypeID,0) = 0 OR D.DocumentTypeID = @DocumentTypeID            
+              ) AND            
+     (            
+    -- filtrovani podle projektu            
+ ISNULL(@ProjectID,0) = 0 OR             
+      EXISTS (SELECT ProjectID FROM ProjectDocument PD WHERE PD.DocumentID = D.ID AND PD.ProjectID = @ProjectID)            
+   )  AND            
+     (            
+    -- filtrovani podle DIVISION          
+                     ISNULL(@DivisionID,0) = 0 OR             
+      EXISTS (SELECT DivisionID FROM DivisionDocument DD WHERE DD.DocumentID = D.ID AND DD.DivisionID = @DivisionID)            
+   )  AND            
+     (            
+    -- filtrovani podle AppSystem          
+ISNULL(@AppSystemID,0) = 0 OR             
+      EXISTS (SELECT ID_System FROM SystemDocument SD WHERE SD.DocumentID = D.ID AND  SD.ID_System = @AppSystemID)            
+   ) AND            
+     (            
+    -- filtrovani podle Workplace          
+                     ISNULL(@WorkplaceID,0) = 0 OR             
+      EXISTS (SELECT WorkplaceID FROM WorkplaceDocument WD WHERE WD.DocumentID = D.ID AND  WD.WorkplaceID = @WorkplaceID)            
+   ) AND                           
+ (                  
+    -- filtrovani podle od do NextReviewDate               
+     ISNULL(@NextReviewDateFrom,0) = 0 OR  ISNULL(@NextReviewDateTo,0) = 0 OR             
+     (CONVERT(date, d.NextReviewDate) BETWEEN CONVERT(date, @NextReviewDateFrom) AND CONVERT(date, @NextReviewDateTo ))             
+   ) AND                                 
+   (                  
+    -- filtrovani podle od do EffeciencyDate               
+                    ISNULL(@EffeciencyDateFrom,0) = 0 OR  ISNULL(@EffeciencyDateTo,0) = 0 OR             
+     (CONVERT(date, d.EffeciencyDate) BETWEEN CONVERT(date, @EffeciencyDateFrom) AND CONVERT(date, @EffeciencyDateTo ))             
+   )       
+   AND         
+   (         
+  --             @readType  -> All - zobrazit vsechny dokumenty, Read -> zobrazit pouze prectene dokument, UnRead -> zobrazit pouze neprectene dokumenty         
+                                @readType = 'all' OR         
+                                (         
+                                @readType = 'read' and (select count(*) from ReadConfirmation where userID = @forUserID and documentID = d.ID) > 0         
+                                ) OR         
+                                @readType = 'unread' and (select count(*) from ReadConfirmation where userID = @forUserID and documentID = d.ID) = 0         
+   )      
+   AND      
+   (     
+     --     hledani stavu            
+                     ISNULL(@StateID,0) = 0 OR  D.StateID = @StateID    
+    )     
+    AND      
+ (     
+     --     hledani dle typu revize         
+              @Revision = 'all' OR            
+                     (ISNULL(@Revision,'') = '' ) OR (D.Revision = @Revision)    
+)       
+    AND      
+ (     
+     --     hledani dle typu ReviewNecessaryChange         
+ @ReviewNecassaryChange = 'all' OR            
+                     (ISNULL(@ReviewNecassaryChange,'') = '' ) OR (D.ReviewNecessaryChange = 1 )    
+)          
+   AND            
+    (            
+                                --     hledani ve jmenu administratora            
+                                (ISNULL (@Administrator,'') = '' ) OR            
+                                ( DocumentAdminType = 0 AND (AdminDocType.LastName + ' ' + AdminDocType.FirstName like '%' + @Administrator + '%'))  OR            
+     ( DocumentAdminType = 1 AND (AdminPerson.LastName + ' ' + AdminPerson.FirstName like '%' + @Administrator + '%'))             
+    )            
+) as T1            
+WHERE row > @Page * @ItemsPerPage            
+ORDER BY row

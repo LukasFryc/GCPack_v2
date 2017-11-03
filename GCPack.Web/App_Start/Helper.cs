@@ -45,6 +45,17 @@ namespace GCPack
                         return $@" clsDisabled ";
                     }
                     break;
+                case "noHidden":
+                    if (UserRoles.IsAccess(forRole))
+                    {
+                        return string.Empty;
+                    }
+                    else
+                    {
+                        return $@" clsHidden ";
+                    }
+                    break;
+
             }
             return "";
         }

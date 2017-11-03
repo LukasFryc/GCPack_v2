@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="83138d74017e436eaed3e188e2add6a9" Name="Diagram1" ZoomLevel="54" >
+      <Diagram DiagramId="83138d74017e436eaed3e188e2add6a9" Name="Diagram1" ZoomLevel="93" >
         <EntityTypeShape EntityType="GCPack.AppSystem" Width="1.5" PointX="10.5" PointY="9" />
         <EntityTypeShape EntityType="GCPack.Division" Width="1.5" PointX="10.5" PointY="6" />
         <EntityTypeShape EntityType="GCPack.JobPosition" Width="1.5" PointX="0.75" PointY="10.25" />
@@ -33,7 +33,9 @@
         <AssociationConnector Association="GCPack.FK_WorkplaceDocument_Workplace" />
         <EntityTypeShape EntityType="GCPack.LogEvent" Width="1.5" PointX="3" PointY="11.625" />
         <AssociationConnector Association="GCPack.FK_LogEvent_User" />
-        <EntityTypeShape EntityType="GCPack.Document" Width="1.5" PointX="7.5" PointY="11.25" />
+        <EntityTypeShape EntityType="GCPack.Document" Width="1.5" PointX="7.5" PointY="6.125" />
+        <AssociationConnector Association="GCPack.FK_Document_AdministratorID_User_ID" />
+        <AssociationConnector Association="GCPack.FK_Document_AuthorID_User_ID" />
         <AssociationConnector Association="GCPack.FK_Documents_PreviousState" />
         <AssociationConnector Association="GCPack.FK_Documents_State" />
         <AssociationConnector Association="GCPack.FK_File_RizeneDokumeny" />
@@ -41,8 +43,6 @@
         <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_Signature_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_WorkplaceDocument_Document" />
-        <AssociationConnector Association="GCPack.FK_Document_AdministratorID_User_ID" />
-        <AssociationConnector Association="GCPack.FK_Document_AuthorID_User_ID" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

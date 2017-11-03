@@ -15,5 +15,6 @@ namespace GCPack.Repository.Interfaces
         UserModel GetUser(int userID);
         UserModel SaveUser(UserModel user);
         ICollection<int> GetJobPositionIDs(int userID);
+        //JobPositionModel GetJobPosition(int ID);
     }
 }

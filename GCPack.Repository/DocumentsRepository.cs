@@ -35,7 +35,10 @@ namespace GCPack.Repository
                                 select u.User;
                 var allUsers2 = from ud in db.UserDocuments where ud.DocumentId == documentID
                                 select ud.User;
+
                 var allUsers = allUsers1.Union(allUsers2);
+
+                
 
                 var usersRead = from r in db.ReadConfirmations
                                 from u in db.Users
@@ -401,7 +404,7 @@ namespace GCPack.Repository
 
                 if (filter.DocumentID==null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments17_Result> documentsResult = db.GetDocuments17(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments17_Result>();
+                ICollection<GetDocuments18_Result> documentsResult = db.GetDocuments18(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments18_Result>();
                 documentCollection.Count = documentsResult.Count();
                 // v pripade ze se jedna o vyber jednoho dokumentu
                 if (filter.DocumentID != 0)
@@ -616,6 +619,7 @@ namespace GCPack.Repository
                 if (newDocument.ParentID == 0)
                 {
                     newDocument.ParentID = document.ID;
+
                     db.SaveChanges();
                 } 
 

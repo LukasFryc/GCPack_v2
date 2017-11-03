@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+//using GCPack.Model;
 
 namespace GCPack.Model
 {
@@ -38,6 +39,9 @@ namespace GCPack.Model
         public Nullable<int> AdministratorID { get; set; }
         public ICollection<int> JobPositionIDs { get; set; } // pracovni pozice ve firme
         public ICollection<int> JobPositions { get; set; }
+
+        //LF 1.11.2017
+         //public virtual ICollection<> JobPositionsName { get; set; }
         /*
         public virtual ICollection<DocumentTypeModel> DocumentTypes { get; set; }
         public virtual JobPositionModel JobPosition { get; set; }
