@@ -1,6 +1,6 @@
 (function ($) {
 
-    var currentPage = 1;
+    var currentPage = 2;
     var pagesCount = 0;
     var rowsPerPage = 10;
     var callbackFunction;
@@ -30,7 +30,7 @@
             currentPage = $('#page').val() * 1;
             owner = o.owner;
             itemCount = o.itemCount;
-            masterPlugin = o.masterPlugin;
+            rowsPerPage = (o.rowsPerPage != null) ? o.rowsPerPage : rowsPerPage;
 
             var pagerHTML = '<div class="WSpager" style="float:right;margin-top:10px" id="pager">';
             pagerHTML += '<img tabIndex="0" alt="To start" class="first" src="/content/images/control_start.png">';
@@ -43,7 +43,7 @@
             pagerHTML += '</div>';
 
             $(owner).html(pagerHTML);
-
+            
             $('.rowsPerPage').val(rowsPerPage);
             rowsPerPage = $('.rowsPerPage').val();
             pagesCount = Math.ceil(itemCount / rowsPerPage);
@@ -74,7 +74,7 @@
             this.SetPager = function (itemsCount) {
                 pagesCount = Math.ceil(itemsCount / rowsPerPage);
                 $('#pagesCount').html(pagesCount + ' (' + itemsCount + ')');
-                if (EventFromPager == false) changePage('first');
+                if (EventFromPager == false && isInit == false) changePage('first');
                 EventFromPager = false;
             }
 

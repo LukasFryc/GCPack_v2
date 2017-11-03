@@ -96,7 +96,7 @@
 
             });
         var EventFromPager = 0;
-
+        var isInit = true;
 
 
         function GetDocuments() {
@@ -137,6 +137,7 @@
 
                             .done(function (documentCollection) {
                                 WSPager.SetPager(documentCollection.Count);
+                                isInit = false;
                                 $('table .dataRow').remove();
                                 $.each(documentCollection.Documents, function (index, doc) {
 
@@ -212,11 +213,11 @@
 </div>
 
 <script>
-        var WSPager; 
+        var WSPager;
 
         $(document).ready(function () {
 
-            WSPager = $().WSPager({ owner: '#pager', currentPage: 0, itemCount: 0, rowsPerPage: 10, fnGetPage: GetDocuments });
+            WSPager = $().WSPager({ owner: '#pager',  itemCount: 0, rowsPerPage: @((filter != null && filter.ItemsPerPage != 0) ? filter.ItemsPerPage : 10), fnGetPage: GetDocuments });
 
             if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorName").val() != '') {
                 $("#section-filter-plus1").collapse('show');
@@ -239,7 +240,7 @@
                 $("#ReviewNecessaryChange").val('all');
                 $("#Revision").val('all');
                 $("#ReadType").val('all');
-                
+
                 $('.filterText, .filter').each(function () {
                     setColorCompleted(this);
                 });
@@ -254,17 +255,17 @@
                 $("#Name").val('');
                 $("#Number").val('');
                 $("#AdministratorName").val('');
-                
+
 
                 $('.filterText, .filter').each(function () {
                     setColorCompleted(this);
                 });
 
                 GetDocuments();
-             
+
             });
 
-            
+
 
             $("#section-filter-plus2").on("hide.bs.collapse", function () {
 
@@ -293,7 +294,7 @@
                 $("#EffeciencyDateTo").val('');
                 $("#NextReviewDateFrom").val('');
                 $("#NextReviewDateTo").val('');
-            
+
                 $('.filterText, .filter').each(function () {
                     setColorCompleted(this);
                 });
@@ -377,9 +378,9 @@
         });
 
 
-       
 
-      
+
+
 
 </script>
 
@@ -661,7 +662,7 @@
 
     </div>
 <div class="WSpager" style="float:left;" id="pager"></div>
-<input type="hidden" id="page" name="currentPage" value="1"/>
+<input type="hidden" id="page" name="currentPage" value="@((filter != null && filter.Page != 0) ? filter.Page : 1)"/>
 <table class="table" style="margin-top:20px">
     <tr>
         <th>
