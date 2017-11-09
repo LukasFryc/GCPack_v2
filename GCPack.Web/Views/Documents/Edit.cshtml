@@ -34,9 +34,23 @@
 </style>
 
 <script>
-    var timeoutHandle;
+   
     var selectedUsers = [];
+    var timeoutHandle;
     $(document).ready(function () {
+
+        // pokus o otevreni detailu doc v y8lo6ce zmeny do dialog okna / nefungovalo
+        //$('.linktest').click(function () {
+
+        //    alert(this.link);
+
+        //    $.get(this.link, function (result) {
+        //        $(result).dialog();
+        //    });
+        //    return false;
+        //});                
+
+        GetDocuments_Edit();
 
         jQuery.validator.methods["date"] = function (value, element) { return true; } 
 
@@ -92,7 +106,9 @@
             //        return false;
             //    }
             //}
-                
+
+
+            
                 
 
             if ($(this).prop("id") == "reviewNecessaryChange") {
@@ -390,12 +406,13 @@
         <input type="hidden" name="StateID" id="StateID" value="@Model.StateID"/>
         <input type="hidden" name="DocumentStateCode" id="DocumentStateCode" value="@Model.DocumentStateCode" />
 
-        <input type="hidden" name="ID" value="@Model.ID" />
-        <input type="hidden" name="type" value="@ViewBag.Type" />
+        <input type="hidden" name="ID" id="ID" value="@Model.ID" />
+        <input type="hidden" name="type" id= "type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
-        <input type="hidden" name="ParentID" value="@Model.ParentID"/>
-        <input type="hidden" name="AuthorID" value="@Model.AuthorID" />
-        
+        <input type="hidden" name="ParentID" id="ParentID" value="@Model.ParentID"/>
+        <input type="hidden" name="AuthorID" id="AuthorID" value="@Model.AuthorID" />
+        <input type="hidden" name="MainID" id="MainID" value="@Model.MainID" />
+
         <input type="hidden" name="HelpText"  id="HelpText" />
 
         <div id="success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>
@@ -403,7 +420,7 @@
             <ul>
                 <li><a href="#tabs-1">Dokument</a></li>
                 <li><a href="#tabs-3">Soubory</a></li>
-                <li><a href="#tabs-4">Přiřazené osoby k dokumentu</a></li>
+                <li><a href="#tabs-4">Rozdělovník</a></li>
                 <li><a href="#tabs-5">Kategorie</a></li>
                 @if (Model.AllUsers > 0)
                 {
@@ -413,6 +430,7 @@
                 {
                     <li><a href="#tabs-7">Nutné změny</a></li>
                 }
+                <li><a href="#tabs-8">Změnový list</a></li>
             </ul>
            
             @* kosilka  rizeneho dokumentu  *@
@@ -527,7 +545,7 @@
                 </div>
 
             </div>
-            @* prirazene soubory k rizenemu dokumentu*@
+            @* přílohy = soubory k rizenemu dokumentu*@
             <div id="tabs-3">
 
                 <div class="row">
@@ -572,6 +590,7 @@
         }
             </div>                
 
+            @* rozdělovník- vyběr funkc a osob(zatim skryto)*@
             <div id="tabs-4">
                 <div class="row">
                     @*<div class="col-md-10">*@
@@ -592,7 +611,7 @@
                         </div>
                     @*</div>*@
                 </div>
-                <div class="row">
+                @*<div class="row">
                     <div class="col-md-8">
                         <b>Přiřazení uživatelé k dokumentu</b><br />
                         <select multiple name="SelectedUsers" id="SelectedUsers" class="selectBoxes">
@@ -610,36 +629,35 @@
 
                         <input type="button" value="Odebrat osoby z dokumentu" id="RemoveSelectedUsers" class="btn btn-default" />
                     </div>
-                </div>
+                </div>*@
                 @* </div>
             <div>*@
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="ui-widget">
-                            <label for="filter">Filtr: </label>
-                            <input id="filter">
-                            <label for="jobPosition">Pracovní pozice: </label>
-                            <select id="jobPosition">
-                                <option value="0">Všechny</option>
-                                @foreach (var item in ViewBag.JobPositions)
-                                {
-                                <option value="@item.ID">@item.Name</option>
-                                }
-                            </select>
-                        </div>
+                                @*<div class="row">
+                          <div class="col-md-8">
+                              <div class="ui-widget">
+                                  <label for="filter">Filtr: </label>
+                                  <input id="filter">
+                                  <label for="jobPosition">Pracovní pozice: </label>
+                                  <select id="jobPosition">
+                                      <option value="0">Všechny</option>
+                                      @foreach (var item in ViewBag.JobPositions)
+                                      {
+                                      <option value="@item.ID">@item.Name</option>
+                                      }
+                                  </select>
+                              </div>
 
-                        <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes"></select>
-                        @*<br />*@
-                        
-                    @*</div>
+                              <select multiple name="FilteredUsers" id="FilteredUsers" class="selectBoxes"></select>
 
-                </div>*@
+
+
+       
 
             </div>
                     <div class="col-md-4">
                         <input type="button" value="Přiřadit osoby k dokumentu" id="AddUserToList" class="btn btn-default" />
                     </div>
-            </div>
+            </div>*@
 
             </div>
 
@@ -899,6 +917,30 @@
 
                     </div>
                 </div>
+            </div>
+            @*tabulka vsech souvisejicich vydani - zmeny *@
+            <div id="tabs-8">
+
+                <table class="table" style="margin-top:20px">
+                    <tr>
+                        <th>
+                            Číslo
+                        </th>
+                        <th>
+                            Název
+                        </th>
+                        <th>
+                            Účinnost
+                        </th>
+                        <th>
+                            Změny
+                        </th>
+                                                
+                        <th></th>
+                    </tr>
+                </table>
+
+
             </div>
          </div>
 

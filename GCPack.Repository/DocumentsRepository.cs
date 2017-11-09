@@ -404,7 +404,7 @@ namespace GCPack.Repository
 
                 if (filter.DocumentID==null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments18_Result> documentsResult = db.GetDocuments18(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange).ToList<GetDocuments18_Result>();
+                ICollection<GetDocuments19_Result> documentsResult = db.GetDocuments19(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments19_Result>();
                 documentCollection.Count = documentsResult.Count();
                 // v pripade ze se jedna o vyber jednoho dokumentu
                 if (filter.DocumentID != 0)
@@ -614,6 +614,7 @@ namespace GCPack.Repository
                 newDocument.DocumentTypeID = documentType.ID;
                 db.SaveChanges();
                 document.ID = newDocument.ID;
+                document.MainID = newDocument.ID;
 
                 // pokud se jedna o novy dokument (a ne nove vydani), pak se parentID nastavi na ID dokumentu
                 if (newDocument.ParentID == 0)
@@ -632,8 +633,9 @@ namespace GCPack.Repository
                     }
                     db.SaveChanges();
                 }
+                return Mapper.Map<DocumentModel>(newDocument);
 
-                return document;
+                //return document;
             }
         }
 

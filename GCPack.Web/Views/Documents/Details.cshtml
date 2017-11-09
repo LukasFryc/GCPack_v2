@@ -11,7 +11,8 @@
     var timeoutHandle;
     var selectedUsers = [];
     $(document).ready(function () {
-
+        // GetDocument-Edit naplni zalozku Zmeny vsema vydanima daneho doc
+        GetDocuments_Edit(); 
         jQuery.validator.methods["date"] = function (value, element) { return true; }
 
         // nize uvedene nebude jiz potreba - reseno scriptem lukasuv kousek 15.9.2017
@@ -206,13 +207,14 @@
 <div>
     @using (Html.BeginForm("Readed", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
     {
-        <input type="hidden" name="documentID" value="@Model.ID" />
+        <input type="hidden" name="documentID" id="documentID" value="@Model.ID" />
         <input type="hidden" name="Action" id="Action" />
         <input type="hidden" name="StateID" id="StateID" value="@Model.StateID" />
-        <input type="hidden" name="ID" value="@Model.ID" />
-        <input type="hidden" name="type" value="@ViewBag.Type" />
+        <input type="hidden" name="ID" id="ID" value="@Model.ID" />
+        <input type="hidden" name="type" id="type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
-        <input type="hidden" name="ParentID" value="@Model.ParentID" />
+        <input type="hidden" name="ParentID" id="ParentID" value="@Model.ParentID" />
+        <input type="hidden" name="MainID" id="MainID" value="@Model.MainID" />
         <input type="hidden" name="HelpText" id="HelpText" />
 
         @*<div < div = "success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>*@
@@ -234,6 +236,7 @@
                 {
                     <li><a href="#tabs-7">Nutné změny</a></li>
                 }
+                <li><a href="#tabs-8">Změnový list</a></li>
             </ul>
             @*-------tabs1 = pole dokumentu*@
             <div id="tabs-1">
@@ -351,6 +354,20 @@
                     </div>
 
                 </div>
+            @if (Model.IssueNumber > 1)
+            { 
+                <div class="row">
+                    <label class="control-label col-md-2" for="Title">Popis změny</label>
+
+                    <div class="col-md-10">
+                        @Html.HiddenFor(model => model.IssueChangeComment)
+                        <p style="white-space: pre-line">@Model.IssueChangeComment</p>
+
+                    </div>
+
+                </div>
+            }
+    
             </div>
             @*-------tabs6 = 6. rozdělovník = záznamy seznámení*@
             @if (Model.AllUsers > 0)
@@ -536,6 +553,30 @@
                 </div>
             </div>
 
+            @*tabulka vsech souvisejicich vydani - zmeny *@
+            <div id="tabs-8">
+
+                <table class="table" style="margin-top:20px">
+                    <tr>
+                        <th>
+                            Číslo
+                        </th>
+                        <th>
+                            Název
+                        </th>
+                        <th>
+                            Účinnost
+                        </th>
+                        <th>
+                            Změny
+                        </th>
+
+                        <th></th>
+                    </tr>
+                </table>
+
+
+            </div>
 
         </div>
         @*<p>

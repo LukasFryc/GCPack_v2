@@ -33,12 +33,12 @@
             rowsPerPage = (o.rowsPerPage != null) ? o.rowsPerPage : rowsPerPage;
 
             var pagerHTML = '<div class="WSpager" style="float:right;margin-top:10px" id="pager">';
-            pagerHTML += '<img tabIndex="0" alt="To start" class="first" src="/content/images/control_start.png">';
-            pagerHTML += '<img tabIndex="0" alt="Previous" class="prev" src="/content/images/control_rewind.png">';
+            pagerHTML += '<img tabIndex="0" alt="To start" class="first" src=' + AppRoot + '/content/images/control_start.png>';
+            pagerHTML += '<img tabIndex="0" alt="Previous" class="prev" src=' + AppRoot + '/content/images/control_rewind.png>';
             pagerHTML += '<span  id="currentPage" name="currentPage" style="width:10px;margin-right:2px;">' + currentPage + '</span>/';
             pagerHTML += '<span  id="pagesCount" style="margin-left:2px;"></span>';
-            pagerHTML += '<img tabIndex="0" alt="Next" class="next" src="/content/images/control_fastforward.png">';
-            pagerHTML += '<img tabIndex="0" alt="To end" class="last" src="/content/images/control_end.png">';
+            pagerHTML += '<img tabIndex="0" alt="Next" class="next" src=' + AppRoot + '/content/images/control_fastforward.png>';
+            pagerHTML += '<img tabIndex="0" alt="To end" class="last" src=' + AppRoot + '/content/images/control_end.png>';
             pagerHTML += '&nbsp;<label><select class="rowsPerPage"><option value="10">10</option><option value="20">20</option><option value="30">30</option><option value="50">50</option><option value="100">100</option><option value="150">150</option><option value="200">200</option><option value="600">600</option></select> na stranku</label>';
             pagerHTML += '</div>';
 

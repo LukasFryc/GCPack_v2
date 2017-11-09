@@ -117,7 +117,7 @@ namespace GCPack.Model
 
             if ( this.Action == "registerDocument" && this.DocumentStateCode =="New" && this.IssueNumber>1 && string.IsNullOrEmpty(this.IssueChangeComment))
             {
-                ValidationResult mss = new ValidationResult("IssueChangeComment musí být v vyplněn!");
+                ValidationResult mss = new ValidationResult("Popis změny musí být vyplněn!");
                 res.Add(mss);
             }
             return res;

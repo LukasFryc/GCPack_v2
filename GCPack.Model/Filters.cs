@@ -66,6 +66,18 @@ namespace GCPack.Model
 
         public string ReviewNecessaryChange { get; set; }
 
+        // LF 7.11.2017 - Main ID ktere je spolecne pro vsechny vydani 
+        public int? MainID { get; set; }
+
+        // LF 7.11.2017 kdyz bude false tak se filter nebude ukladat
+        // true je default, false nastavujeme pri volani getDocuments ve view\Document\Edit a Detail ve js funkci GetDocuments_edit (gc.js)
+
+        private bool saveFilter=true;
+        public bool SaveFilter
+        {
+            get { return saveFilter; }
+            set { saveFilter = value; }
+        }
 
     }
 

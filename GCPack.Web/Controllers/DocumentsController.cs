@@ -164,7 +164,8 @@ namespace GCPack.Web.Controllers
             documentService.SendEmail();
         }
 
-        private ActionResult GetFile(int fileID)
+        [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
+        public ActionResult GetFile(int fileID)
         {
             FileItem fileItem = documentService.GetFile(fileID);
             Response.AppendHeader("Content-Disposition", "attachment; filename = " + fileItem.Name);
@@ -224,9 +225,11 @@ namespace GCPack.Web.Controllers
             // filter.EffeciencyDateFrom = string.IsNullOrEmpty(filter.EffeciencyDateFrom.ToString())
             //? (DateTime?)null
             //: DateTime.Parse(filter.EffeciencyDateFrom.ToString());
-        
             filter.ForUserID = UserRoles.GetUserId();
-            Session["documentFilter"] = filter;
+            if (filter.SaveFilter)
+            {
+                Session["documentFilter"] = filter;
+            }
 
             //ICollection<DocumentModel> documents = documentService.GetDocuments(filter);
             DocumentCollectionModel documentCollection = documentService.GetDocuments(filter);
@@ -358,9 +361,27 @@ namespace GCPack.Web.Controllers
 
             ICollection<string> fileNames = new HashSet<string>();
 
-            documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
+            // funguje
+            //DocumentModel documentX = documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
+            //return RedirectToAction("Edit", new { documentId = documentX.ID });
 
-            return RedirectToAction("Index", filter);
+            // funguje
+            document = documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
+            return RedirectToAction("Edit", new { documentId = document.ID });
+
+            // funguje
+            // return RedirectToAction("Index", filter);
+
+
+            // pada chybu
+            // return RedirectToAction("Edit", documentX.ID);
+
+
+            // totolni kolaps aplikace nepouzivat !!!!!
+            //return Edit(documentX.ID);
+
+
+
         }
 
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,documentadminid")]
@@ -511,7 +532,6 @@ namespace GCPack.Web.Controllers
 
             int userId = UserRoles.GetUserId();
 
-            ViewBag.Type = "Nový řízený dokument";
             // TODO: opravit ID = 1, DocumentStateCode, DocumentStateName na GetStateFromCode("New")
             //DocumentModel document = new DocumentModel() { Revision = "P", StateID = 1, IssueNumber = 1, DocumentStateCode = "New", DocumentStateName = "Nový" };
             DocumentModel document = new DocumentModel() { Revision = "P", IssueNumber = 1, DocumentStateCode = "New", DocumentStateName = "Nový"};
@@ -542,7 +562,7 @@ namespace GCPack.Web.Controllers
 
             ViewBag.Administrators = administrators.OrderBy(a => a.Value);
 
-            return View("edit",document);
+            return View("edit", document);
         }
 
         [GCAuthorize(Roles = "SystemAdmin")]
@@ -557,7 +577,7 @@ namespace GCPack.Web.Controllers
         {
 
             int userId = UserRoles.GetUserId();
-            ViewBag.Type = "Úprava řízeného dokumentu";
+            //ViewBag.Type = "Úprava řízeného dokumentu";
             DocumentModel document = documentService.GetDocument(documentId, userId);
             DocumentTypeModel typeModel = documentService.GetDocumentType(document.DocumentTypeID);
             ViewBag.TypeModel = typeModel;

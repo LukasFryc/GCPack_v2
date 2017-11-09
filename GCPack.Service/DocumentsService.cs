@@ -99,14 +99,19 @@ namespace GCPack.Service
             //nastvani priznaku Archiv
             document.Archived = false;
 
+            //nastvani textu IssueChangeComment  na nic
+            document.IssueChangeComment = "";
+
             // odeslani emailu vsem prirazenym osobam v dokumentu
             documentsRepository.ChangeRevison(oldDocument,"R");
             //EditDocument(oldDocument, null);
             document = AddDocument(document, fileNames, userId);
-            
+
             // preulozit i soubory ??? - zatim nee 
 
-            return new DocumentModel();
+            //  return new DocumentModel();
+            // LF zmenil na return document z puvodniho return new DocumentModel(); -- 7.11.2017
+            return document;
         }
 
         public string GenNumberOfDocument(int documentTypeID)
@@ -290,7 +295,9 @@ namespace GCPack.Service
             // ulozeni vsech souboru
             SaveFiles(document, files);
 
-            return new DocumentModel();
+            //  return new DocumentModel();
+            // LF zmenil na return document z puvodniho return new DocumentModel(); -- 7.11.2017
+            return document;
 
         }
 
