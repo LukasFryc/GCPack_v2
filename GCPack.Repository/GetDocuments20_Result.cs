@@ -11,7 +11,7 @@ namespace GCPack.Repository
 {
     using System;
     
-    public partial class GetDocuments19_Result
+    public partial class GetDocuments20_Result
     {
         public Nullable<long> row { get; set; }
         public int ID { get; set; }
@@ -45,6 +45,6 @@ namespace GCPack.Repository
         public string DocumentStateCode { get; set; }
         public Nullable<int> UsersRead { get; set; }
         public Nullable<int> AllUsers { get; set; }
-        public Nullable<int> DocumentOwnerID { get; set; }
+        public string AuthorName { get; set; }
     }
 }

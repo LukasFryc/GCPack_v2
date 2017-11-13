@@ -15,18 +15,19 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                //ahoj
-                return Mapper.Map<UserModel>(db.Users.Where(u => u.UserName == username && u.Password == password).Select(u => u).SingleOrDefault());
+                // LF doplneno 9.11.2017 && u.Active == true
+                return Mapper.Map<UserModel>(db.Users.Where(u => u.UserName == username && u.Password == password && u.Active == true).Select(u => u).SingleOrDefault());
             }
         }
 
         public UserModel CheckTicket(string ticket)
         {
+            // LF doplneno 9.11.2017 && u.Active == true
             using (GCPackContainer db = new GCPackContainer())
             {
                 var user = (from u in db.Users
                            from l in db.Logins
-                           where u.ID == l.UserID && l.Hash == ticket
+                           where u.ID == l.UserID && l.Hash == ticket && u.Active == true
                            select u).FirstOrDefault();
                 if (user != null)
                 {

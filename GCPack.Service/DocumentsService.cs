@@ -99,6 +99,11 @@ namespace GCPack.Service
             //nastvani priznaku Archiv
             document.Archived = false;
 
+
+            // SelectedProjectsID
+            
+
+
             //nastvani textu IssueChangeComment  na nic
             document.IssueChangeComment = "";
 

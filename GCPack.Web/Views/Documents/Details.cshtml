@@ -15,17 +15,6 @@
         GetDocuments_Edit(); 
         jQuery.validator.methods["date"] = function (value, element) { return true; }
 
-        // nize uvedene nebude jiz potreba - reseno scriptem lukasuv kousek 15.9.2017
-        //$('.btn').click(function () {
-        //    $('#Action').val($(this).prop("id"));
-        //});
-
-        // LF lukasuv kousek 15.9.2017
-        $('.btnAction').click(function () {
-            $('#Action').val($(this).prop("id"));
-            $('#myForm').submit();
-        });
-
         $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yy' });
         $("#ReviewDate").datepicker({ dateFormat: 'dd/mm/yy' });
         $("#NextReviewDate").datepicker({ dateFormat: 'dd/mm/yy' });
@@ -68,78 +57,16 @@
             });
         });
 
-        $('#jobPosition').change(function () {
-            GetUsers();
-        });
+        $('.btnAction').click(function () {
 
-        $("#RemoveSelectedUsers").click(function () {
-            $("#SelectedUsers :selected").each(function () {
-                $(this).remove();
-            });
-            GetUsers();
-        });
-
-        $('#saveDocument, #newVersion, #registerDocument, #revisionNoAction, #revisionChanges').click(function () {
-            var form = $(this).closest('form')
-            $('.categories option').prop('selected', true);
-            $('#SelectedUsers option').prop('selected', true);
-        });
-
-        $('#AddUserToList').click(function () {
-            $("#FilteredUsers :selected").each(function (index, user) {
-                $('#SelectedUsers').append('<option value="' + user.value + '">' + user.text + '</option>');
-            });
-
-            GetUsers();
+            $('#Action').val($(this).prop("id"));
+            $('form').prop('action', $(this).prop("id"));
+            
+            $('#myForm').submit();
         });
 
 
         GetUsers();
-
-        $('.removeFile').click(function () {
-            $('#DeleteFileItems').val($('#DeleteFileItems').val() + $(this).attr('fileId') + ',');
-            $(this).closest(".row").remove();
-        });
-
-        $('.downloadFile').click(function () {
-
-        });
-
-        $('#actionTestModal').click(function () {
-            //$('#myModal').modal('show');
-            $('#myModal').modal();
-            return false;
-        });
-
-        //$('#myModal').modal('show');
-
-        $('#stornoModalSave').click(function () {
-            quota = $("#quotas").val();
-            //alert(quota);
-            $('#HelpText').val(quota);
-            $('#myForm').submit();
-
-        });
-
-        $('#stornoModalClose').click(function () {
-
-        });
-
-        $('#myModal').on('shown', function () {
-            $("#quotas").focus();
-        })
-
-        $("#myForm").submit(function (event) {
-
-            testik = $('#HelpText').val()
-            //alert(testik);
-            //event.preventDefault(); je shodnz s return false
-            //return false
-        });
-
-
-
-
 
         function GetUsers() {
             if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
@@ -456,10 +383,17 @@
                                         @file.Name
                                     </div>
                                     <div class="col-md-4">
-                                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@file.ID" class="btn btn-default btn-sm downloadFile">
+                                        @*<a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@file.ID" class="btn btn-default btn-sm downloadFile">
                                             <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
+                                        </a>*@
+                                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@file.ID&forceDownload=false" class="btn btn-default btn-sm downloadFile" fileId="@file.ID">
+                                            <span class="glyphicon glyphicon-download"></span> Otevřít
                                         </a>
-                                    </div>
+                                        <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@file.ID&forceDownload=true" class="btn btn-default btn-sm downloadFile" fileId="@file.ID">
+                                            <span class="glyphicon glyphicon-download"></span> Stáhnout
+                                        </a>
+
+                                       </div>
                                 </div>
                             }
                         }
@@ -524,7 +458,7 @@
 
                 <div class="row">
                     <div class="col-md-10">
-                        <b>Vybrané pracovní místa</b><br />
+                        <b>Vybrané lokality</b><br />
                         <select multiple name="SelectedWorkplacesID" id="SelectedWorkplaces" class="categories">
                             @if (Model.SelectedWorkplacesID != null)
                             {
@@ -596,7 +530,7 @@
                                             @if (Model.DocumentStateCode == "Registered" & Model.CanConfirmRead & Model.ReadDate == null)
                                             {
                                                 <li style="padding-right:5px">
-                                                    <button class="btn btn-primary navbar-btn btnAction" id="readed">Seznámit</button>
+                                                    <button  type="button" class="btn btn-primary navbar-btn btnAction" id="readed">Seznámit</button>
                                                 </li>
 
 

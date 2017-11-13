@@ -67,11 +67,14 @@
         var orderBy = 'NumberA';
         $(document).ready(function () {
 
+
+                //alert("ready");    
                 GetDocuments();
                 // vsechnz talcitka na trideni jsou zalozany na  css class sortBy
                 $('.sortBy').click(
                     function () {
                         orderBy = $(this).attr('sortBy');
+                        //alert("sortby");
                         GetDocuments();
                     }
                 );
@@ -86,7 +89,8 @@
                     });
                 });
 
-                $('.filterText').keyup(function () {
+                 $('.filterText').keyup(function () {
+                     //alert("filtertext");
                     GetDocuments();
                 });
 
@@ -167,11 +171,22 @@
                                     //} else {
                                     //    archiv = ""
                                     //}
+
+                                    var revision;
+                                    if (isEmpty(doc.Revision)) {
+                                        revision = '<td> ' + doc.DocumentStateName + '</td>';
+                                    }
+                                    else
+                                    {
+                                        revision = '<td> ' + doc.DocumentStateName + ' (<b>' + doc.Revision + '</b>)</td>';
+                                    };
+
                                     $('table').append('<tr class="dataRow">' +
                                         '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
                                         '<td> ' + doc.Title + '</td>' +
                                         '<td> ' + dateStr + '</td>' +
                                         '<td> ' + doc.DocumentAdministrator + '</td>' +
+                                        revision +
                                         '<td> <b> <font color="' + readColor + '">' + doc.UsersRead + ':' + unReadCount + '</font></b></td>' +
                                         //'<td> ' + archiv + '</td>' +
                                         '<td> <A href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
@@ -245,6 +260,7 @@
                     setColorCompleted(this);
                 });
 
+                //alert("section-filter-plus0");    
                 GetDocuments();
 
             });
@@ -261,6 +277,7 @@
                     setColorCompleted(this);
                 });
 
+                //alert("section-filter-plus1");
                 GetDocuments();
 
             });
@@ -282,6 +299,7 @@
                     setColorCompleted(this);
                 });
 
+                //alert("section-filter-plus2");
                 GetDocuments();
 
             });
@@ -298,6 +316,8 @@
                 $('.filterText, .filter').each(function () {
                     setColorCompleted(this);
                 });
+
+                //alert("section-filter-plus3");
                 GetDocuments();
 
 
@@ -524,7 +544,7 @@
             <label for="AppSystemID">Systém</label>
         </div>
         <div class="col-md-2">
-            <label for="WorkplaceID">Pracoviště</label>
+            <label for="WorkplaceID">Lokalita</label>
         </div>
         <div class="col-md-2">
             
@@ -685,6 +705,10 @@
             Správce
             <a href="#" class="sortBy" sortBy="AdminA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
             <a href="#" class="sortBy" sortBy="AdminD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
+        </th>
+
+        <th>
+            Stav
         </th>
 
         <th>

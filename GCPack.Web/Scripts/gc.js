@@ -23,6 +23,7 @@ function GetDocuments_SetParameters(name, Number, AdministratorName, DocumentTyp
 
 // nepouzito 
     name = $('#Name').val();
+    name = $('#Name').val();
     Number = $('#Number').val();
     AdministratorName = $('#AdministratorName').val();
     DocumentTypeID = $('#DocumentTypeID').val();

@@ -48,8 +48,6 @@ namespace GCPack.Model
         // LF 2.11.2017 Action - doplneno do modelu jen proto abych mohl delat validaci na vyplneni pole IssueCommentChange
         // pokud kliknu na registredDocument
         public string Action { get; set; }
-
-
         public int ID { get; set; }
         [Required(ErrorMessage = "Musí být vyplněn název dokumentu.")]
         public string Title { get; set; }

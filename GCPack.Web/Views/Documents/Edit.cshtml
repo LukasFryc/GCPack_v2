@@ -89,26 +89,6 @@
 
             $('#Action').val($(this).prop("id"));
             $('form').prop('action', $(this).prop("id"));
-
-            //if ($(this).prop("id") == "saveDocument") {
-            //    var form = $("#myForm");
-            //    form.validate();
-
-            //    var title = $("#Title");
-            //    title.validate();
-
-            //    if (title.valid() == false) {
-            //        alert ("nemas vyplneny nayev")
-            //        return false;
-            //    }
-
-            //    if (form.valid() == false) {
-            //        return false;
-            //    }
-            //}
-
-
-            
                 
 
             if ($(this).prop("id") == "reviewNecessaryChange") {
@@ -133,7 +113,7 @@
                 //zastavi submit
                 return false;
             }
-
+            //1
             $('#myForm').submit();
         });
 
@@ -172,12 +152,15 @@
             GetUsers();
         });
 
-        $('#cancelChanges').click(function () {
-            $("#success-alert").fadeTo(1000, 500).slideUp(500, function () {
-                $("#success-alert").slideUp(500);
-                document.location.href = '/Documents';
-            });
-        });
+        // TODO: LF 10.11.2017 vyhledove rozchodit pro vsechny akce zobrazeni hlaseni o provedeni akce Ulozit, zaevidoval jste a podobne
+        // nize uvedeny script je urcen k zobrazeni hlasnei o provedene akci v tomto pripade cancel
+        // nicmene nefunguje porotoze nemame osetrene doplneni AppRoot pred /Documents
+        //$('#cancelChanges').click(function () {
+        //    $("#success-alert").fadeTo(1000, 500).slideUp(500, function () {
+        //        $("#success-alert").slideUp(500);
+        //        document.location.href = '/Documents';
+        //    });
+        //});
 
         $('#jobPosition').change(function () {
             GetUsers();
@@ -251,7 +234,7 @@
             $("#myModalComment").focus();
         })
 
-        $("#myForm").submit(function (event) {
+        //$("#myForm").submit(function (event) {
 
             //testik = $('#myModalComment').val()
             
@@ -259,7 +242,9 @@
             //alert($('#HelpText').val());
             //event.preventDefault(); je shodnz s return false
             //return false
-        });
+
+            //alert('odeslano');
+        //});
 
         function GetUsers()
         {
@@ -276,7 +261,8 @@
                     var AllPath = AppRoot + "/user/getUsers";
                     //alert(AllPath);
 
-                    $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
+                    // LF 10.11.2017 pred tim nez jsme skryli jobPosition a dalsi pole $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
+                    $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: 0, preservedUsers: selectedUsers.join(',') })
                         .done(function (users) {
 
                             for (var user in users)
@@ -303,6 +289,13 @@
 @*script pro kategorie viz tab 5*@
 <script>
     $(document).ready(function () {
+
+        $('#cancelChanges').click(
+            function () {
+                //window.location.href = '/Documents/Index/'; - kdyz bych pouzil takto tak se nenastavi zpravne filtry
+                window.location.href = '/Documents/CancelChanges/' ;
+            });
+
         $('#addProjects').click(
             function () {
                 ChangeItems('#AllProjects', '#SelectedProjects');
@@ -405,7 +398,6 @@
         <input type="hidden" name="Action" id="Action" />
         <input type="hidden" name="StateID" id="StateID" value="@Model.StateID"/>
         <input type="hidden" name="DocumentStateCode" id="DocumentStateCode" value="@Model.DocumentStateCode" />
-
         <input type="hidden" name="ID" id="ID" value="@Model.ID" />
         <input type="hidden" name="type" id= "type" value="@ViewBag.Type" />
         <input type="hidden" name="DeleteFileItems" id="DeleteFileItems" />
@@ -422,10 +414,7 @@
                 <li><a href="#tabs-3">Soubory</a></li>
                 <li><a href="#tabs-4">Rozdělovník</a></li>
                 <li><a href="#tabs-5">Kategorie</a></li>
-                @if (Model.AllUsers > 0)
-                {
-                    <li><a href="#tabs-6">Záznamy o seznámení</a></li>
-                }
+
                 @if (Model.ReviewNecessaryChangeComment != "")
                 {
                     <li><a href="#tabs-7">Nutné změny</a></li>
@@ -524,25 +513,24 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <label class="control-label col-md-2" for="Title">Anotace</label>
+                    <div class="col-md-9">
+                        @Html.TextAreaFor(model => model.Annotation, new { @class = "form-control annotationArea", @placeholder = "Poznámka k dokumentu" })
+                        @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
                 @if (Model.IssueNumber > 1)
                 {
                     <div class="row">
                         <label class="control-label col-md-2" for="Title">Popis změny</label>
-                        <div class="col-md-8">
+                        <div class="col-md-9">
                             @Html.TextAreaFor(model => model.IssueChangeComment, new { @class = "form-control annotationArea", @placeholder = "Popis změny v tomto vydání" })
                             @Html.ValidationMessageFor(model => model.IssueChangeComment, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 }
-                
-
-                <div class="row">
-                    <label class="control-label col-md-2" for="Title">Anotace</label>
-                    <div class="col-md-8">
-                        @Html.TextAreaFor(model => model.Annotation, new { @class = "form-control annotationArea", @placeholder = "Poznámka k dokumentu" })
-                        @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
-                    </div>
-                </div>
 
             </div>
             @* přílohy = soubory k rizenemu dokumentu*@
@@ -565,8 +553,11 @@
                                     <span class="glyphicon glyphicon-remove"></span> Smazat
                                 </a>
                                 }
-                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@item.ID" class="btn btn-default btn-sm downloadFile" fileId="@item.ID">
-                                    <span class="glyphicon glyphicon-download"></span> Stáhnout soubor
+                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@item.ID&forceDownload=false" class="btn btn-default btn-sm downloadFile" fileId="@item.ID">
+                                    <span class="glyphicon glyphicon-download"></span> Otevřít
+                                </a>
+                                <a href="@System.Configuration.ConfigurationManager.AppSettings["AppRoot"]/Documents/GetFile?FileID=@item.ID&forceDownload=true" class="btn btn-default btn-sm downloadFile" fileId="@item.ID">
+                                    <span class="glyphicon glyphicon-download"></span> Stáhnout
                                 </a>
                             </div>
                         </div>
@@ -591,7 +582,9 @@
             </div>                
 
             @* rozdělovník- vyběr funkc a osob(zatim skryto)*@
+            @*záznamy o seznámení*@
             <div id="tabs-4">
+                @* rozdělovník- vyběr funkc a osob(zatim skryto)*@
                 <div class="row">
                     @*<div class="col-md-10">*@
                         <div style="margin-bottom:20px">
@@ -610,7 +603,69 @@
                             </div>
                         </div>
                     @*</div>*@
+
                 </div>
+                @*záznamy o seznámení*@
+                <p></p>
+                <b>Záznamy seznámení</b>
+                <div class="row">
+                    <div class="col-md-10">
+                        @{ bool existAsUserReader = false; }
+                        @if (Model.UsersInDocument != null && Model.UsersInDocument.AllUsers != null)
+                        {
+                            foreach (var item in @Model.UsersInDocument.AllUsers.OrderBy(au => au.LastName).Select(au => au))
+                            {
+                                existAsUserReader = false;
+                                if (Model.UsersInDocument.UsersRead != null)
+                                {
+
+                                    foreach (var itemUR in @Model.UsersInDocument.UsersRead)
+                                    {
+                                        if (itemUR.User.ID == item.ID)
+                                        {
+                                            existAsUserReader = true;
+
+                                            <div class="row">
+                                                <div class="col-md-2">
+                                                    @itemUR.User.FirstName
+                                                </div>
+                                                <div class="col-md-2">
+                                                    @itemUR.User.LastName
+
+                                                </div>
+                                                <div class="col-md-2">
+                                                    @itemUR.DateRead.ToShortDateString()
+
+
+                                                </div>
+                                            </div>
+                                        }
+
+
+                                    }
+
+                                }
+                                if (existAsUserReader == false)
+                                {
+
+                                    <div class="row">
+                                        <div class="col-md-2">
+                                            @item.FirstName
+                                        </div>
+                                        <div class="col-md-2">
+                                            @item.LastName
+                                        </div>
+                                        <div class="col-md-2">
+
+                                        </div>
+                                    </div>
+                                }
+
+                            }
+                        }
+                    </div>
+                </div>
+
                 @*<div class="row">
                     <div class="col-md-8">
                         <b>Přiřazení uživatelé k dokumentu</b><br />
@@ -660,7 +715,7 @@
             </div>*@
 
             </div>
-
+            @*kategorie*@ 
             <div id="tabs-5">
                 <div class="row">
                     <b>Projekty</b><br />
@@ -795,7 +850,7 @@
                 </div>
 
                 <div class="row">
-                    <b>Pracovní místa</b><br />
+                    <b>Lokality</b><br />
                     <div class="col-md-4 sedaPozadi">
                          
                         <input type="text" id="workplacesFilter" />
@@ -826,7 +881,7 @@
 
 
                     <div class="col-md-4">
-                        <b>Vybrané pracovní místa</b><br />
+                        <b>Vybrané lokality</b><br />
                         <select multiple name="SelectedWorkplacesID" id="SelectedWorkplaces" class="categories  form-control">
                             @if (Model.SelectedWorkplacesID != null)
                             {
@@ -844,69 +899,9 @@
 
 
             </div>
-             
-            @*tabulka vsech osob kteri se maji seynamit doplnena o o datumy sezanmeni*@
-            @if (Model.AllUsers > 0)
-            {
-                <div id="tabs-6">
+            
 
-
-                    @{ bool existAsUserReader = false; }
-                    @if (Model.UsersInDocument != null && Model.UsersInDocument.AllUsers != null)
-                    {
-                        foreach (var item in @Model.UsersInDocument.AllUsers.OrderBy(au => au.LastName).Select(au => au))
-                        {
-                            existAsUserReader = false;
-                            if (Model.UsersInDocument.UsersRead != null)
-                            {
-
-                                foreach (var itemUR in @Model.UsersInDocument.UsersRead)
-                                {
-                                    if (itemUR.User.ID == item.ID)
-                                    {
-                                        existAsUserReader = true;
-
-                                        <div class="row">
-                                            <div class="col-md-2">
-                                                @itemUR.User.FirstName
-                                            </div>
-                                            <div class="col-md-2">
-                                                @itemUR.User.LastName
-                                                
-                                            </div>
-                                            <div class="col-md-2">
-                                                @itemUR.DateRead.ToShortDateString()
-                                               
-                                                
-                                            </div>
-                                        </div>
-                                    }
-
-
-                                }
-
-                            }
-                            if (existAsUserReader == false)
-                            {
-
-                                <div class="row">
-                                    <div class="col-md-2">
-                                        @item.FirstName
-                                    </div>
-                                    <div class="col-md-2">
-                                        @item.LastName
-                                    </div>
-                                    <div class="col-md-2">
-
-                                    </div>
-                                </div>
-                            }
-
-                        }
-                    }
-                </div>
-            }
-
+            @*nutne zmeny*@
             <div id="tabs-7">
                 <div class="row">
                     <div class="col-md-10">
@@ -954,7 +949,8 @@
                     <div class="container-fluid">
                         <ul class="nav navbar-nav">
                             <li style="padding-right:5px">
-                                <button class="btn btn-danger navbar-btn btnAction" id="cancelChanges">Zpět</button>
+                                @*<button type="button" class="btn btn-danger navbar-btn" id="cancelChangesN">Zpět N</button>*@
+                                <button type="button" class="btn btn-danger navbar-btn" id="cancelChanges">Zpět</button>
                             </li>
                             @if (Model.DocumentStateCode == "New")
                             {
@@ -962,12 +958,12 @@
                                 {
                                     <li style="padding-right:5px">
                                    
-                                        <button class="btn btn-primary navbar-btn btnAction " id="saveDocument">Uložit</button>
+                                        <button type="button" class="btn btn-primary navbar-btn btnAction " id="saveDocument">Uložit</button>
                                     </li>
                                
                                     <li style="padding-right:5px">
                                     
-                                        <button class="btn btn-primary navbar-btn btnAction" id="registerDocument">Zaevidovat</button>
+                                        <button type="button" class="btn btn-primary navbar-btn btnAction" id="registerDocument">Zaevidovat</button>
                                     </li>
                                 }
 
@@ -980,7 +976,7 @@
                                     if (UserRoles.IsAccess("SystemAdmin,SuperDocAdmin,documentadminid"))
                                     { 
                                         <li style="padding-right:5px">
-                                            <button class="btn btn-primary navbar-btn btnAction" id="newVersion">Nové vydání</button>
+                                            <button type="button" class="btn btn-primary navbar-btn btnAction" id="newVersion">Nové vydání</button>
                                         </li>
                                         <li style="padding-right:5px">
                                             <button class="btn btn-primary navbar-btn dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Přezkoumání<span class="caret"></span></button>
@@ -1003,7 +999,7 @@
                                     {
 
                                         <li style="padding-right:5px">
-                                            <button class="btn btn-primary navbar-btn btnAction" id="stornoDocument">Storno</button>
+                                            <button type="button" class="btn btn-primary navbar-btn btnAction" id="stornoDocument">Storno</button>
                                         </li>
 
                                     }
@@ -1011,13 +1007,13 @@
                                     if (Model.DocumentStateCode != "Archived")
                                     {
                                         <li style="padding-right:5px">
-                                            <button class="btn btn-primary navbar-btn btnAction" id="archivDocument">Archivace</button>
+                                            <button type="button" class="btn btn-primary navbar-btn btnAction" id="archivDocument">Archivace</button>
                                         </li>
                                     }
                                     else
                                     {
                                         <li style="padding-right:5px">
-                                            <button class="btn btn-primary navbar-btn btnAction" id="deArchivDocument">Dearchivace</button>
+                                            <button type="button" class="btn btn-primary navbar-btn btnAction" id="deArchivDocument">Dearchivace</button>
                                         </li>
                                     }
                             }

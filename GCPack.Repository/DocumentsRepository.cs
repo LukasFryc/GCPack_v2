@@ -404,7 +404,7 @@ namespace GCPack.Repository
 
                 if (filter.DocumentID==null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments19_Result> documentsResult = db.GetDocuments19(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments19_Result>();
+                ICollection<GetDocuments20_Result> documentsResult = db.GetDocuments20(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments20_Result>();
                 documentCollection.Count = documentsResult.Count();
                 // v pripade ze se jedna o vyber jednoho dokumentu
                 if (filter.DocumentID != 0)
@@ -633,9 +633,9 @@ namespace GCPack.Repository
                     }
                     db.SaveChanges();
                 }
-                return Mapper.Map<DocumentModel>(newDocument);
+                //return Mapper.Map<DocumentModel>(newDocument);
 
-                //return document;
+                return document;
             }
         }
 

@@ -69,7 +69,7 @@ namespace GCPack.Web.Controllers
 
             ICollection<Item> ReviewNecessaryChange = new HashSet<Item>();
             ReviewNecessaryChange.Add(new Item { ID = 0, Code = "all", OrderBy = 1, Value = "Všechny" });
-            ReviewNecessaryChange.Add(new Item { ID = 1, Code = "necessaryChange", OrderBy = 2, Value = "Nutná změně" });
+            ReviewNecessaryChange.Add(new Item { ID = 1, Code = "necessaryChange", OrderBy = 2, Value = "Nutná změna" });
             ViewBag.ReviewNecessaryChange = ReviewNecessaryChange.OrderBy(rt => rt.OrderBy);
 
 
@@ -80,9 +80,9 @@ namespace GCPack.Web.Controllers
 
             ICollection<Item> revisionType = new HashSet<Item>(); ;
             revisionType.Add(new Item { ID = 0, Code = "all", OrderBy = 0, Value = "Všechny" });
-            revisionType.Add(new Item { ID = 1, Code = "p", OrderBy = 1, Value = "Platné" });
-            revisionType.Add(new Item { ID = 2, Code = "n", OrderBy = 2, Value = "Neplatné" });
-            revisionType.Add(new Item { ID = 3, Code = "r", OrderBy = 3, Value = "V revizi" });
+            revisionType.Add(new Item { ID = 1, Code = "p", OrderBy = 1, Value = "Platné (P + R)" });
+            revisionType.Add(new Item { ID = 2, Code = "n", OrderBy = 2, Value = "Neplatné (N)" });
+            revisionType.Add(new Item { ID = 3, Code = "r", OrderBy = 3, Value = "V revizi (R)" });
             ViewBag.RevisionType = revisionType.OrderBy(rt => rt.OrderBy);
 
             ICollection<Item> readType = new HashSet<Item>(); ;
@@ -165,12 +165,108 @@ namespace GCPack.Web.Controllers
         }
 
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
-        public ActionResult GetFile(int fileID)
+        public ActionResult GetFile(int fileID, bool forceDownload)
         {
+            // LF do 9.11.2017 takto to udelal dave
+            // puvodni action nemela parametr forceAttachment
+            //FileItem fileItem = documentService.GetFile(fileID);
+            //Response.AppendHeader("Content-Disposition", "attachment; filename = " + fileItem.Name);
+            //return File(fileItem.Data, "attachment");
+
+            // LF 9.11.2017 
             FileItem fileItem = documentService.GetFile(fileID);
-            Response.AppendHeader("Content-Disposition", "attachment; filename = " + fileItem.Name);
-            return File(fileItem.Data, "attachment");
+            string name = Path.GetFileName(fileItem.Name);
+            string ext = Path.GetExtension(fileItem.Name);
+            string type = "";
+            // set known types based on file extension  
+            if (ext != null)
+            {
+                switch (ext.ToLower())
+                {
+                    case ".htm":
+                    case ".html":
+                        type = "text/HTML";
+                        break;
+                    case ".txt":
+                        type = "text/plain";
+                        break;
+                    case ".doc":
+                        type = "Application/msword";
+                        break;
+                    case ".xls":
+                        type = "application/excel";
+                        break;
+                    case ".rtf":
+                        type = "text/richtext";
+                        break;
+                    case ".pdf":
+                        type = "application/pdf";
+                        break;
+                }
+            }
+
+            // LF pokud nenajdu pripomu v mime case tak  neumoznim uzivateli dokument zobarazit ale jen stahnout downloadedm
+            if (type == "") {
+                type = "attachment";
+                forceDownload = true;
+            };
+
+            if (forceDownload)
+            {
+                Response.AppendHeader("content-disposition", "attachment; filename=" + fileItem.Name);
+                type = "attachment";
+            }
+            else
+            {
+                Response.AppendHeader("Content-Disposition", "inline; filename=" + fileItem.Name);
+            }
+
+
+            return File(fileItem.Data, type);
+
+            // https://www.sitepoint.com/mime-types-complete-list/
+
+            // TODO: LF 9.11.2017  nacitani z configu trochu o dost lepe 
+            // https://stackoverflow.com/questions/21878374/how-to-read-multiple-values-in-c-sharp-app-config-file
         }
+
+        private void DownloadFile(string fname, bool forceDownload)
+        {
+            string path = System.Web.HttpContext.Current.Server.MapPath(fname); 
+            string name = Path.GetFileName(path);
+            string ext = Path.GetExtension(path);
+            string type = "";
+            // set known types based on file extension  
+            if (ext != null)
+            {
+                switch (ext.ToLower())
+                {
+                    case ".htm":
+                    case ".html":
+                        type = "text/HTML";
+                        break;
+
+                    case ".txt":
+                        type = "text/plain";
+                        break;
+
+                    case ".doc":
+                    case ".rtf":
+                        type = "Application/msword";
+                        break;
+                }
+            }
+            if (forceDownload)
+            {
+                Response.AppendHeader("content-disposition",
+                    "attachment; filename=" + name);
+            }
+            if (type != "")
+                Response.ContentType = type;
+            Response.WriteFile(path);
+            Response.End();
+        }
+
 
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
         public ActionResult Details(int documentId)
@@ -239,10 +335,10 @@ namespace GCPack.Web.Controllers
 
         // seznameni s dokumentem
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
-        public ActionResult Readed(int documentID)
+        public ActionResult Readed(int ID)
         {
             int userId = UserRoles.GetUserId();
-            documentService.Readed(documentID, userId);
+            documentService.Readed(ID, userId);
             DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
             return RedirectToAction("Index", filter);
         }
@@ -367,6 +463,7 @@ namespace GCPack.Web.Controllers
 
             // funguje
             document = documentService.NewVersion(document, UserRoles.GetUserId(), fileNames);
+
             return RedirectToAction("Edit", new { documentId = document.ID });
 
             // funguje

@@ -84,7 +84,7 @@ namespace GCPack.Web.Controllers
        
         public ActionResult AppSystemAdd()
         {
-            ViewBag.Title = "Nová položka číselníku systém";
+            ViewBag.Title = "Nový číselník systém";
             return View("AppSystemEdit", new AppSystemModel());
         }
             
@@ -125,7 +125,7 @@ namespace GCPack.Web.Controllers
 
         public ActionResult JobPositionAdd()
         {
-            ViewBag.Title = "Nová položka číselníku systém";
+            ViewBag.Title = "Nová pracovní pozice";
             return View("JobPositionEdit", new JobPositionModel());
         }
 
@@ -158,7 +158,7 @@ namespace GCPack.Web.Controllers
 
         public ActionResult ProjectAdd()
         {
-            ViewBag.Title = "Nová položka projektů";
+            ViewBag.Title = "Nový projekt";
             return View("ProjectEdit", new ProjectModel());
         }
 
@@ -191,7 +191,7 @@ namespace GCPack.Web.Controllers
 
         public ActionResult DivisionAdd()
         {
-            ViewBag.Title = "Nová položka střediska";
+            ViewBag.Title = "Nové středisko";
             return View("DivisionEdit", new DivisionModel());
         }
 
@@ -215,14 +215,14 @@ namespace GCPack.Web.Controllers
         }
         public ActionResult WorkplaceEdit(int ID)
         {
-            ViewBag.Title = "Editace číselníku pracovní místa";
+            ViewBag.Title = "Editace číselníku lokalita";
             WorkplaceModel workplace = codeListsService.GetWorkplace(ID);
             return View(workplace);
         }
 
         public ActionResult WorkplaceAdd()
         {
-            ViewBag.Title = "Nová položka pracovního místa";
+            ViewBag.Title = "Nová lokalita";
             return View("WorkplaceEdit", new WorkplaceModel());
         }
 

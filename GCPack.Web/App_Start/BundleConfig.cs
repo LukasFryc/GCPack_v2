@@ -43,7 +43,13 @@ namespace GCPack.Web
               "~/Content/themes/base/jquery.ui.progressbar.css",
               "~/Content/themes/base/jquery.ui.theme.css"));
 
+            bundles.Add(new ScriptBundle("~/Scripts/gc").Include(
+            "~/Scripts/gc.js"));
+            
+            // NECHAT ZAREMOVANE - ODREMOVAT JEN PRED ODESLANIM K YAKAYNIKUM
+            // NESLO BY TO TOTIZ LADIT F12
             //BundleTable.EnableOptimizations = true;
+            
         }
     }
 }

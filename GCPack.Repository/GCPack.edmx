@@ -1201,7 +1201,31 @@
             <Parameter Name="Revision" Mode="In" Type="String" />
             <Parameter Name="ReviewNecassaryChange" Mode="In" Type="String" />
           </FunctionImport>
-          <FunctionImport Name="GetDocuments19" ReturnType="Collection(GCPack.GetDocuments19_Result)">
+          <FunctionImport Name="GetDocuments19">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="ReadType" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="Revision" Mode="In" Type="String" />
+            <Parameter Name="ReviewNecassaryChange" Mode="In" Type="String" />
+            <Parameter Name="MainID" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="GetDocuments20" ReturnType="Collection(GCPack.GetDocuments20_Result)">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -1849,7 +1873,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments19_Result">
+        <ComplexType Name="GetDocuments20_Result">
           <Property Type="Int64" Name="row" Nullable="true" />
           <Property Type="Int32" Name="ID" Nullable="false" />
           <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
@@ -1882,7 +1906,7 @@
           <Property Type="String" Name="DocumentStateCode" Nullable="false" MaxLength="50" />
           <Property Type="Int32" Name="UsersRead" Nullable="true" />
           <Property Type="Int32" Name="AllUsers" Nullable="true" />
-          <Property Type="Int32" Name="DocumentOwnerID" Nullable="true" />
+          <Property Type="String" Name="AuthorName" Nullable="true" MaxLength="101" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2146,9 +2170,9 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments19" FunctionName="GCPack.Store.GetDocuments">
+          <FunctionImportMapping FunctionImportName="GetDocuments20" FunctionName="GCPack.Store.GetDocuments">
             <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments19_Result">
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments20_Result">
                 <ScalarProperty Name="row" ColumnName="row" />
                 <ScalarProperty Name="ID" ColumnName="ID" />
                 <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
@@ -2181,7 +2205,7 @@
                 <ScalarProperty Name="DocumentStateCode" ColumnName="DocumentStateCode" />
                 <ScalarProperty Name="UsersRead" ColumnName="UsersRead" />
                 <ScalarProperty Name="AllUsers" ColumnName="AllUsers" />
-                <ScalarProperty Name="DocumentOwnerID" ColumnName="DocumentOwnerID" />
+                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

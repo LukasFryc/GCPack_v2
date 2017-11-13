@@ -15,8 +15,9 @@
     @Styles.Render("~/Content/themes/base/css")
     @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/jqueryval")
-    <script src="~/Scripts/gc.js"></script>
-    <script src="~/Scripts/jquery.WSpager.js"></script>
+    @Scripts.Render("~/Scripts/gc")
+    @*<script src="~/Scripts/gc.js?VER=1"></script>*@
+    <script src="~/Scripts/jquery.WSpager.js?v=1"></script>
     <link href="~/Content/themes/base/jquery-ui.css" rel="stylesheet" />
     <style>
         #nav ul{
@@ -107,7 +108,7 @@
                             <li>@Html.ActionLink("Střediska", "DivisionIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Pracovní pozice", "JobPositionIndex", "CodeLists")</li>
                             <li>@Html.ActionLink("Projekty", "ProjectIndex", "CodeLists")</li>
-                            <li>@Html.ActionLink("Pracovní místa", "WorkplaceIndex", "CodeLists")</li>
+                            <li>@Html.ActionLink("Lokality", "WorkplaceIndex", "CodeLists")</li>
                             @*<li>@Html.ActionLink("Test emailu", "SendMail", "Documents")</li>*@
 
                         </ul>
@@ -118,11 +119,14 @@
 
                 @if (!HttpContext.Current.User.Identity.IsAuthenticated)
                 {
-                    <li id="login">@Html.ActionLink("Přihlášení uživatele", "Index", "Login")</li>
+                    
+                        <li class="navbar-right" id="login">@Html.ActionLink("Přihlášení uživatele", "Index", "Login")</li>
+                    
+                    
                 }
                 else
                 {
-                    <li id="login">@Html.ActionLink("Odhlášení uživatele", "Logout", "Login")</li>
+                    <li class="navbar-right" id="login">@Html.ActionLink("Odhlášení uživatele", "Logout", "Login")</li>
                 }
 
                 <p class="nav navbar-text navbar-right">@GCPack.Web.Filter.UserRoles.UserName()</p>

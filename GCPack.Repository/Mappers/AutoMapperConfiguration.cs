@@ -35,7 +35,7 @@ namespace GCPack.Repository.Mappers
             //DocumentTypeID
             CreateMap<DocumentType, DocumentTypeModel>().ReverseMap();
             CreateMap<File, FileItem>().ReverseMap();
-            CreateMap<GetDocuments19_Result, DocumentModel>()
+            CreateMap<GetDocuments20_Result, DocumentModel>()
                 .ForMember(dr => dr.DocumentStateCode, m => m.MapFrom(dt => dt.DocumentStateCode))
                 .ForMember(dr => dr.DocumentStateName, m => m.MapFrom(dt => dt.DocumentStateName))
                 // LF 30.10.2017 - zruseno naplnovani AuthorID podle ownera, owner jako tako v aplikaci RD nebude figurovat
