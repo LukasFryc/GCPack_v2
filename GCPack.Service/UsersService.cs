@@ -44,6 +44,10 @@ namespace GCPack.Service
             return ticket;
         }
 
+        public ICollection<JobPositionModel> GetUserJobPositions(int userID)
+        {
+            return usersRepository.GetUserJobPositions(userID);
+        }
         public UserModel GetUser(string ticket)
         {
             var user = usersRepository.GetUser(ticket);
@@ -90,6 +94,8 @@ namespace GCPack.Service
         {
             return Mapper.Map<ICollection<Item>>(GetUsers(filter));
         }
+
+
 
         public ICollection<Item> GetRoles()
         {

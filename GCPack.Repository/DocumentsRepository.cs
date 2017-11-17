@@ -36,6 +36,11 @@ namespace GCPack.Repository
                 var allUsers2 = from ud in db.UserDocuments where ud.DocumentId == documentID
                                 select ud.User;
 
+                
+                
+
+                
+
                 var allUsers = allUsers1.Union(allUsers2);
 
                 
@@ -326,11 +331,11 @@ namespace GCPack.Repository
                 if (!string.IsNullOrEmpty(filter.AdministratorName))
                 { documents =
                     documents.Where(d =>
-                    (d.AdministratorID == 0 && 
-                        (
-                            d.DocumentType.User.FirstName.Contains (filter.AdministratorName) ||
-                            d.DocumentType.User.LastName.Contains(filter.AdministratorName)
-                        )) ||
+                    //(d.AdministratorID == 0 && 
+                    //    (
+                    //        d.DocumentType.User.FirstName.Contains (filter.AdministratorName) ||
+                    //        d.DocumentType.User.LastName.Contains(filter.AdministratorName)
+                    //    )) ||
                      (d.AdministratorID != 0 && 
                         (
                             db.Users.Where (u => u.FirstName.Contains(filter.AdministratorName) ||
@@ -373,8 +378,8 @@ namespace GCPack.Repository
                 {
                     if (document.AdministratorID == 0)
                     {
-                        document.DocumentAdministrator =
-                            db.DocumentTypes.Where(d => d.ID == document.DocumentTypeID).Select(d => d.User.FirstName + " " + d.User.LastName).FirstOrDefault();
+                        //document.DocumentAdministrator =
+                        //    db.DocumentTypes.Where(d => d.ID == document.DocumentTypeID).Select(d => d.User.FirstName + " " + d.User.LastName).FirstOrDefault();
                     }
                     else
                     {
@@ -581,14 +586,15 @@ namespace GCPack.Repository
             return result;
         }
 
-        public void Readed(int documentID, int userID)
+        public int Readed(int documentID, int userID)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
+                ReadConfirmation readConfirmation = null;
                 var readConfirms = db.ReadConfirmations.Where(s => s.DocumentID == documentID && s.UserID == userID).Select(s => s).FirstOrDefault();
                 if (readConfirms == null)
                 {
-                    db.ReadConfirmations.Add(new ReadConfirmation()
+                    readConfirmation = db.ReadConfirmations.Add(new ReadConfirmation()
                     {
                         DocumentID = documentID,
                         UserID = userID,
@@ -596,9 +602,27 @@ namespace GCPack.Repository
                     });
                     db.SaveChanges();
                 }
+                return readConfirmation.ID;
+            }
+        }
+
+        public void ReadedUserInFunctions(int confirmID, int jobPositionID, string name)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                {
+                    db.ConfirmUserFunctions.Add(new ConfirmUserFunction()
+                    {
+                        ConfimID = confirmID,
+                        JobPositionID = jobPositionID,
+                        JobPositionName = name
+                    });
+                    db.SaveChanges();
+                }
 
             }
         }
+
 
         public DocumentModel AddDocument(DocumentModel document)
         {
@@ -813,6 +837,84 @@ namespace GCPack.Repository
                     db.SaveChanges();
                 }
             }
+        }
+
+        public ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID)
+        {
+
+            ICollection<UsersForJobPositionInDocumentModel> jpu = new HashSet<UsersForJobPositionInDocumentModel>();
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                var result = db.JobPositions
+                    .Where(jp => jobPositionsID.Contains(jp.ID))
+                    .Select(jp => jp);
+                if (result.Count() > 0)
+                {
+                    foreach (var item in result)
+                    {
+                        UsersForJobPositionInDocumentModel jpuItem = new UsersForJobPositionInDocumentModel();
+                        jpuItem.JobPosition = Mapper.Map<JobPositionModel>(item);
+                        foreach (var dbUser in item.JobPositionUsers.Select(u => u.User))
+                        {
+                            UserReadDocument user = new UserReadDocument();
+                            user.User = Mapper.Map<UserModel>(dbUser);
+                            user.DateRead = dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId).Select(rc => rc.ReadDate).FirstOrDefault();
+                            //foreach (var function1 in 
+                            //    dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId)
+                            //    .Select(rc => rc)
+                            //    .FirstOrDefault()
+                            //    .ConfirmUserFunctions.Select(cuf => cuf))
+                            //{
+                            //    user.Functions += function1.JobPositionName + " ";
+                            //}
+
+
+                            var rc1 = dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId)
+                                .Select(rc => rc).FirstOrDefault();
+
+                            
+                            if (rc1 != null)
+                            {
+                                foreach (var function1 in rc1.ConfirmUserFunctions.Select(cuf => cuf))
+                                {
+                                    user.Functions += function1.JobPositionName + " ";
+                                };
+                            };
+
+
+                            user.User.Password = "";
+                            jpuItem.Users.Add(user);
+                        }
+                        jpu.Add(jpuItem);
+                    }
+                }
+
+                UsersForJobPositionInDocumentModel jpuItemManual = new UsersForJobPositionInDocumentModel();
+                jpuItemManual.JobPosition = new JobPositionModel() {
+                    Name = "Ručně přidaní uživatelé",
+                    ID = 0
+                };
+
+                var usersDocument = db.Users.Where(u => usersID.Contains(u.ID)).Select(u => u);
+                if (usersDocument.Count() > 0)
+                {
+                    foreach (var userManual in usersDocument)
+                    {
+                        UserReadDocument userRead = new UserReadDocument();
+                        userRead.User = Mapper.Map<UserModel>(userManual);
+                        userRead.DateRead = userManual.ReadConfirmations
+                            .Where(rc => rc.UserID == userManual.ID && rc.DocumentID == documentId)
+                            .Select(rc => rc.ReadDate).FirstOrDefault();
+                        userRead.User.Password = "";
+                        jpuItemManual.Users.Add(userRead);
+                    }
+
+                    jpu.Add(jpuItemManual);
+                }
+            }
+
+            return jpu;
+
         }
     }
 }

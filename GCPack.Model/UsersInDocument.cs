@@ -9,8 +9,9 @@ namespace GCPack.Model
 
     public class UserReadDocument
     {
-        public DateTime DateRead { get; set; }
+        public DateTime? DateRead { get; set; }
         public UserModel User { get; set; }
+        public string Functions { get; set; }
     }
 
     public class UsersInDocument

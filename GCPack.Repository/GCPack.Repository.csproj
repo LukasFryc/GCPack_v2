@@ -59,6 +59,9 @@
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="CodeListsRepository.cs" />
+    <Compile Include="ConfirmUserFunction.cs">
+      <DependentUpon>GCPack.tt</DependentUpon>
+    </Compile>
     <Compile Include="Division.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>

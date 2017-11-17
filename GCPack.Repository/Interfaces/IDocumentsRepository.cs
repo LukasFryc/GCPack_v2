@@ -19,7 +19,7 @@ namespace GCPack.Repository.Interfaces
         ICollection<FileItem> GetFiles(int documentId);
         ICollection<UserModel> GetUsersForDocument(int documentId);
         FileItem GetFile(int fileID);
-        void Readed(int documentID, int userID);
+        int Readed(int documentID, int userID);
         bool ReadAccessToDocument(DocumentModel document, int userID);
         ICollection<Item> GetDocumentTypes();
         DocumentTypeModel GetDocumentType(int ID);
@@ -48,8 +48,10 @@ namespace GCPack.Repository.Interfaces
         void ReviewNecessaryChange(DocumentModel document, string comment, string userName);
 
         void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState);
+        void ReadedUserInFunctions(int confirmID, int jobPositionID, string name);
 
-
+        // TODO: LF prezenatce rozdelovniku v tabulce 
+        ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID);
 
     }
 }

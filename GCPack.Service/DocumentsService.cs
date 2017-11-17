@@ -255,6 +255,7 @@ namespace GCPack.Service
                 case "Author":
                     break;
                 case "User":
+                case "Anonymous":
                     // nastaveni filtru pro uzivatele
                     //filter.ForUserID = null;
                     filter.StateID = documentsRepository.GetDocumentState("Registered"); // pouze zaevidovane
@@ -272,7 +273,15 @@ namespace GCPack.Service
 
         public void Readed(int documentID, int userID)
         {
-                documentsRepository.Readed(documentID, userID);
+            int confirmID = documentsRepository.Readed(documentID, userID);
+            // TODO: LF moznost rozsirit o:
+            // nyni se vkladaji vsechny pracovni pozice uzivatele
+            // muze se doplnit pouze o prunik z pozicemi vybranymi na dokumentu
+            foreach (JobPositionModel jobPosition in userService.GetUserJobPositions(userID))
+            {
+                documentsRepository.ReadedUserInFunctions(confirmID,jobPosition.ID,jobPosition.Name);
+            }
+            
         }
 
 
@@ -352,6 +361,11 @@ namespace GCPack.Service
                     documentsRepository.AddFileToDb(document, System.IO.File.ReadAllBytes(file), fi.Name);
                 }
             }
+        }
+
+        public ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID)
+        {
+            return documentsRepository.GetUsersForJobPositionInDocument(documentId,  jobPositionsID,  usersID);
         }
 
         //public void Archived(DocumentModel document, bool archiv)

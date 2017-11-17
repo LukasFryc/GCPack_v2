@@ -13,6 +13,7 @@
 
 <style>
     
+
     .row {
         margin-bottom: 10px;
     }
@@ -87,8 +88,24 @@
         // LF lukasuv kousek 15.9.2017
         $('.btnAction').click(function () {
 
+            
+            var myForm1 = $("#Title");
+            myForm1.validate();
+            if (!myForm1.valid())
+            {
+                alert('Zadejte název dokumentu.');
+                return false;
+            }
+            
+            
+
+
             $('#Action').val($(this).prop("id"));
             $('form').prop('action', $(this).prop("id"));
+
+            var form = $(this).closest('form');
+            $('.categories option').prop('selected', true);
+            $('#SelectedUsers option').prop('selected', true);
                 
 
             if ($(this).prop("id") == "reviewNecessaryChange") {
@@ -174,12 +191,12 @@
             GetUsers();
         });
 
-        $('#saveDocument, #newVersion, #registerDocument, #revisionNoAction, #revisionChanges').click(function ()
-        {
-            var form = $(this).closest('form')
-            $('.categories option').prop('selected', true);
-            $('#SelectedUsers option').prop('selected', true);
-        });
+        //$('#saveDocument, #newVersion, #registerDocument, #revisionNoAction, #revisionChanges').click(function ()
+        //{
+        //    var form = $(this).closest('form')
+        //    $('.categories option').prop('selected', true);
+        //    $('#SelectedUsers option').prop('selected', true);
+        //});
 
         $('#AddUserToList').click(function () {
             $("#FilteredUsers :selected").each(function (index, user) {
@@ -295,6 +312,24 @@
                 //window.location.href = '/Documents/Index/'; - kdyz bych pouzil takto tak se nenastavi zpravne filtry
                 window.location.href = '/Documents/CancelChanges/' ;
             });
+        $('#addUsers').click(
+            function () {
+                ChangeItems('#AllUsers', '#SelectedUsers');
+            });
+        $('#removeUsers').click(
+            function () {
+                ChangeItems('#SelectedUsers', '#AllUsers');
+            });
+
+
+        $('#addJobPositions').click(
+            function () {
+                ChangeItems('#AllJobPositions', '#JobPositionIDs');
+            });
+        $('#removeJobPositions').click(
+            function () {
+                ChangeItems('#JobPositionIDs', '#AllJobPositions');
+            });
 
         $('#addProjects').click(
             function () {
@@ -331,6 +366,10 @@
                 ChangeItems('#SelectedWorkplaces', '#AllWorkplaces');
             });
 
+        $('#JobPositionFilter').keyup(function () {
+            filterCodeList($(this).val(), '#AllJobPositions');
+        });
+
         $('#divisionsFilter').keyup(function () {
             filterCodeList($(this).val(), '#AllDivisions');
         });
@@ -349,11 +388,24 @@
 
 
         function filterCodeList(filter, codeList) {
+
+        //    var text = $("#selectA option[value='" + $(this).val() + "']").text().split(' ');
+        //    text = text[1];    // this is the tricky part...
+        //    $("#selectB option").attr("disabled", "disabled").hide();
+
+
+        // TODO> LF 15.11.2017 nefunguje na IE nutno predelat na json 
             $(codeList + ' option').each(function () {
                 if ($(this).text().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
                     $(this).show();
+                    //$(this).removeAttr("disabled").show();
+
                 } else {
+                    //$(this).css({ "display": "none" });
                     $(this).hide();
+                    //$(this).attr("disabled", "disabled").hide();
+                    //$(this).css({ "display": "" });
+                    //$(this).show();
                 }
             })
         };
@@ -585,9 +637,125 @@
             @*záznamy o seznámení*@
             <div id="tabs-4">
                 @* rozdělovník- vyběr funkc a osob(zatim skryto)*@
+
                 <div class="row">
+                    <b>Pracovní pozice</b><br />
+                    <div class="col-md-4 sedaPozadi">
+
+                        @*<input type="text" id="JobPositionFilter" />*@
+                        <select multiple name="AllJobPositions" id="AllJobPositions" class="categories form-control">
+                            @if (Model.JobPositionIDs != null)
+                            {
+                                foreach (JobPositionModel jobPosition in ((ICollection<JobPositionModel>)ViewBag.JobPositions).Where(jp => !Model.JobPositionIDs.Contains(jp.ID)).Select(jp => jp))
+                                {
+                                    <option value="@jobPosition.ID">@jobPosition.Name</option>
+                                }
+                            }
+                            else
+                            {
+                                foreach (JobPositionModel jobPosition in ((ICollection<JobPositionModel>)ViewBag.JobPositions).Select(jp => jp))
+                                {
+                                    <option value="@jobPosition.ID">@jobPosition.Name</option>
+                                }
+                            }
+
+
+                        </select>
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="button" id="addJobPositions" value=">" /><br />
+                        <input type="button" id="removeJobPositions" value="<" />
+                    </div>
+
+
+                    <div class="col-md-4">
+                        <b>Vybrané pracovní pozice</b><br />
+                        <select multiple name="JobPositionIDs" id="JobPositionIDs" class="categories  form-control">
+                            @if (Model.JobPositionIDs != null)
+                            {
+                                foreach (JobPositionModel jobPosition in ((ICollection<JobPositionModel>)ViewBag.JobPositions).Where(jp => Model.JobPositionIDs.Contains(jp.ID)).Select(jp => jp))
+                                {
+                                    <option value="@jobPosition.ID">@jobPosition.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                @*osoby*@
+                <div class="row">
+                    <b>Výběr osob </b><br />
+                    <div class="col-md-4 sedaPozadi">
+
+                        @*<input type="text" id="JobPositionFilter" />*@
+
+
+                        @if (@Model.Users != null)
+                        {
+                            <p>ahoj</p>
+
+                        }
+                        <select multiple name="AllUsers" id="AllUsers" class="categories form-control">
+                            @if (@Model.Users != null)
+                            {
+                                
+                                foreach (UserModel user in ((ICollection<UserModel>)ViewBag.Users)
+                                    .Where(u => !@Model.Users.Select(us=> us.ID).Contains(u.ID))
+                                    .Select(u => u))
+                                {
+                                    <option value="@user.ID">@user.LastName @user.FirstName</option>
+                                }
+                               
+                            }
+                            else
+                            {
+                                foreach (UserModel user in ((ICollection<UserModel>)ViewBag.Users).Select(u => u))
+                                {
+                                    <option value="@user.ID">@user.LastName @user.FirstName</option>
+                                }
+                            }
+                        </select>
+                        @*@Html.ListBoxFor(m => m.AllUsers, new SelectList(ViewBag.Users, "ID", "Value"), new { @class = "form-control", @placeholder = "Osoby" })*@
+                    </div>
+
+                    <div class="col-md-2">
+                        <input type="button" id="addUsers" value=">" /><br />
+                        <input type="button" id="removeUsers" value="<" />
+                    </div>
+
+
+                    <div class="col-md-4">
+                        @*<b>Vybrané pracovní pozice</b><br />
+                        <select multiple name="JobPositionIDs" id="JobPositionIDs" class="categories  form-control">
+                            @if (Model.JobPositionIDs != null)
+                            {
+                                foreach (JobPositionModel jobPosition in ((ICollection<JobPositionModel>)ViewBag.JobPositions).Where(jp => Model.JobPositionIDs.Contains(jp.ID)).Select(jp => jp))
+                                {
+                                    <option value="@jobPosition.ID">@jobPosition.Name</option>
+                                }
+                            }
+                        </select>*@
+
+                        <b>Vybrané osoby</b><br />
+                        <select multiple name="SelectedUsers" id="SelectedUsers" class="categories  form-control">
+                            @if (@Model.Users != null)
+                            {
+                                foreach (var item in Model.Users)
+                                {
+                                    <option value="@item.ID">@item.LastName @item.FirstName</option>
+                                }
+                            }
+                        </select>
+
+                        @*@Html.ListBoxFor(m => m.SelectedUsers, new SelectList(ViewBag.Users, "ID", "Value"), new { @class = "form-control", @placeholder = "Osoby" })*@
+                    </div>
+                </div>
+
+
+                @*<div class="row">*@
                     @*<div class="col-md-10">*@
-                        <div style="margin-bottom:20px">
+                        @*<div style="margin-bottom:20px">
 
                             <div class="col-md-2">
                                 <b>Pracovní pozice</b>
@@ -601,10 +769,10 @@
                                     </div>
                                 }
                             </div>
-                        </div>
+                        </div>*@
                     @*</div>*@
 
-                </div>
+                @*</div>*@
                 @*záznamy o seznámení*@
                 <p></p>
                 <b>Záznamy seznámení</b>
@@ -634,8 +802,8 @@
 
                                                 </div>
                                                 <div class="col-md-2">
-                                                    @itemUR.DateRead.ToShortDateString()
-
+                                                    @itemUR.DateRead
+                                                    
 
                                                 </div>
                                             </div>
@@ -721,7 +889,7 @@
                     <b>Projekty</b><br />
                     <div class="col-md-4 sedaPozadi">
                            
-                        <input type="text" id="projectsFilter" />
+                        @*<input type="text" id="projectsFilter" />*@
                         <select multiple name="AllProjects" id="AllProjects" class="categories form-control">
                             @if (Model.SelectedProjectsID != null)
                             {
@@ -765,7 +933,7 @@
                     <b>Střediska</b><br />
                     <div class="col-md-4  sedaPozadi">
                           
-                        <input type="text" id="divisionsFilter" />
+                        @*<input type="text" id="divisionsFilter" />*@
                         <select multiple name="AllDivisions" id="AllDivisions" class="categories  form-control">
                             @if (Model.SelectedDivisionsID != null)
                             {
@@ -809,7 +977,7 @@
                     <b>Systémy</b><br />
                     <div class="col-md-4 sedaPozadi">
                            
-                        <input type="text" id="appSystemsFilter" />
+                        @*<input type="text" id="appSystemsFilter" />*@
                         <select multiple name="AllAppSystems" id="AllAppSystems" class="categories  form-control">
                             @if (Model.SelectedAppSystemsID != null)
                             {
@@ -853,7 +1021,7 @@
                     <b>Lokality</b><br />
                     <div class="col-md-4 sedaPozadi">
                          
-                        <input type="text" id="workplacesFilter" />
+                        @*<input type="text" id="workplacesFilter" />*@
                         <select multiple name="AllWorkplaces" id="AllWorkplaces" class="categories  form-control">
                             @if (Model.SelectedWorkplacesID != null)
                             {

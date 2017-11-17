@@ -35,7 +35,6 @@ namespace GCPack.Repository
         public Nullable<int> DocumentEfficiencyDays { get; set; }
         public Nullable<int> InformedInDays { get; set; }
     
-        public virtual User User { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }
     }

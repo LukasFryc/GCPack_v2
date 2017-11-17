@@ -270,5 +270,12 @@ namespace GCPack.Repository
             }
         }
 
+        public ICollection<JobPositionModel> GetUserJobPositions(int userID)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                return Mapper.Map<ICollection<JobPositionModel>>(db.JobPositionUsers.Where(jpu => jpu.UserId == userID).Select(jpu => jpu.JobPosition));
+            }
+        }
     }
 }

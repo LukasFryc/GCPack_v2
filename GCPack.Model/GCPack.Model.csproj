@@ -56,6 +56,7 @@
     <Compile Include="SignatureModel.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserRoleModel.cs" />
+    <Compile Include="UsersForJobPositionInDocumentModel.cs" />
     <Compile Include="UsersInDocument.cs" />
     <Compile Include="Views.cs" />
     <Compile Include="WorkplaceModel.cs" />

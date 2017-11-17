@@ -9,9 +9,11 @@ using GCPack.Model;
 using GCPack.Service.Interfaces;
 using System.IO;
 using System.Data.Entity.Core.Objects;
+using System.Web.UI;
 
 namespace GCPack.Web.Controllers
 {
+    [OutputCache(Location = OutputCacheLocation.None, NoStore = true)]
     public class DocumentsController : Controller
     {
         private readonly IDocumentsService documentService;
@@ -25,7 +27,7 @@ namespace GCPack.Web.Controllers
             this.codeListService = codeListService;
         }
 
-        
+
         [GCAuthorizeAttribute(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,User,Author")]
         public ActionResult Index(DocumentFilter filter)
         {
@@ -614,12 +616,14 @@ namespace GCPack.Web.Controllers
 
         private void InitCodeLists()
         {
+
             ViewBag.Projects = codeListService.GetProjects();
             ViewBag.AppSystems = codeListService.GetAppSystems();
             ViewBag.Divisions = codeListService.GetDivisions();
             ViewBag.DocumentTypes = documentService.GetDocumentTypes();
             ViewBag.JobPositions = userService.GetJobPositions();
             ViewBag.Workplaces = codeListService.GetWorkplaces();
+            ViewBag.Users = userService.GetUsers(new UserFilter());
 
         }
                 
@@ -650,8 +654,11 @@ namespace GCPack.Web.Controllers
 
             document.AuthorID = userId;
 
+            //ICollection<Item> users = userService.GetUserList(new UserFilter() { });
             ICollection<Item> administrators = userService.GetUserList(new UserFilter() { });
-            
+
+            //ViewBag.Users = users.OrderBy(a => a.Value);
+
             if (document.AdministratorID == 0)
             {
                 administrators.Add(new Item { ID = 0, Value = "---------"});
@@ -673,6 +680,14 @@ namespace GCPack.Web.Controllers
         public ActionResult Edit(int documentId)
         {
 
+            int[] jobPositions = {};
+            //int[] usersID = {};
+            //int[] jobPositions = { 1, 2, 3 };
+            int[] usersID = { 12, 14 };
+
+            ICollection<UsersForJobPositionInDocumentModel> UsersForJobPositionInDocument =
+            documentService.GetUsersForJobPositionInDocument(documentId, jobPositions, usersID);
+
             int userId = UserRoles.GetUserId();
             //ViewBag.Type = "Úprava řízeného dokumentu";
             DocumentModel document = documentService.GetDocument(documentId, userId);
@@ -680,8 +695,12 @@ namespace GCPack.Web.Controllers
             ViewBag.TypeModel = typeModel;
             ViewBag.Documents = document;
             ViewBag.Type = "Edit";
-            ViewBag.Administrators = userService.GetUserList(new UserFilter() { }).OrderBy(u=>u.Value);
-            
+
+            IEnumerable<Item> users = userService.GetUserList(new UserFilter() { }).OrderBy(u => u.Value);
+
+            ViewBag.Administrators = users;
+            //ViewBag.Users = users;
+
             InitCodeLists();
             return View("edit", document);
         }
