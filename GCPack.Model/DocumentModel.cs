@@ -109,6 +109,9 @@ namespace GCPack.Model
 
         public string IssueChangeComment { get; set; } // zmena pri novem vydani text
 
+
+        public string StornoReason { get; set; } //  důvod storna
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> res = new List<ValidationResult>();

@@ -16,6 +16,7 @@ namespace GCPack.Service.Interfaces
         DocumentTypeModel GetDocumentType(int ID);
         DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType);
         void ChangeDocumentState(DocumentModel document, string state);
+        void ChangeDocumentState(DocumentModel document, string state,string helpText);
         void ChangeDocumentState(int documentID, string state);
         void SendEmail();
         string GenNumberOfDocument(int documentTypeID);

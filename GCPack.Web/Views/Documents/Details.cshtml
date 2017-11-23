@@ -130,6 +130,7 @@
 </style>
 
 <h2>@Model.Title</h2>
+
 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 <div>
     @using (Html.BeginForm("Readed", "Documents", FormMethod.Post, new { @enctype = "multipart/form-data", id = "myForm" }))
@@ -143,6 +144,7 @@
         <input type="hidden" name="ParentID" id="ParentID" value="@Model.ParentID" />
         <input type="hidden" name="MainID" id="MainID" value="@Model.MainID" />
         <input type="hidden" name="HelpText" id="HelpText" />
+
 
         @*<div < div = "success-alert" class="alert alert-danger" style="display:none">Tento dokument se neuložil</div>*@
 
@@ -171,131 +173,148 @@
                     <label class="control-label col-md-2" for="Title">Název</label>
                     <div class="col-md-4">
                         @*@Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název dokumentu" } })
-                            @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger", required = "required" })*@
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger", required = "required" })*@
                         @Html.HiddenFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", @placeholder = "Název" } })
                         @Model.Title
 
                     </div>
                     <label class="control-label col-md-2 modra" for="DocumentTypeID">Stav dokumentu</label>
-                    <div class="col-md-4 modra">
+                    <div class="col-md-2 modra">
                         @Model.DocumentStateName
-
                     </div>
 
-
-                </div>
-                <div class="row">
-                    <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
-                    <div class="col-md-4">
-                        @Html.HiddenFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
-                        @Model.DocumentNumber
-                        @Html.HiddenFor(model => model.IssueNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo vydání" } })
-                        <strong>  (v. </strong> @Model.IssueNumber <strong> ) </strong>
-                        @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
-                    </div>
-                    <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
-                    <div class="col-md-4">
-                        @*@Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })*@
-                        @Html.HiddenFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Účinnost" } })
-                        @Model.EffeciencyDate
-                    </div>
+                 
 
                 </div>
-                <div class="row">
-                    <label class="control-label col-md-2" for="Revision">Typ revize</label>
-                    <div class="col-md-4">
-                        @Model.Revision
-                        <input type="hidden" name="Revision" value="@Model.Revision" />
-                    </div>
-                    <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
-                    <div class="col-md-4">
-                        @*@Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })*@
-                        @Html.HiddenFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Revidovat" } })
-                        @Model.ReviewDate
-                    </div>
 
-                </div>
-                <div class="row">
-                    <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
-                    <div class="col-md-4">
-                        <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
-                        @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true })
-                    </div>
-                    <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
-                    <div class="col-md-4">
-                        @*@Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })*@
-                        @Html.HiddenFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Další revize" } })
-                        @Model.NextReviewDate
-                    </div>
+                @if (Model.StateID == 3)
+                {
+                    <div class="row">
+                        <div class="col-md-8 ">
+                        </div>
+                            <div class="col-md-4 modra">
+
+                                <p class="modra">Důvod: @Model.StornoReason</p>
+
+                                @*@Html.HiddenFor(model => model.StornoReason, new { htmlAttributes = new { @class = "form-control", @placeholder = "oduvodnění Storna" } })*@
+                                
+                            </div>
+                        </div>
+                }
 
 
-                </div>
-                <div class="row">
-                    <div class="col-md-6">
-
-                    </div>
-                    <label class="control-label col-md-2" for="EndDate">Konec platnosti</label>
-                    <div class="col-md-4">
-                        @*@Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })*@
-                        @Html.HiddenFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Datum ukončení platnosti" } })
-                        @Model.EndDate
-                    </div>
-                </div>
-
-                @*<div class="row">
-                        <label class="control-label col-md-2" for="DocumentTypeID">Stav dokumentu</label>
-                        <div class="col-md-10">
-                            @Model.DocumentStateName
+                        <div class="row">
+                            <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
+                            <div class="col-md-4">
+                                @Html.HiddenFor(model => model.DocumentNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo dokumentu" } })
+                                @Model.DocumentNumber
+                                @Html.HiddenFor(model => model.IssueNumber, new { htmlAttributes = new { @class = "form-control", @placeholder = "Číslo vydání" } })
+                                <strong>  (v. </strong> @Model.IssueNumber <strong> ) </strong>
+                                @Html.ValidationMessageFor(model => model.DocumentNumber, "", new { @class = "text-danger" })
+                            </div>
+                            <label class="control-label col-md-2" for="EffeciencyDate">Datum účinnosti</label>
+                            <div class="col-md-4">
+                                @*@Html.EditorFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EffeciencyDate, "", new { @class = "text-danger" })*@
+                                @Html.HiddenFor(model => model.EffeciencyDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Účinnost" } })
+                                @Model.EffeciencyDate
+                            </div>
 
                         </div>
-                    </div>*@
+                        <div class="row">
+                            <label class="control-label col-md-2" for="Revision">Typ revize</label>
+                            <div class="col-md-4">
+                                @Model.Revision
+                                <input type="hidden" name="Revision" value="@Model.Revision" />
+                            </div>
+                            <label class="control-label col-md-2" for="ReviewDate">Datum revize</label>
+                            <div class="col-md-4">
+                                @*@Html.EditorFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ReviewDate, "", new { @class = "text-danger" })*@
+                                @Html.HiddenFor(model => model.ReviewDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Revidovat" } })
+                                @Model.ReviewDate
+                            </div>
 
-                <div class="row">
-                    <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
-                    <div class="col-md-10">
-                        @if (ViewBag.TypeModel.AdministratorID != 0)
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-2" for="DocumentTypeID">Typ dokumentu</label>
+                            <div class="col-md-4">
+                                <input type="hidden" name="DocumentTypeID" value="@Model.DocumentTypeID" />
+                                @Html.DropDownListFor(m => m.DocumentTypeID, new SelectList(ViewBag.DocumentTypes, "ID", "Value"), new { disabled = true })
+                            </div>
+                            <label class="control-label col-md-2" for="NextReviewDate">Datum další revize</label>
+                            <div class="col-md-4">
+                                @*@Html.EditorFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.NextReviewDate, "", new { @class = "text-danger" })*@
+                                @Html.HiddenFor(model => model.NextReviewDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Další revize" } })
+                                @Model.NextReviewDate
+                            </div>
+
+
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+
+                            </div>
+                            <label class="control-label col-md-2" for="EndDate">Konec platnosti</label>
+                            <div class="col-md-4">
+                                @*@Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })*@
+                                @Html.HiddenFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control", @placeholder = "Datum ukončení platnosti" } })
+                                @Model.EndDate
+                            </div>
+                        </div>
+
+                        @*<div class="row">
+                                <label class="control-label col-md-2" for="DocumentTypeID">Stav dokumentu</label>
+                                <div class="col-md-10">
+                                    @Model.DocumentStateName
+
+                                </div>
+                            </div>*@
+
+                        <div class="row">
+                            <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
+                            <div class="col-md-10">
+                                @if (ViewBag.TypeModel.AdministratorID != 0)
+                                {
+                                    <p>Z typu dokumentu: @Model.DocumentAdministrator</p>
+
+                                }
+                                else
+                                {
+                                    <p>Vybraná osoba &nbsp;</p>
+                                    @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"));
+                                }
+                                <br />
+
+                            </div>
+                        </div>
+                        <div class="row">
+                            <label class="control-label col-md-2" for="Title">Anotace</label>
+
+                            <div class="col-md-10">
+                                @Html.HiddenFor(model => model.Annotation)
+                                <p style="white-space: pre-line">@Model.Annotation</p>
+
+                            </div>
+
+                        </div>
+                        @if (Model.IssueNumber > 1)
                         {
-                            <p>Z typu dokumentu: @Model.DocumentAdministrator</p>
+                            <div class="row">
+                                <label class="control-label col-md-2" for="Title">Popis změny</label>
 
+                                <div class="col-md-10">
+                                    @Html.HiddenFor(model => model.IssueChangeComment)
+                                    <p style="white-space: pre-line">@Model.IssueChangeComment</p>
+
+                                </div>
+
+                            </div>
                         }
-                        else
-                        {
-                            <p>Vybraná osoba &nbsp;</p>
-                                @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.Administrators, "ID", "Value"));
-                        }
-                        <br />
 
                     </div>
-                </div>
-                <div class="row">
-                    <label class="control-label col-md-2" for="Title">Anotace</label>
-
-                    <div class="col-md-10">
-                        @Html.HiddenFor(model => model.Annotation)
-                        <p style="white-space: pre-line">@Model.Annotation</p>
-
-                    </div>
-
-                </div>
-            @if (Model.IssueNumber > 1)
-            { 
-                <div class="row">
-                    <label class="control-label col-md-2" for="Title">Popis změny</label>
-
-                    <div class="col-md-10">
-                        @Html.HiddenFor(model => model.IssueChangeComment)
-                        <p style="white-space: pre-line">@Model.IssueChangeComment</p>
-
-                    </div>
-
-                </div>
-            }
-    
-            </div>
             @*-------tabs6 = 6. rozdělovník = záznamy seznámení*@
             @if (Model.AllUsers > 0)
             {

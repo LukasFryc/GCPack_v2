@@ -490,6 +490,20 @@
                        
 
                 </div>
+                @if (Model.StateID == 3)
+                {
+                    <div class="row">
+                        <div class="col-md-8 ">
+                        </div>
+                        <div class="col-md-4 modra">
+
+                            <p class="modra">Důvod: @Model.StornoReason</p>
+
+                            @*@Html.HiddenFor(model => model.StornoReason, new { htmlAttributes = new { @class = "form-control", @placeholder = "oduvodnění Storna" } })*@
+
+                        </div>
+                    </div>
+                }
                 <div class="row">
                     <label class="control-label col-md-2" for="DocumentAdminType">Číslo dokumentu</label>
                     <div class="col-md-4">

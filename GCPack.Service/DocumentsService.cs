@@ -153,6 +153,7 @@ namespace GCPack.Service
                 document.DocumentNumber = oldDocument.DocumentNumber;
 
                 documentsRepository.ChangeRevison(oldDocument, "N");
+               
             }
 
             // stav revize dokumentu se prepne na P
@@ -227,6 +228,10 @@ namespace GCPack.Service
         public void ChangeDocumentState(DocumentModel document, string state)
         {
             documentsRepository.ChangeDocumentState(document, state);
+        }
+        public void ChangeDocumentState(DocumentModel document, string state, string helpText)
+        {
+            documentsRepository.ChangeDocumentState(document, state, helpText);
         }
         public void ChangeDocumentState(int documentID, string state)
         {

@@ -382,8 +382,8 @@ namespace GCPack.Web.Controllers
         public ActionResult StornoDocument(DocumentModel document, string HelpText)
         {
             DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
-            // TODO: LF - duvod storna dat do logu
-            documentService.ChangeDocumentState(document, "Storno");
+            // TODO: LF - duvod storna dat do logu ?? zatim se ukládá  do sloupce StornoReason
+            documentService.ChangeDocumentState(document, "Storno", HelpText);
             return RedirectToAction("Index", filter);
         }
 

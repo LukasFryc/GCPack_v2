@@ -25,7 +25,9 @@ namespace GCPack.Repository.Interfaces
         DocumentTypeModel GetDocumentType(int ID);
         DocumentTypeModel SaveDocumentType(DocumentTypeModel documentType);
         void ChangeDocumentState(DocumentModel document, string state);
+        void ChangeDocumentState(DocumentModel document, string state,string helpText);
         void ChangeDocumentState(int documentID, string state);
+        void ChangeDocumentState(int documentID, string state, string helpText);
         ICollection<int> GetJobPositionsFromDocument(int documentId);
         ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter);
         string GenNumberOfDocument(int documentTypeID);

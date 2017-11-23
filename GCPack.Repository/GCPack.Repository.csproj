@@ -96,7 +96,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GCPack.edmx</DependentUpon>
     </Compile>
-    <Compile Include="GetDocuments20_Result.cs">
+    <Compile Include="GetDocuments21_Result.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ILogEventsRepository.cs" />

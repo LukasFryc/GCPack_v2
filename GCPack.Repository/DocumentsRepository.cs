@@ -409,7 +409,7 @@ namespace GCPack.Repository
 
                 if (filter.DocumentID==null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments20_Result> documentsResult = db.GetDocuments20(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments20_Result>();
+                ICollection<GetDocuments21_Result> documentsResult = db.GetDocuments21(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments21_Result>();
                 documentCollection.Count = documentsResult.Count();
                 // v pripade ze se jedna o vyber jednoho dokumentu
                 if (filter.DocumentID != 0)
@@ -715,10 +715,22 @@ namespace GCPack.Repository
                 db.SaveChanges();
             }
         }
-
         public void ChangeDocumentState(DocumentModel document, string state)
         {
-            ChangeDocumentState(document.ID, state);
+           
+                ChangeDocumentState(document.ID, state);
+            
+        }
+
+        public void ChangeDocumentState(DocumentModel document, string state, string helpText)
+        { if (String.IsNullOrEmpty(helpText) )
+              {
+                ChangeDocumentState(document.ID, state);
+            }
+            else
+            {
+               ChangeDocumentState(document.ID, state, helpText);
+            }
         }
 
         public void ChangeDocumentState(int documentId, string state)
@@ -731,6 +743,28 @@ namespace GCPack.Repository
                 dbDocument.PreviousStateID = dbDocument.StateID;
                 dbDocument.StateID = stateID;
 
+                db.SaveChanges();
+            }
+        }
+
+        public void ChangeDocumentState(int documentId, string state, string helpText)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                int stateID = db.DocumentStates.Where(s => s.Code == state).Select(s => s.ID).FirstOrDefault();
+                var dbDocument = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault();
+
+                dbDocument.PreviousStateID = dbDocument.StateID;
+                dbDocument.StateID = stateID;
+
+                if (state == "Storno")
+                {
+                    dbDocument.StornoReason = helpText;                   
+                }
+
+
+                
+               
                 db.SaveChanges();
             }
         }
