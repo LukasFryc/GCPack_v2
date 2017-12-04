@@ -40,6 +40,12 @@
     var timeoutHandle;
     $(document).ready(function () {
 
+       
+        $("#AllIssue").delegate("tr.dataRowClick", "click", function () {
+            window.location.href = '/Documents/Details/?documentId=' + $(this).attr('value');
+        });
+        
+
         // pokus o otevreni detailu doc v y8lo6ce zmeny do dialog okna / nefungovalo
         //$('.linktest').click(function () {
 
@@ -50,6 +56,10 @@
         //    });
         //    return false;
         //});                
+
+
+       
+
 
         GetDocuments_Edit();
 
@@ -88,7 +98,6 @@
         // LF lukasuv kousek 15.9.2017
         $('.btnAction').click(function () {
 
-            
             var myForm1 = $("#Title");
             myForm1.validate();
             if (!myForm1.valid())
@@ -131,6 +140,12 @@
                 return false;
             }
             //1
+
+            //if ($(this).prop("id") == "cancelChanges") {
+            //    $('#MyForm').validate().cancelSubmit = true;
+            //}
+
+            
             $('#myForm').submit();
         });
 
@@ -179,17 +194,22 @@
         //    });
         //});
 
-        $('#jobPosition').change(function () {
-            GetUsers();
-        });
 
-        $("#RemoveSelectedUsers").click(function ()
-        {
-            $("#SelectedUsers :selected").each(function () {
-                $(this).remove();
-            });
-            GetUsers();
-        });
+
+
+
+
+        //$('#jobPosition').change(function () {
+        //    GetUsers();
+        //});
+
+        //$("#RemoveSelectedUsers").click(function ()
+        //{
+        //    $("#SelectedUsers :selected").each(function () {
+        //        $(this).remove();
+        //    });
+        //    GetUsers();
+        //});
 
         //$('#saveDocument, #newVersion, #registerDocument, #revisionNoAction, #revisionChanges').click(function ()
         //{
@@ -198,16 +218,16 @@
         //    $('#SelectedUsers option').prop('selected', true);
         //});
 
-        $('#AddUserToList').click(function () {
-            $("#FilteredUsers :selected").each(function (index, user) {
-                $('#SelectedUsers').append('<option value="' + user.value + '">' + user.text + '</option>');
-            });
+        //$('#AddUserToList').click(function () {
+        //    $("#FilteredUsers :selected").each(function (index, user) {
+        //        $('#SelectedUsers').append('<option value="' + user.value + '">' + user.text + '</option>');
+        //    });
             
-            GetUsers();
-        });
+        //    GetUsers();
+        //});
         
 
-        GetUsers();
+        //GetUsers();
 
         $('.removeFile').click(function () {
             $('#DeleteFileItems').val($('#DeleteFileItems').val() + $(this).attr('fileId') + ',');
@@ -263,72 +283,115 @@
             //alert('odeslano');
         //});
 
-        function GetUsers()
-        {
-            if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
 
-            timeoutHandle = setTimeout(
-                function () {
-                    selectedUsers = [];
-                    $("#SelectedUsers").children().each(function () {
-                        selectedUsers.push($(this).val());
-                    });
-                    $('#FilteredUsers').empty();
 
-                    var AllPath = AppRoot + "/user/getUsers";
-                    //alert(AllPath);
+        //function GetUsers()
+        //{
+        //    if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
 
-                    // LF 10.11.2017 pred tim nez jsme skryli jobPosition a dalsi pole $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
-                    $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: 0, preservedUsers: selectedUsers.join(',') })
-                        .done(function (users) {
+        //    timeoutHandle = setTimeout(
+        //        function () {
+        //            selectedUsers = [];
+        //            $("#SelectedUsers").children().each(function () {
+        //                selectedUsers.push($(this).val());
+        //            });
+        //            $('#FilteredUsers').empty();
 
-                            for (var user in users)
-                            {
-                                $('#FilteredUsers').append($('<option>', {
-                                    value: users[user].ID,
-                                    text: users[user].LastName + ' ' + users[user].FirstName 
-                                }));
-                            }
+        //            var AllPath = AppRoot + "/user/getUsers";
+                    
+        //            $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: 0, preservedUsers: selectedUsers.join(',') })
+        //                .done(function (users) {
+
+        //                    for (var user in users)
+        //                    {
+        //                        $('#FilteredUsers').append($('<option>', {
+        //                            value: users[user].ID,
+        //                            text: users[user].LastName + ' ' + users[user].FirstName 
+        //                        }));
+        //                    }
                             
-                        })
-                        .fail(function (jqxhr, textStatus, error) {
-                            var err = textStatus + ", " + error;
-                            console.log("Request Failed: " + err);
-                        });
+        //                })
+        //                .fail(function (jqxhr, textStatus, error) {
+        //                    var err = textStatus + ", " + error;
+        //                    console.log("Request Failed: " + err);
+        //                });
 
 
-                },
-                500);
-        }
+        //        },
+        //        500);
+        //}
     });
 
 </script>
 @*script pro kategorie viz tab 5*@
 <script>
+
+    var GetUsersJob_orderBy = 'GetUsersJob_JobPostionA';
+    var GetReadConfirms_orderBy = 'GetReadConfirms_JobPostionA';
+    var GetDocuments_Edit_orderBy = 'NumberA';
+
     $(document).ready(function () {
+
+        $('.GetReadConfirms_SortBy').click(
+            function () {
+                GetReadConfirms_orderBy = $(this).attr('sortBy');
+                //alert("sortby");
+                GetReadConfirms();
+            }
+        );
+
+        $('.GetUsersJob_SortBy').click(
+            function () {
+                GetUsersJob_orderBy = $(this).attr('sortBy');
+                //alert("sortby");
+                GetUsersJob();
+            }
+        );
+
+        $('.GetDocuments_Edit_SortBy').click(
+            function () {
+
+                GetDocuments_Edit_orderBy = $(this).attr('sortBy');
+                alert(GetDocuments_Edit_orderBy);
+                SetSelectedColumn($(this), GetDocuments_Edit);
+            }
+
+        );
+
+
+        if ($('#DocumentStateCode').val() == "New") {
+            GetUsersJob();
+            
+        } else {
+            GetReadConfirms();
+        }
 
         $('#cancelChanges').click(
             function () {
                 //window.location.href = '/Documents/Index/'; - kdyz bych pouzil takto tak se nenastavi zpravne filtry
-                window.location.href = '/Documents/CancelChanges/' ;
+               location.href = '/Documents/CancelChanges' ;
             });
         $('#addUsers').click(
             function () {
                 ChangeItems('#AllUsers', '#SelectedUsers');
+                GetUsersJob();
             });
         $('#removeUsers').click(
             function () {
                 ChangeItems('#SelectedUsers', '#AllUsers');
+                GetUsersJob();
             });
 
 
         $('#addJobPositions').click(
             function () {
                 ChangeItems('#AllJobPositions', '#JobPositionIDs');
+                GetUsersJob();
             });
         $('#removeJobPositions').click(
             function () {
                 ChangeItems('#JobPositionIDs', '#AllJobPositions');
+                GetUsersJob();
             });
 
         $('#addProjects').click(
@@ -394,7 +457,7 @@
         //    $("#selectB option").attr("disabled", "disabled").hide();
 
 
-        // TODO> LF 15.11.2017 nefunguje na IE nutno predelat na json 
+        // TODO> LF 15.11.2017 hide nefunguje na IE nutno predelat na json 
             $(codeList + ' option').each(function () {
                 if ($(this).text().toLowerCase().indexOf(filter.toLowerCase()) > -1) {
                     $(this).show();
@@ -703,13 +766,7 @@
                     <div class="col-md-4 sedaPozadi">
 
                         @*<input type="text" id="JobPositionFilter" />*@
-
-
-                        @if (@Model.Users != null)
-                        {
-                            <p>ahoj</p>
-
-                        }
+                       
                         <select multiple name="AllUsers" id="AllUsers" class="categories form-control">
                             @if (@Model.Users != null)
                             {
@@ -767,28 +824,66 @@
                 </div>
 
 
-                @*<div class="row">*@
-                    @*<div class="col-md-10">*@
-                        @*<div style="margin-bottom:20px">
 
-                            <div class="col-md-2">
-                                <b>Pracovní pozice</b>
-                            </div>
-                            <div class="col-md-8">
-                                @foreach (GCPack.Model.JobPositionModel job in ViewBag.JobPositions)
-                                {
-                                    string isChecked = (Model.JobPositionIDs != null && Model.JobPositionIDs.Contains(job.ID)) ? "checked" : "";
-                                    <div>
-                                        <input type="checkbox" name="JobPositionIDs" value="@job.ID" @isChecked /> @job.Name
-                                    </div>
-                                }
-                            </div>
-                        </div>*@
-                    @*</div>*@
+                @if (Model.DocumentStateCode == "New")
+                {
+                    <p><strong>Návrh rozdělovníku</strong></p>
+                    <div class="row">
+                        <table class="table" style="margin-top:20px" id="AllUsersJob">
+                            <tr>
+                                <th>
+                                    Jméno
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_NameA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_NameD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
+                                </th>
+                                <th>
+                                    Funkce
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_JobPostionA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_JobPostionD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
+                                </th>
+
+                            </tr>
+                        </table>
+
+                    </div>
+
+                }
+                else
+                {
+                    <p><strong>Rozdělovník</strong></p>
+                    <div class="row">
+                        <table class="table" style="margin-top:20px" id="AllReadConfirms">
+                            <tr>
+                                <th>
+                                    Jméno
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_NameA"><span class="glyphicon glyphicon-circle-arrow-up" style="color:blue" ></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_NameD"><span class="glyphicon glyphicon-circle-arrow-down" style="color:blue" ></span></a>
+                                </th>
+                                <th>
+                                    Funkce
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_JobPostionA"><span class="glyphicon glyphicon-circle-arrow-up "></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_JobPostionD"><span class="glyphicon glyphicon-circle-arrow-down "></span></a>
+                                </th>
+                                <th>
+                                    Přiřazeno
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_CreatedA"><span class="glyphicon glyphicon-circle-arrow-up"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_CreatedD"><span class="glyphicon glyphicon-circle-arrow-down"></span></a>
+                                </th>
+                                <th>
+                                    Seznámeno
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_ReadDateA"><span class="glyphicon glyphicon-circle-arrow-up"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_ReadDateD"><span class="glyphicon glyphicon-circle-arrow-down"></span></a>
+                                </th>
+
+                            </tr>
+                        </table>
+                    </div>
+                }
+                
 
                 @*</div>*@
                 @*záznamy o seznámení*@
-                <p></p>
+                @*<p></p>
                 <b>Záznamy seznámení</b>
                 <div class="row">
                     <div class="col-md-10">
@@ -846,7 +941,7 @@
                             }
                         }
                     </div>
-                </div>
+                </div>*@
 
                 @*<div class="row">
                     <div class="col-md-8">
@@ -1098,23 +1193,38 @@
             @*tabulka vsech souvisejicich vydani - zmeny *@
             <div id="tabs-8">
 
-                <table class="table" style="margin-top:20px">
+                <table class="table" style="margin-top:20px" id="AllIssue">
+                    @*<tr>
+                        <th>Číslo</th>
+                        <th>Název</th>
+                        <th>Účinnost</th>
+                        <th>Změny</th>
+                        <th></th>
+                    </tr>*@
+
                     <tr>
                         <th>
                             Číslo
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="NumberA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="NumberD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                         </th>
                         <th>
                             Název
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="NameA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="NameD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                         </th>
+
                         <th>
                             Účinnost
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="RevisionA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="RevisionD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                         </th>
                         <th>
                             Změny
                         </th>
-                                                
-                        <th></th>
-                    </tr>
+                        <th>
+                        </th>
+
                 </table>
 
 

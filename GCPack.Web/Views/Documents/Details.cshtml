@@ -8,11 +8,20 @@
 }
 @using GCPack.Model;
 <script>
+
+    
+
+
     var timeoutHandle;
     var selectedUsers = [];
     $(document).ready(function () {
+
+
+
+
         // GetDocument-Edit naplni zalozku Zmeny vsema vydanima daneho doc
-        GetDocuments_Edit(); 
+        GetDocuments_Edit();
+
         jQuery.validator.methods["date"] = function (value, element) { return true; }
 
         $("#EffeciencyDate").datepicker({ dateFormat: 'dd/mm/yy' });
@@ -46,62 +55,77 @@
 
         $("#tabs").tabs();
 
-        $('#filter').keyup(function () {
-            GetUsers();
-        });
+        var selector = '@ViewBag.Tabs';
+        if(selector)
+        {
+            //$("#tabs-" + selector).tab('show');
+            $("a[href='#tabs-"+selector+ "']").click();
+        }
+
+        //$("#tabs").tabs({ active: 6 });
+
+        //$('#tabs-6').click();
+
+        //$("a[href='#tabs-6']").click();
+
+        //alert('@ViewBag.Tabs');
+
+        //$('#filter').keyup(function () {
+        //    GetUsers();
+        //});
 
         $('#cancelChanges').click(function () {
             $("#success-alert").fadeTo(1000, 500).slideUp(500, function () {
                 $("#success-alert").slideUp(500);
-                document.location.href = '/Documents';
+                document.location.href = '/Documents/CancelChanges';
             });
         });
-
+        //cancelChangec bz nemel mit clasu btnAction
         $('.btnAction').click(function () {
 
             $('#Action').val($(this).prop("id"));
             $('form').prop('action', $(this).prop("id"));
-            
+
             $('#myForm').submit();
         });
 
 
-        GetUsers();
+        //GetUsers();
 
-        function GetUsers() {
-            if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
+        //function GetUsers() {
+        //    if (timeoutHandle != null) window.clearTimeout(timeoutHandle);
 
-            timeoutHandle = setTimeout(
-                function () {
-                    selectedUsers = [];
-                    $("#SelectedUsers").children().each(function () {
-                        selectedUsers.push($(this).val());
-                    });
-                    $('#FilteredUsers').empty();
+        //    timeoutHandle = setTimeout(
+        //        function () {
+        //            selectedUsers = [];
+        //            $("#SelectedUsers").children().each(function () {
+        //                selectedUsers.push($(this).val());
+        //            });
+        //            $('#FilteredUsers').empty();
 
-                    var AllPath = AppRoot + "/user/getUsers";
-                    //alert(AllPath);
+        //            var AllPath = AppRoot + "/user/getUsers";
+        //            //alert(AllPath);
 
-                    $.getJSON(AppRoot + "/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
-                        .done(function (users) {
+        //            $.getJSON(AppRoot + "/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
+        //                .done(function (users) {
 
-                            for (var user in users) {
-                                $('#FilteredUsers').append($('<option>', {
-                                    value: users[user].ID,
-                                    text: users[user].LastName + ' ' + users[user].FirstName
-                                }));
-                            }
+        //                    for (var user in users) {
+        //                        $('#FilteredUsers').append($('<option>', {
+        //                            value: users[user].ID,
+        //                            text: users[user].LastName + ' ' + users[user].FirstName
+        //                        }));
+        //                    }
 
-                        })
-                        .fail(function (jqxhr, textStatus, error) {
-                            var err = textStatus + ", " + error;
-                            console.log("Request Failed: " + err);
-                        });
+        //                })
+        //                .fail(function (jqxhr, textStatus, error) {
+        //                    var err = textStatus + ", " + error;
+        //                    console.log("Request Failed: " + err);
+        //                });
 
 
-                },
-                500);
-        }
+        //        },
+        //        500);
+        //}
     });
 
 </script>
@@ -544,7 +568,7 @@
                                     <div class="container-fluid">
                                         <ul class="nav navbar-nav">
                                             <li style="padding-right:5px">
-                                                <button class="btn btn-danger navbar-btn btnAction" id="cancelChanges">Zpět</button>
+                                                <button class="btn btn-danger navbar-btn " id="cancelChanges">Zpět</button>
                                             </li>
                                             @if (Model.DocumentStateCode == "Registered" & Model.CanConfirmRead & Model.ReadDate == null)
                                             {

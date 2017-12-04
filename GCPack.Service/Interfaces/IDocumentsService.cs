@@ -25,8 +25,11 @@ namespace GCPack.Service.Interfaces
         void ReviewNoAction(DocumentModel document);
         void ReviewNecessaryChange(DocumentModel document, string comment, string userName);
         void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState);
-        ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID);
+        //ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID);
         //void Archived(DocumentModel document, bool archiv);
+        void AddReadConfirms(int documentID, ICollection<UserJobModel> usersJob);
+
+        ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter);
 
     }
 }

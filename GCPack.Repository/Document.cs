@@ -21,10 +21,10 @@ namespace GCPack.Repository
             this.Files = new HashSet<File>();
             this.JobPositionDocuments = new HashSet<JobPositionDocument>();
             this.ProjectDocuments = new HashSet<ProjectDocument>();
-            this.ReadConfirmations = new HashSet<ReadConfirmation>();
             this.Signatures = new HashSet<Signature>();
             this.SystemDocuments = new HashSet<SystemDocument>();
             this.WorkplaceDocuments = new HashSet<WorkplaceDocument>();
+            this.ReadConfirmations = new HashSet<ReadConfirmation>();
         }
     
         public int ID { get; set; }
@@ -64,12 +64,12 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProjectDocument> ProjectDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ReadConfirmation> ReadConfirmations { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Signature> Signatures { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SystemDocument> SystemDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<WorkplaceDocument> WorkplaceDocuments { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReadConfirmation> ReadConfirmations { get; set; }
     }
 }

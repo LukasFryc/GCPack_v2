@@ -47,10 +47,9 @@ namespace GCPack.Repository
         public virtual DbSet<Workplace> Workplaces { get; set; }
         public virtual DbSet<WorkplaceDocument> WorkplaceDocuments { get; set; }
         public virtual DbSet<LogEvent> LogEvents { get; set; }
-        public virtual DbSet<ConfirmUserFunction> ConfirmUserFunctions { get; set; }
-        public virtual DbSet<ReadConfirmation> ReadConfirmations { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Document> Documents { get; set; }
+        public virtual DbSet<ReadConfirmation> ReadConfirmations { get; set; }
     
         public virtual int GetDocuments(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage)
         {

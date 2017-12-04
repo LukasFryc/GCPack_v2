@@ -14,20 +14,15 @@ namespace GCPack.Repository
     
     public partial class ReadConfirmation
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ReadConfirmation()
-        {
-            this.ConfirmUserFunctions = new HashSet<ConfirmUserFunction>();
-        }
-    
         public int ID { get; set; }
         public int UserID { get; set; }
         public Nullable<System.DateTime> ReadDate { get; set; }
         public int DocumentID { get; set; }
+        public int JobPositionID { get; set; }
+        public string JobPositionName { get; set; }
+        public System.DateTime Created { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ConfirmUserFunction> ConfirmUserFunctions { get; set; }
-        public virtual User User { get; set; }
         public virtual Document Document { get; set; }
+        public virtual User User { get; set; }
     }
 }

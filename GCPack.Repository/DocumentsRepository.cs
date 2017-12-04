@@ -35,10 +35,6 @@ namespace GCPack.Repository
                                 select u.User;
                 var allUsers2 = from ud in db.UserDocuments where ud.DocumentId == documentID
                                 select ud.User;
-
-                
-                
-
                 
 
                 var allUsers = allUsers1.Union(allUsers2);
@@ -57,7 +53,8 @@ namespace GCPack.Repository
                 foreach (var userRead in usersRead)
                 {
                     usersInDocument.UsersRead.Add(new UserReadDocument() {
-                        DateRead = (DateTime)userRead.Date,
+                        //(DateTime)
+                        DateRead = userRead.Date,
                         User = Mapper.Map<UserModel> (userRead.User)
                     });
                 }
@@ -586,42 +583,49 @@ namespace GCPack.Repository
             return result;
         }
 
-        public int Readed(int documentID, int userID)
+        public void Readed(int documentID, int userID)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ReadConfirmation readConfirmation = null;
-                var readConfirms = db.ReadConfirmations.Where(s => s.DocumentID == documentID && s.UserID == userID).Select(s => s).FirstOrDefault();
-                if (readConfirms == null)
+                //ReadConfirmation readConfirmation = null;
+                var readConfirms = db.ReadConfirmations.Where(s => s.DocumentID == documentID && s.UserID == userID).Select(s => s);
+                if (readConfirms != null)
                 {
-                    readConfirmation = db.ReadConfirmations.Add(new ReadConfirmation()
+
+                    foreach (var item in readConfirms)
                     {
-                        DocumentID = documentID,
-                        UserID = userID,
-                        ReadDate = DateTime.Now
-                    });
+                        item.ReadDate = DateTime.Now;
+
+                    }
+
+                    //readConfirmation = db.ReadConfirmations.Add(new ReadConfirmation()
+                    //{
+                    //    DocumentID = documentID,
+                    //    UserID = userID,
+                    //    ReadDate = DateTime.Now
+                    //});
                     db.SaveChanges();
                 }
-                return readConfirmation.ID;
+                //return readConfirmation.ID;
             }
         }
 
-        public void ReadedUserInFunctions(int confirmID, int jobPositionID, string name)
-        {
-            using (GCPackContainer db = new GCPackContainer())
-            {
-                {
-                    db.ConfirmUserFunctions.Add(new ConfirmUserFunction()
-                    {
-                        ConfimID = confirmID,
-                        JobPositionID = jobPositionID,
-                        JobPositionName = name
-                    });
-                    db.SaveChanges();
-                }
+        //public void ReadedUserInFunctions(int confirmID, int jobPositionID, string name)
+        //{
+        //    using (GCPackContainer db = new GCPackContainer())
+        //    {
+        //        {
+        //            db.ConfirmUserFunctions.Add(new ConfirmUserFunction()
+        //            {
+        //                ConfimID = confirmID,
+        //                JobPositionID = jobPositionID,
+        //                JobPositionName = name
+        //            });
+        //            db.SaveChanges();
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
 
         public DocumentModel AddDocument(DocumentModel document)
@@ -643,7 +647,8 @@ namespace GCPack.Repository
                 // pokud se jedna o novy dokument (a ne nove vydani), pak se parentID nastavi na ID dokumentu
                 if (newDocument.ParentID == 0)
                 {
-                    newDocument.ParentID = document.ID;
+                    //newDocument.ParentID = document.ID;
+                    newDocument.MainID = document.ID;
 
                     db.SaveChanges();
                 } 
@@ -873,82 +878,165 @@ namespace GCPack.Repository
             }
         }
 
-        public ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID)
-        {
 
-            ICollection<UsersForJobPositionInDocumentModel> jpu = new HashSet<UsersForJobPositionInDocumentModel>();
+        //public ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID)
+        //{
+
+        //    ICollection<UsersForJobPositionInDocumentModel> jpu = new HashSet<UsersForJobPositionInDocumentModel>();
+        //    using (GCPackContainer db = new GCPackContainer())
+        //    {
+        //        var result = db.JobPositions
+        //            .Where(jp => jobPositionsID.Contains(jp.ID))
+        //            .Select(jp => jp);
+        //        if (result.Count() > 0)
+        //        {
+        //            foreach (var item in result)
+        //            {
+        //                UsersForJobPositionInDocumentModel jpuItem = new UsersForJobPositionInDocumentModel();
+        //                jpuItem.JobPosition = Mapper.Map<JobPositionModel>(item);
+        //                foreach (var dbUser in item.JobPositionUsers.Select(u => u.User))
+        //                {
+        //                    UserReadDocument user = new UserReadDocument();
+        //                    user.User = Mapper.Map<UserModel>(dbUser);
+        //                    user.DateRead = dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId).Select(rc => rc.ReadDate).FirstOrDefault();
+        //                    //foreach (var function1 in 
+        //                    //    dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId)
+        //                    //    .Select(rc => rc)
+        //                    //    .FirstOrDefault()
+        //                    //    .ConfirmUserFunctions.Select(cuf => cuf))
+        //                    //{
+        //                    //    user.Functions += function1.JobPositionName + " ";
+        //                    //}
+
+
+        //                    var rc1 = dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId)
+        //                        .Select(rc => rc).FirstOrDefault();
+
+
+        //                    if (rc1 != null)
+        //                    {
+        //                        foreach (var function1 in rc1.ConfirmUserFunctions.Select(cuf => cuf))
+        //                        {
+        //                            user.Functions += function1.JobPositionName + " ";
+        //                        };
+        //                    };
+
+
+        //                    user.User.Password = "";
+        //                    jpuItem.Users.Add(user);
+        //                }
+        //                jpu.Add(jpuItem);
+        //            }
+        //        }
+
+        //        UsersForJobPositionInDocumentModel jpuItemManual = new UsersForJobPositionInDocumentModel();
+        //        jpuItemManual.JobPosition = new JobPositionModel() {
+        //            Name = "Ručně přidaní uživatelé",
+        //            ID = 0
+        //        };
+
+        //        var usersDocument = db.Users.Where(u => usersID.Contains(u.ID)).Select(u => u);
+        //        if (usersDocument.Count() > 0)
+        //        {
+        //            foreach (var userManual in usersDocument)
+        //            {
+        //                UserReadDocument userRead = new UserReadDocument();
+        //                userRead.User = Mapper.Map<UserModel>(userManual);
+        //                userRead.DateRead = userManual.ReadConfirmations
+        //                    .Where(rc => rc.UserID == userManual.ID && rc.DocumentID == documentId)
+        //                    .Select(rc => rc.ReadDate).FirstOrDefault();
+        //                userRead.User.Password = "";
+        //                jpuItemManual.Users.Add(userRead);
+        //            }
+
+        //            jpu.Add(jpuItemManual);
+        //        }
+        //    }
+
+        //    return jpu;
+
+        //}
+
+        public void AddReadConfirms(int documentID, ICollection<UserJobModel> usersJob)
+        {
             using (GCPackContainer db = new GCPackContainer())
             {
-                var result = db.JobPositions
-                    .Where(jp => jobPositionsID.Contains(jp.ID))
-                    .Select(jp => jp);
-                if (result.Count() > 0)
+                foreach (var item in usersJob)
                 {
-                    foreach (var item in result)
-                    {
-                        UsersForJobPositionInDocumentModel jpuItem = new UsersForJobPositionInDocumentModel();
-                        jpuItem.JobPosition = Mapper.Map<JobPositionModel>(item);
-                        foreach (var dbUser in item.JobPositionUsers.Select(u => u.User))
-                        {
-                            UserReadDocument user = new UserReadDocument();
-                            user.User = Mapper.Map<UserModel>(dbUser);
-                            user.DateRead = dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId).Select(rc => rc.ReadDate).FirstOrDefault();
-                            //foreach (var function1 in 
-                            //    dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId)
-                            //    .Select(rc => rc)
-                            //    .FirstOrDefault()
-                            //    .ConfirmUserFunctions.Select(cuf => cuf))
-                            //{
-                            //    user.Functions += function1.JobPositionName + " ";
-                            //}
 
 
-                            var rc1 = dbUser.ReadConfirmations.Where(rc => rc.DocumentID == documentId)
-                                .Select(rc => rc).FirstOrDefault();
+                    ReadConfirmation newReadConfirm = new ReadConfirmation();
 
-                            
-                            if (rc1 != null)
-                            {
-                                foreach (var function1 in rc1.ConfirmUserFunctions.Select(cuf => cuf))
-                                {
-                                    user.Functions += function1.JobPositionName + " ";
-                                };
-                            };
+                    newReadConfirm.Created = DateTime.Now;
+                    newReadConfirm.DocumentID = documentID;
+                    newReadConfirm.JobPositionName = item.JobPositionName;
+                    newReadConfirm.JobPositionID = item.JobPositionID;
+                    newReadConfirm.UserID = item.UserID;
 
+                    db.ReadConfirmations.Add(newReadConfirm);
 
-                            user.User.Password = "";
-                            jpuItem.Users.Add(user);
-                        }
-                        jpu.Add(jpuItem);
-                    }
+                    db.SaveChanges();
+
                 }
 
-                UsersForJobPositionInDocumentModel jpuItemManual = new UsersForJobPositionInDocumentModel();
-                jpuItemManual.JobPosition = new JobPositionModel() {
-                    Name = "Ručně přidaní uživatelé",
-                    ID = 0
-                };
-
-                var usersDocument = db.Users.Where(u => usersID.Contains(u.ID)).Select(u => u);
-                if (usersDocument.Count() > 0)
-                {
-                    foreach (var userManual in usersDocument)
-                    {
-                        UserReadDocument userRead = new UserReadDocument();
-                        userRead.User = Mapper.Map<UserModel>(userManual);
-                        userRead.DateRead = userManual.ReadConfirmations
-                            .Where(rc => rc.UserID == userManual.ID && rc.DocumentID == documentId)
-                            .Select(rc => rc.ReadDate).FirstOrDefault();
-                        userRead.User.Password = "";
-                        jpuItemManual.Users.Add(userRead);
-                    }
-
-                    jpu.Add(jpuItemManual);
-                }
             }
 
-            return jpu;
+        }
 
+        public ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter) {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+
+                //switch (filter.OrderBy)
+                //{
+
+                //    case "GetUsersJob_NameA":
+
+
+                //        UserJobs = UserJobs.OrderBy(uj => uj.JobPositionName);
+                //        break;
+                //    case "GetUsersJob_NameD":
+                //        UserJobs = UserJobs.OrderBy(u => u.LastName).ThenBy(u => u.FirstName);
+                //        break;
+                //}
+
+                var dbRC = db.ReadConfirmations.Where(rc => rc.DocumentID == filter.DocumentID).Select(rc => rc);
+
+                switch (filter.OrderBy)
+                {
+                    case "GetReadConfirms_NameA":
+                        dbRC = dbRC.OrderBy(rc => rc.User.LastName);
+                        break;
+                    case "GetReadConfirms_NameD":
+                        dbRC = dbRC.OrderByDescending(rc => rc.User.LastName);
+                        break;
+                    case "GetReadConfirms_JobPostionA":
+                        dbRC = dbRC.OrderBy(rc => rc.JobPositionName);
+                        break;
+                    case "GetReadConfirms_JobPostionD":
+                        dbRC = dbRC.OrderByDescending(rc => rc.JobPositionName);
+                        break;
+                    case "GetReadConfirms_CreatedA":
+                        dbRC = dbRC.OrderBy(rc => rc.Created.Date);
+                        break;
+                    case "GetReadConfirms_CreatedD":
+                        dbRC = dbRC.OrderByDescending(rc => rc.Created.Date);
+                        break;
+                    case "GetReadConfirms_ReadDateA":
+                        dbRC = dbRC.OrderBy(rc => rc.ReadDate);
+                        break;
+                    case "GetReadConfirms_ReadDateD":
+                        dbRC = dbRC.OrderByDescending(rc => rc.ReadDate);
+                        break;
+
+                }
+
+
+                
+                
+                return Mapper.Map<ICollection<ReadConfirmModel>>(dbRC);
+
+            }
         }
     }
 }

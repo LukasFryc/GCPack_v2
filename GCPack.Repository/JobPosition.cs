@@ -19,7 +19,6 @@ namespace GCPack.Repository
         {
             this.JobPositionUsers = new HashSet<JobPositionUser>();
             this.JobPositionDocuments = new HashSet<JobPositionDocument>();
-            this.ConfirmUserFunctions = new HashSet<ConfirmUserFunction>();
             this.Users = new HashSet<User>();
         }
     
@@ -30,8 +29,6 @@ namespace GCPack.Repository
         public virtual ICollection<JobPositionUser> JobPositionUsers { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<JobPositionDocument> JobPositionDocuments { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ConfirmUserFunction> ConfirmUserFunctions { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<User> Users { get; set; }
     }

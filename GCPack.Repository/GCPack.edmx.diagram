@@ -24,16 +24,11 @@
         <EntityTypeShape EntityType="GCPack.WorkplaceDocument" Width="1.5" PointX="12.75" PointY="12.625" />
         <AssociationConnector Association="GCPack.FK_WorkplaceDocument_Workplace" />
         <EntityTypeShape EntityType="GCPack.LogEvent" Width="1.5" PointX="3" PointY="11.625" />
-        <EntityTypeShape EntityType="GCPack.ConfirmUserFunction" Width="1.5" PointX="15" PointY="15.25" />
-        <AssociationConnector Association="GCPack.FK_ConfirmUserFunctions_JobPosition" />
-        <EntityTypeShape EntityType="GCPack.ReadConfirmation" Width="1.5" PointX="9.75" PointY="14.375" />
         <EntityTypeShape EntityType="GCPack.User" Width="1.5" PointX="3" PointY="15.625" />
-        <AssociationConnector Association="GCPack.FK_ConfirmUserFunctions_ReadConfirmation" />
         <AssociationConnector Association="GCPack.FK_User_JobPosition" />
         <AssociationConnector Association="GCPack.FK_JobPositionUser_User" />
         <AssociationConnector Association="GCPack.FK_LogEvent_User" />
         <AssociationConnector Association="GCPack.FK_Login_User" />
-        <AssociationConnector Association="GCPack.FK_ReadConfirmation_User" />
         <AssociationConnector Association="GCPack.FK_Signature_User" />
         <AssociationConnector Association="GCPack.FK_UserRoles_Users" />
         <AssociationConnector Association="GCPack.FK_UserDocument_User" />
@@ -44,9 +39,11 @@
         <AssociationConnector Association="GCPack.FK_Documents_State" />
         <AssociationConnector Association="GCPack.FK_File_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_JobPositionDocument_Document" />
-        <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_Signature_RizeneDokumeny" />
         <AssociationConnector Association="GCPack.FK_WorkplaceDocument_Document" />
+        <EntityTypeShape EntityType="GCPack.ReadConfirmation" Width="1.5" PointX="9.75" PointY="16.125" />
+        <AssociationConnector Association="GCPack.FK_ReadConfirmation_RizeneDokumeny" />
+        <AssociationConnector Association="GCPack.FK_ReadConfirmation_User" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

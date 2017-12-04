@@ -1,5 +1,7 @@
 ﻿using GCPack.Model;
 using System.Collections.Generic;
+using System.Linq;
+
 namespace GCPack.Repository.Interfaces
 {
     public interface IUsersRepository
@@ -17,5 +19,7 @@ namespace GCPack.Repository.Interfaces
         ICollection<int> GetJobPositionIDs(int userID);
         //JobPositionModel GetJobPosition(int ID);
         ICollection<JobPositionModel> GetUserJobPositions(int userID);
+        ICollection<UserJobModel> GetUsersJob(UserFilter filter);
+        void AddUserToReadConfirms(UserModel user, ICollection<int> JobPositionIDAdds);
     }
 }

@@ -60,7 +60,31 @@ namespace GCPack.Service
             // do kterych byl uzivatel prirazen a pokud jsou nektere
             // nove, tak se odesle email
 
-            return usersRepository.SaveUser(user);
+            UserFilter filter = new UserFilter();
+
+            HashSet<int> UserIDs = new HashSet<int>();
+            UserIDs.Add(user.ID);
+            filter.UserIDs = UserIDs;
+            ICollection<UserJobModel> usersJobs = GetUsersJob(filter);
+
+            HashSet<int> JobPositionIDAdds = new HashSet<int>();
+
+
+            foreach (var item in user.JobPositionIDs) {
+                
+                if (!usersJobs.Select(uj=>uj.JobPositionID).Contains(item))
+                {
+                    JobPositionIDAdds.Add(item);
+                }
+            }
+
+            UserModel userSave = usersRepository.SaveUser(user);
+
+            AddUserToReadConfirms(user, JobPositionIDAdds);
+
+            return userSave;
+
+
         }
 
         public UserModel GetUser(int userID)
@@ -114,12 +138,25 @@ namespace GCPack.Service
 
         public UserModel AddUser(UserModel user)
         {
-            return usersRepository.AddUser(user);
+            UserModel userAdd =  usersRepository.AddUser(user);
+
+            return userAdd;
+
         }
 
         public void DeleteUser(int userId)
         {
             usersRepository.DeleteUser(userId);
+        }
+
+        public ICollection<UserJobModel> GetUsersJob(UserFilter filter)
+        {
+            return usersRepository.GetUsersJob(filter);
+        }
+
+        public void AddUserToReadConfirms(UserModel user, ICollection<int> JobPositionIDAdds)
+        {
+            usersRepository.AddUserToReadConfirms(user, JobPositionIDAdds);
         }
 
     }

@@ -129,6 +129,9 @@ namespace GCPack.Web.Controllers
             //@WorkplaceID int
 
             // ViewBag.Message = Message;
+
+            
+
             return View(filter);
             //DocumentFilter filterModel = new DocumentFilter() { WorkplaceID = 1, AppSystemID = 1, StateID = 2 };
             //return View(filterModel);
@@ -271,7 +274,7 @@ namespace GCPack.Web.Controllers
 
 
         [GCAuthorize(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,Author,User")]
-        public ActionResult Details(int documentId)
+        public ActionResult Details(int documentId, string tabs="")
         {
             //int userId = UserRoles.GetUserId();
             //return View(documentService.GetDocument(documentId, userId));
@@ -283,6 +286,7 @@ namespace GCPack.Web.Controllers
             ViewBag.Documents = document;
             ViewBag.Administrators = userService.GetUserList(new UserFilter() { });
             ViewBag.Type = "Detail";
+            ViewBag.Tabs = tabs;
             InitCodeLists();
             return View("Details", document);
 
@@ -389,6 +393,7 @@ namespace GCPack.Web.Controllers
 
         public ActionResult CancelChanges()
         {
+
             DocumentFilter filter = (DocumentFilter)Session["DocumentFilter"];
             return RedirectToAction("Index", filter);
         }
@@ -680,13 +685,27 @@ namespace GCPack.Web.Controllers
         public ActionResult Edit(int documentId)
         {
 
-            int[] jobPositions = {};
-            //int[] usersID = {};
-            //int[] jobPositions = { 1, 2, 3 };
-            int[] usersID = { 12, 14 };
+            //int[] jobPositions = {};
+            ////int[] usersID = {};
+            ////int[] jobPositions = { 1, 2, 3 };
+            //int[] usersID = { 12, 14 };
 
-            ICollection<UsersForJobPositionInDocumentModel> UsersForJobPositionInDocument =
-            documentService.GetUsersForJobPositionInDocument(documentId, jobPositions, usersID);
+            //ICollection<UsersForJobPositionInDocumentModel> UsersForJobPositionInDocument =
+            //documentService.GetUsersForJobPositionInDocument(documentId, jobPositions, usersID);
+
+
+            //UserFilter filter = new UserFilter();
+            //HashSet<int> jp = new HashSet<int>();
+            //HashSet<int> uuu = new HashSet<int>();
+            
+            //jp.Add(2);
+            //uuu.Add(3);
+
+            //filter.JobPositionIDs = jp;
+            //filter.UserIDs = uuu;
+
+            //ICollection<UserJobModel> ujm = userService.GetUsersJob(filter);
+
 
             int userId = UserRoles.GetUserId();
             //ViewBag.Type = "Úprava řízeného dokumentu";
@@ -704,6 +723,26 @@ namespace GCPack.Web.Controllers
             InitCodeLists();
             return View("edit", document);
         }
+
+        public ActionResult GetReadConfirms(int documentId, string selectedUserIDs, string selectedJobPositionIDs, string orderBy)
+        {
+            //int[] UserIDs = (!string.IsNullOrEmpty(selectedUserIDs)) ? Array.ConvertAll(selectedUserIDs.Split(','), int.Parse) : new int[] { };
+
+            ICollection<int> UserIDs = ((!string.IsNullOrEmpty(selectedUserIDs)) ? Array.ConvertAll(selectedUserIDs.Split(','), int.Parse) : new int[] { }).ToList();
+            ICollection<int> JoPostionIDs = ((!string.IsNullOrEmpty(selectedJobPositionIDs)) ? Array.ConvertAll(selectedJobPositionIDs.Split(','), int.Parse) : new int[] { }).ToList();
+
+            ReadConfirmFilter filter = new ReadConfirmFilter();
+            filter.DocumentID = documentId;
+            filter.UserIDs = UserIDs;
+            filter.JobPositionIDs = JoPostionIDs;
+            filter.OrderBy = orderBy;
+
+            ICollection<ReadConfirmModel> readConfirms = documentService.GetReadConfirms(filter);
+
+
+            return Json(readConfirms, JsonRequestBehavior.AllowGet);
+        }
+
 
         //public JobPositionModel GetJobPosition(int ID)
         //{

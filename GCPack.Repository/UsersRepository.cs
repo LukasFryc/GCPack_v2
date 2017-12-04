@@ -207,6 +207,7 @@ namespace GCPack.Repository
 
             return user;
         }
+
         public ICollection<UserModel> GetUsers(UserFilter filter)
         {
             using (GCPackContainer db = new GCPackContainer())
@@ -221,8 +222,11 @@ namespace GCPack.Repository
                 var users = from u in db.Users
                         where
                             (
-                                (u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || string.IsNullOrEmpty (filter.Name))) &&
-                                (!filter.ExcludedUsersId.Contains(u.ID))  &&
+                                //(u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || string.IsNullOrEmpty (filter.Name))) &&
+                                //(!filter.ExcludedUsersId.Contains(u.ID))  &&
+                                //(filter.JobPositionIDs.FirstOrDefault() == 0 || jpus.Select(j => j.UserId).Contains(u.ID))
+
+                                (u.LastName.ToLower().Contains(filter.Name) || (u.FirstName.ToLower().Contains(filter.Name) || string.IsNullOrEmpty(filter.Name))) &&
                                 (filter.JobPositionIDs.FirstOrDefault() == 0 || jpus.Select(j => j.UserId).Contains(u.ID))
                             )
                         select u;
@@ -275,6 +279,96 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 return Mapper.Map<ICollection<JobPositionModel>>(db.JobPositionUsers.Where(jpu => jpu.UserId == userID).Select(jpu => jpu.JobPosition));
+            }
+        }
+
+        public ICollection<UserJobModel> GetUsersJob(UserFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                //var dbUsers = db.Users.Where(u => filter.UserIDs.Contains(u.ID)).Select(u=>u);
+
+                var dbJobUsersPositions = db.JobPositionUsers.Select(jpu => jpu).Where(jpu=> filter.JobPositionIDs.Contains(jpu.JobPositionId) || filter.UserIDs.Contains(jpu.UserId));
+                //var dbJobUsersPositions = db.JobPositionUsers.Select(jpu => jpu).Where(jpu => filter.JobPositionIDs.Contains(jpu.JobPositionId));
+
+                List<UserJobModel> UserJobs = new List<UserJobModel>();
+
+                foreach (var item in dbJobUsersPositions)
+                {
+                    UserJobModel userJob = new UserJobModel();
+                    userJob.FirstName = item.User.FirstName;
+                    userJob.LastName = item.User.LastName;
+                    userJob.JobPositionID = item.JobPositionId;
+                    userJob.JobPositionName = item.JobPosition.Name;
+                    userJob.UserID = item.UserId;
+
+                    UserJobs.Add(userJob);
+                }
+
+                //                                ="GetUsersJob_NameA
+                //    GetUsersJob_NameD"
+                //GetUsersJob_JobPostionA
+                //GetUsersJob_JobPostionD"
+
+                IQueryable<UserJobModel> UserJobsQ = null;
+
+                switch (filter.OrderBy)
+                {
+                    case "GetUsersJob_NameA":
+                        UserJobsQ = UserJobs.AsQueryable().OrderBy(uj => uj.LastName);
+                        break;
+                    case "GetUsersJob_NameD":
+                        UserJobsQ = UserJobs.AsQueryable().OrderByDescending(uj => uj.LastName);
+                        break;
+                    case "GetUsersJob_JobPostionA":
+                        UserJobsQ = UserJobs.AsQueryable().OrderBy(uj => uj.JobPositionName);
+                        break;
+                    case "GetUsersJob_JobPostionD":
+                        UserJobsQ = UserJobs.AsQueryable().OrderByDescending(uj => uj.JobPositionName);
+                        break;
+                }
+                
+                return UserJobsQ.ToList() ;
+
+            }
+        }
+
+        // ne void ale icollection<RedadconfirmModel>
+        public void AddUserToReadConfirms(UserModel user, ICollection<int> JobPositionIDAdds)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+
+                //var dbJpu = db.JobPositionUsers.Where(jpu => user.JobPositionIDs.Contains(jpu.JobPositionId)).Select(jpu => jpu);
+
+                //ICollection<int> jp = new HashSet<int>();
+
+                //foreach (var jpID in user.JobPositionIDs)
+                //{
+                //    var pom = dbJpu.Where(jpu => jpu.JobPositionId == jpID).Count();
+                //    if (pom == 0)
+                //    {
+                //        jp.Add(jpID);
+                //    }
+                //}
+
+                var dbJpd = db.JobPositionDocuments.Where(jpd => JobPositionIDAdds.Contains(jpd.JobPositionId)).Select(jpd => jpd);
+
+                foreach(var item in dbJpd)
+                {
+                    ReadConfirmation readConfirm = new ReadConfirmation();
+
+                    readConfirm.DocumentID = item.DocumentId;
+                    readConfirm.JobPositionID = item.JobPositionId;
+                    readConfirm.JobPositionName = item.JobPosition.Name;
+                    readConfirm.UserID = user.ID;
+                    readConfirm.Created = DateTime.Now;
+
+                    db.ReadConfirmations.Add(readConfirm);
+
+                }
+
+                db.SaveChanges();
             }
         }
     }

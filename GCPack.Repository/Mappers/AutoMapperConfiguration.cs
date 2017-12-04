@@ -22,6 +22,10 @@ namespace GCPack.Repository.Mappers
 
         public ViewModelToModelMappingProfile()
         {
+            CreateMap<ReadConfirmation, ReadConfirmModel>()
+                .ForMember(i => i.FirstName, m => m.MapFrom(rc=> rc.User.FirstName))
+                .ForMember(i => i.LastName, m => m.MapFrom(rc => rc.User.LastName))
+                .ReverseMap();  
             CreateMap<DocumentState, DocumentStateModel>().ReverseMap();
             CreateMap<AppSystem, AppSystemModel>().ReverseMap();
             CreateMap<Division, DivisionModel>().ReverseMap();

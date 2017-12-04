@@ -60,3 +60,11 @@ IsAccessCSSClass
 .clsHhidden {
     visibility: hidden
 }
+
+/*LF - vsechny radky s class dataRowClick budou mit vlastnostnost selected*/
+.dataRowClick:hover, .dataRow.selected {
+    /*background-color: #FFCF8B;*/
+    background-color: #E5E5E5;
+    cursor: pointer;
+}
+

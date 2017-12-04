@@ -174,6 +174,18 @@ namespace GCPack.Service
             documentsRepository.SetNumberOfDocument(document.DocumentTypeID);
             //SaveFiles(document, fileNames);
 
+
+            // LF and JH 27.11.2017 
+            // generovani rozdelovniku do ReadConfirm na zakladae vybranych jobpostionid a usersid
+
+            UserFilter filter = new UserFilter();
+            filter.JobPositionIDs = document.JobPositionIDs;
+            filter.UserIDs = document.SelectedUsers;
+
+
+            ICollection<UserJobModel> usersJob = userService.GetUsersJob(filter);
+            AddReadConfirms(document.ID, (ICollection<UserJobModel>) usersJob);
+
             // odeslani emailu vsem zaregistrovanym uzivatelum v dokumentu
             UsersInDocument usersInDoc = documentsRepository.GetUsersInDocument(document.ID);
             foreach (UserModel user in usersInDoc.AllUsers)
@@ -264,6 +276,7 @@ namespace GCPack.Service
                     // nastaveni filtru pro uzivatele
                     //filter.ForUserID = null;
                     filter.StateID = documentsRepository.GetDocumentState("Registered"); // pouze zaevidovane
+                    filter.StateCode = "Registered"; // pouze zaevidovane
                     filter.Revision = "p"; // pouze platne
                     break;
             }
@@ -278,14 +291,14 @@ namespace GCPack.Service
 
         public void Readed(int documentID, int userID)
         {
-            int confirmID = documentsRepository.Readed(documentID, userID);
+            documentsRepository.Readed(documentID, userID);
             // TODO: LF moznost rozsirit o:
             // nyni se vkladaji vsechny pracovni pozice uzivatele
             // muze se doplnit pouze o prunik z pozicemi vybranymi na dokumentu
-            foreach (JobPositionModel jobPosition in userService.GetUserJobPositions(userID))
-            {
-                documentsRepository.ReadedUserInFunctions(confirmID,jobPosition.ID,jobPosition.Name);
-            }
+            //foreach (JobPositionModel jobPosition in userService.GetUserJobPositions(userID))
+            //{
+            //    documentsRepository.ReadedUserInFunctions(confirmID,jobPosition.ID,jobPosition.Name);
+            //}
             
         }
 
@@ -368,16 +381,27 @@ namespace GCPack.Service
             }
         }
 
-        public ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID)
-        {
-            return documentsRepository.GetUsersForJobPositionInDocument(documentId,  jobPositionsID,  usersID);
-        }
+        //public ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID)
+        //{
+        //    return documentsRepository.GetUsersForJobPositionInDocument(documentId,  jobPositionsID,  usersID);
+        //}
 
         //public void Archived(DocumentModel document, bool archiv)
         //{
         //    documentsRepository.Archived(document, archiv);
 
         //}
+
+        public void AddReadConfirms(int documentID, ICollection<UserJobModel> usersJob)
+        {
+            documentsRepository.AddReadConfirms(documentID, usersJob);
+        }
+
+        public ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter) {
+
+            return documentsRepository.GetReadConfirms(filter);
+
+        }
 
     }
 }

@@ -59,9 +59,6 @@
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="CodeListsRepository.cs" />
-    <Compile Include="ConfirmUserFunction.cs">
-      <DependentUpon>GCPack.tt</DependentUpon>
-    </Compile>
     <Compile Include="Division.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
@@ -197,6 +194,7 @@
     <Content Include="SQL\2017_07\Workplace.txt" />
     <Content Include="SQL\2017_07\WorkplaceDocument.txt" />
     <Content Include="SQL\2017_10_31 - GetDocuments_zaloha.txt" />
+    <Content Include="SQL\2017_11_28_ - GetDocumentsZaloha.txt" />
     <Content Include="SQL\2017_11_9 - GetDocuments_zaloha.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -52,9 +52,11 @@
     <Compile Include="LogEventModel.cs" />
     <Compile Include="ProjectModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReadConfirmModel.cs" />
     <Compile Include="RoleModel.cs" />
     <Compile Include="SignatureModel.cs" />
     <Compile Include="User.cs" />
+    <Compile Include="UserJobModel.cs" />
     <Compile Include="UserRoleModel.cs" />
     <Compile Include="UsersForJobPositionInDocumentModel.cs" />
     <Compile Include="UsersInDocument.cs" />

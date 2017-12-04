@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using GCPack.Service;
 using GCPack.Model;
 using GCPack.Service.Interfaces;
+using System.Web.Http;
 
 namespace GCPack.Web.Controllers
 {
@@ -27,7 +28,27 @@ namespace GCPack.Web.Controllers
             return View("Edit");
         }
 
-        public ActionResult GetUsers(string name, int jobPositionId, string preservedUsers)
+        public ActionResult GetUsersJob(string selectedUserIDs, string selectedJobPositionIDs, string orderBy)
+        {
+
+            //int[] UserIDs = (!string.IsNullOrEmpty(selectedUserIDs)) ? Array.ConvertAll(selectedUserIDs.Split(','), int.Parse) : new int[] { };
+
+            ICollection<int> UserIDs = ((!string.IsNullOrEmpty(selectedUserIDs)) ? Array.ConvertAll(selectedUserIDs.Split(','), int.Parse) : new int[] { }).ToList();
+            ICollection<int> JoPostionIDs = ((!string.IsNullOrEmpty(selectedJobPositionIDs)) ? Array.ConvertAll(selectedJobPositionIDs.Split(','), int.Parse) : new int[] { }).ToList();
+
+            UserFilter filter = new UserFilter();
+            filter.UserIDs = UserIDs;
+            filter.JobPositionIDs = JoPostionIDs;
+            filter.OrderBy = orderBy;
+
+            ICollection<UserJobModel> usersJob =  userService.GetUsersJob(filter);
+            //return Json(usersJob.OrderBy(uj => uj.JobPositionName).ThenBy(uj =>uj.LastName), JsonRequestBehavior.AllowGet);
+            return Json(usersJob, JsonRequestBehavior.AllowGet);
+        }
+
+
+
+    public ActionResult GetUsers(string name, int jobPositionId, string preservedUsers)
         {
             jobPositionId = (jobPositionId == null) ? 0 : jobPositionId;
             int[] excludedUsersId = (!string.IsNullOrEmpty(preservedUsers)) ? Array.ConvertAll(preservedUsers.Split(','), int.Parse) : new int[] { };
@@ -35,14 +56,15 @@ namespace GCPack.Web.Controllers
             ICollection<int> jobPosition = new HashSet<int>();
             jobPosition.Add(jobPositionId);
 
-            var users = userService.GetUsers(new UserFilter() {
+            var users = userService.GetUsers(new UserFilter()
+            {
                 Name = name,
                 ExcludedUsersId = excludedUsersId,
                 JobPositionIDs = jobPosition
             });
 
-            
-            return Json(users,JsonRequestBehavior.AllowGet);
+
+            return Json(users, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult SaveUser(UserModel user)

@@ -33,11 +33,16 @@ namespace GCPack.Model
         {
             this.ExcludedUsersId = new int[] { };
             this.JobPositionIDs = new HashSet<int>();
+            this.UserIDs = new HashSet<int>();
         }
+
+        public ICollection<int> UserIDs { get; set; }
         public ICollection<int> JobPositionIDs { get; set; }
         public string Name { get; set; }
         public int[] ExcludedUsersId { get; set; }
     }
+
+
 
     public class DocumentFilter : Filter
     {
@@ -78,6 +83,16 @@ namespace GCPack.Model
             get { return saveFilter; }
             set { saveFilter = value; }
         }
+
+    }
+
+    public class ReadConfirmFilter : Filter
+    {
+        public int? DocumentID { get; set; }
+
+        public ICollection<int> UserIDs { get; set; }
+
+        public ICollection<int> JobPositionIDs { get; set; }
 
     }
 
