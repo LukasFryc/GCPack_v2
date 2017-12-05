@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using GCPack.Model;
 using AutoMapper;
 using GCPack.Repository.Interfaces;
+using System.Data.Entity.Core.Objects;
 
 namespace GCPack.Repository
 {
@@ -416,7 +417,10 @@ namespace GCPack.Repository
                 }
 
                 documentCollection.Documents = Mapper.Map<ICollection<DocumentModel>>(documentsResult.Skip((filter.Page - 1) * filter.ItemsPerPage).Take(filter.ItemsPerPage));
-                
+
+                // LF 4.12.2017 
+                documentCollection.filter = filter;
+
                 return documentCollection;
             }
         }
@@ -983,24 +987,12 @@ namespace GCPack.Repository
 
         }
 
-        public ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter) {
+        public ReadConfirmCollectionModel GetReadConfirms(ReadConfirmFilter filter)
+        {
             using (GCPackContainer db = new GCPackContainer())
             {
-
-                //switch (filter.OrderBy)
-                //{
-
-                //    case "GetUsersJob_NameA":
-
-
-                //        UserJobs = UserJobs.OrderBy(uj => uj.JobPositionName);
-                //        break;
-                //    case "GetUsersJob_NameD":
-                //        UserJobs = UserJobs.OrderBy(u => u.LastName).ThenBy(u => u.FirstName);
-                //        break;
-                //}
-
                 var dbRC = db.ReadConfirmations.Where(rc => rc.DocumentID == filter.DocumentID).Select(rc => rc);
+                ReadConfirmCollectionModel readConfirmCollection = new ReadConfirmCollectionModel();
 
                 switch (filter.OrderBy)
                 {
@@ -1017,10 +1009,10 @@ namespace GCPack.Repository
                         dbRC = dbRC.OrderByDescending(rc => rc.JobPositionName);
                         break;
                     case "GetReadConfirms_CreatedA":
-                        dbRC = dbRC.OrderBy(rc => rc.Created.Date);
+                        dbRC = dbRC.OrderBy(rc => EntityFunctions.TruncateTime(rc.Created));
                         break;
                     case "GetReadConfirms_CreatedD":
-                        dbRC = dbRC.OrderByDescending(rc => rc.Created.Date);
+                        dbRC = dbRC.OrderByDescending(rc => EntityFunctions.TruncateTime(rc.Created));
                         break;
                     case "GetReadConfirms_ReadDateA":
                         dbRC = dbRC.OrderBy(rc => rc.ReadDate);
@@ -1032,11 +1024,55 @@ namespace GCPack.Repository
                 }
 
 
-                
-                
-                return Mapper.Map<ICollection<ReadConfirmModel>>(dbRC);
+                readConfirmCollection.Count = dbRC.Count();
 
+                readConfirmCollection.ReadConfirms = Mapper.Map<ICollection<ReadConfirmModel>>(dbRC);
+
+                //readConfirmCollection.ReadConfirms = Mapper.Map<ICollection<ReadConfirmModel>>(dbRC.Skip((filter.Page - 1) * filter.ItemsPerPage).Take(filter.ItemsPerPage));
+
+                // LF 4.12.2017 
+                readConfirmCollection.filter = filter;
+
+                return readConfirmCollection;
             }
         }
+        //public ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter) {
+        //    using (GCPackContainer db = new GCPackContainer())
+        //    {
+        //        var dbRC = db.ReadConfirmations.Where(rc => rc.DocumentID == filter.DocumentID).Select(rc => rc);
+
+        //        switch (filter.OrderBy)
+        //        {
+        //            case "GetReadConfirms_NameA":
+        //                dbRC = dbRC.OrderBy(rc => rc.User.LastName);
+        //                break;
+        //            case "GetReadConfirms_NameD":
+        //                dbRC = dbRC.OrderByDescending(rc => rc.User.LastName);
+        //                break;
+        //            case "GetReadConfirms_JobPostionA":
+        //                dbRC = dbRC.OrderBy(rc => rc.JobPositionName);
+        //                break;
+        //            case "GetReadConfirms_JobPostionD":
+        //                dbRC = dbRC.OrderByDescending(rc => rc.JobPositionName);
+        //                break;
+        //            case "GetReadConfirms_CreatedA":
+        //                dbRC = dbRC.OrderBy(rc => EntityFunctions.TruncateTime(rc.Created));
+        //                break;
+        //            case "GetReadConfirms_CreatedD":
+        //                dbRC = dbRC.OrderByDescending(rc => EntityFunctions.TruncateTime(rc.Created));
+        //                break;
+        //            case "GetReadConfirms_ReadDateA":
+        //                dbRC = dbRC.OrderBy(rc => rc.ReadDate);
+        //                break;
+        //            case "GetReadConfirms_ReadDateD":
+        //                dbRC = dbRC.OrderByDescending(rc => rc.ReadDate);
+        //                break;
+
+        //        }
+                
+        //        return Mapper.Map<ICollection<ReadConfirmModel>>(dbRC);
+
+        //    }
+        //}
     }
 }

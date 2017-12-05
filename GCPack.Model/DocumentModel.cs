@@ -36,6 +36,8 @@ namespace GCPack.Model
         }
         public ICollection<DocumentModel> Documents { get; set; }
         public int Count { get; set; }
+
+        public DocumentFilter filter { get; set; }
     }
 
     public class DocumentModel : IValidatableObject

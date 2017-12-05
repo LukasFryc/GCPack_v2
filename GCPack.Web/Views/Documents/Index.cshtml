@@ -17,15 +17,7 @@
         border: 3px solid #3276B1 !important;
     }
 
-    .setSortByDefault {
-        color: #CCCCCC;
-        opacity: 0.7;
-    }
-
-    .setSortBy {
-        color: #3276B1;
-        opacity: 0.7;
-    }
+   
     
 </style>
 
@@ -85,53 +77,19 @@
                         window.location.href = '/Documents/Details/?documentId=' + $(this).attr('value');
                 });
 
-                //alert("ready");
                 GetDocuments();
 
-                orderByX = '@(Model.OrderBy)';
-
-                if (orderByX === '') { orderByX = orderBy };
-                
-                var sortByAX = $("a[sortBy='" + orderByX + "']");
-                var $sortBySpanX = sortByAX.find('span.glyphicon');
-                $sortBySpanX.removeClass('setSortByDefault');
-                $sortBySpanX.addClass('setSortBy');
-                
-
-                //$("a[sortBy='" + orderByX + "']").addClass('setSortBy');
-
-
-                    // <a href="#" class="sortBy" sortBy="NumberA">
-
-                // vsechnz talcitka na trideni jsou zalozany na  css class sortBy
+                // vsechny talcitka na trideni jsou zalozany na  css class sortBy
                 $('.sortBy').click(
                     function () {
 
-                        SetSelectedColumn($(this),GetDocuments);
+                        //SetSelectedColumn($(this), GetDocuments);
 
-                        //var $tableThis = $(this).closest('table');
+                        // z aktualniho linku si beru parametr trideni, pro nastaveni trideni se kterzm pocitam ve funkci
+                        orderBy = $(this).attr('sortBy');
+                        GetDocuments();
 
-                        //$tableThis.find(".sortBy").each(function () {
-                        //    var $sortByA = $(this);
-
-                        //    var $sortBySpan = $sortByA.find('span.glyphicon');
-
-                        //    $sortBySpan.removeClass('setSortBy');
-                        //    $sortBySpan.addClass('setSortByDefault');
-
-                        //});
-
-                        //orderBy = $(this).attr('sortBy');
-
-                        //var $sortByA = $(this);
-
-                        //var $sortBySpan = $sortByA.find('span.glyphicon');
-
-                        //$sortBySpan.removeClass('setSortByDefault');
-                        //$sortBySpan.addClass('setSortBy');
-
-
-                        //GetDocuments();
+                       
                     }
                     
                 );
@@ -147,7 +105,6 @@
                 });
 
                 $('.filterText').keyup(function () {
-                    //alert("filtertext");
                     GetDocuments();
                 });
 
@@ -203,7 +160,12 @@
                         .done(function (documentCollection) {
                             WSPager.SetPager(documentCollection.Count);
                             isInit = false;
-                            $('#AllDocuments .dataRowClick').remove();
+                            //$('#AllDocuments .dataRow').remove();
+
+                            // nastaveni ikony pro defaultni stertideni - jina barva (class)
+                            //alert(documentCollection.filter.OrderBy);
+                            SetTable('AllDocuments',documentCollection.filter.OrderBy);
+
                             $.each(documentCollection.Documents, function (index, doc) {
 
                                 var dateStr = "";
@@ -256,7 +218,7 @@
                                 //);
 
 
-                                $('#AllDocuments').append('<tr class="dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
+                                $('#AllDocuments').append('<tr class="dataRow dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
                                     '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
                                     '<td> ' + doc.Title + '</td>' +
                                     '<td> ' + dateStr + '</td>' +
@@ -269,6 +231,7 @@
                                     '"><span class="glyphicon glyphicon-trash"></span></A></td>'
                                 );
                             });
+                            
 
                         })
                         .fail(function (jqxhr, textStatus, error) {
@@ -799,8 +762,8 @@
         
         <th>
             Účinnost
-            <a href="#" class="sortBy" sortBy="RevisionA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
-            <a href="#" class="sortBy" sortBy="RevisionD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
+            <a href="#" class="sortBy" sortBy="EffeciencyDateA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+            <a href="#" class="sortBy" sortBy="EffeciencyDateD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
         </th>
         <th>
             Správce

@@ -282,7 +282,7 @@ namespace GCPack.Repository
             }
         }
 
-        public ICollection<UserJobModel> GetUsersJob(UserFilter filter)
+        public UserJobCollectionModel GetUsersJob(UserFilter filter)
         {
             using (GCPackContainer db = new GCPackContainer())
             {
@@ -310,25 +310,30 @@ namespace GCPack.Repository
                 //GetUsersJob_JobPostionA
                 //GetUsersJob_JobPostionD"
 
-                IQueryable<UserJobModel> UserJobsQ = null;
+                UserJobCollectionModel UserJobCollection = new UserJobCollectionModel();
+
+                UserJobCollection.UserJobs = null;
 
                 switch (filter.OrderBy)
                 {
                     case "GetUsersJob_NameA":
-                        UserJobsQ = UserJobs.AsQueryable().OrderBy(uj => uj.LastName);
+                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderBy(uj => uj.LastName).ToList();
                         break;
                     case "GetUsersJob_NameD":
-                        UserJobsQ = UserJobs.AsQueryable().OrderByDescending(uj => uj.LastName);
+                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderByDescending(uj => uj.LastName).ToList();
                         break;
                     case "GetUsersJob_JobPostionA":
-                        UserJobsQ = UserJobs.AsQueryable().OrderBy(uj => uj.JobPositionName);
+
+                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderBy(uj => uj.JobPositionName).ToList();
                         break;
                     case "GetUsersJob_JobPostionD":
-                        UserJobsQ = UserJobs.AsQueryable().OrderByDescending(uj => uj.JobPositionName);
+                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderByDescending(uj => uj.JobPositionName).ToList();
                         break;
                 }
-                
-                return UserJobsQ.ToList() ;
+
+                UserJobCollection.filter = filter;
+
+                return UserJobCollection;
 
             }
         }

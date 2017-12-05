@@ -183,8 +183,8 @@ namespace GCPack.Service
             filter.UserIDs = document.SelectedUsers;
 
 
-            ICollection<UserJobModel> usersJob = userService.GetUsersJob(filter);
-            AddReadConfirms(document.ID, (ICollection<UserJobModel>) usersJob);
+            UserJobCollectionModel usersJob = userService.GetUsersJob(filter);
+            AddReadConfirms(document.ID, (ICollection<UserJobModel>) usersJob.UserJobs);
 
             // odeslani emailu vsem zaregistrovanym uzivatelum v dokumentu
             UsersInDocument usersInDoc = documentsRepository.GetUsersInDocument(document.ID);
@@ -397,7 +397,7 @@ namespace GCPack.Service
             documentsRepository.AddReadConfirms(documentID, usersJob);
         }
 
-        public ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter) {
+        public ReadConfirmCollectionModel GetReadConfirms(ReadConfirmFilter filter) {
 
             return documentsRepository.GetReadConfirms(filter);
 

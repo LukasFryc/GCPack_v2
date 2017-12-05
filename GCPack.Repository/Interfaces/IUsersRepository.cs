@@ -19,7 +19,7 @@ namespace GCPack.Repository.Interfaces
         ICollection<int> GetJobPositionIDs(int userID);
         //JobPositionModel GetJobPosition(int ID);
         ICollection<JobPositionModel> GetUserJobPositions(int userID);
-        ICollection<UserJobModel> GetUsersJob(UserFilter filter);
+        UserJobCollectionModel GetUsersJob(UserFilter filter);
         void AddUserToReadConfirms(UserModel user, ICollection<int> JobPositionIDAdds);
     }
 }

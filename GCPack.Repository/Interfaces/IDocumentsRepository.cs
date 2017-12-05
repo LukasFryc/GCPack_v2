@@ -56,8 +56,7 @@ namespace GCPack.Repository.Interfaces
         //ICollection<UsersForJobPositionInDocumentModel> GetUsersForJobPositionInDocument(int documentId, ICollection<int> jobPositionsID, ICollection<int> usersID);
 
         void AddReadConfirms(int documentID, ICollection<UserJobModel> usersJob);
-
-        ICollection<ReadConfirmModel>  GetReadConfirms(ReadConfirmFilter  filter);
+        ReadConfirmCollectionModel GetReadConfirms(ReadConfirmFilter  filter);
 
     }
 }

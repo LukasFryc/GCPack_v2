@@ -737,7 +737,7 @@ namespace GCPack.Web.Controllers
             filter.JobPositionIDs = JoPostionIDs;
             filter.OrderBy = orderBy;
 
-            ICollection<ReadConfirmModel> readConfirms = documentService.GetReadConfirms(filter);
+            ReadConfirmCollectionModel readConfirms = documentService.GetReadConfirms(filter);
 
 
             return Json(readConfirms, JsonRequestBehavior.AllowGet);

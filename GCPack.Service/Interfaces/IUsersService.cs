@@ -20,7 +20,7 @@ namespace GCPack.Service.Interfaces
         ICollection<JobPositionModel> GetUserJobPositions(int userID);
         //JobPositionModel GetJobPosition(int ID);
 
-        ICollection<UserJobModel> GetUsersJob(UserFilter filter);
+        UserJobCollectionModel GetUsersJob(UserFilter filter);
 
         void AddUserToReadConfirms(UserModel user, ICollection<int> JobPositionIDAdds);
 

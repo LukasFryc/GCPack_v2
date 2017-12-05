@@ -65,14 +65,14 @@ namespace GCPack.Service
             HashSet<int> UserIDs = new HashSet<int>();
             UserIDs.Add(user.ID);
             filter.UserIDs = UserIDs;
-            ICollection<UserJobModel> usersJobs = GetUsersJob(filter);
+            UserJobCollectionModel usersJobs = GetUsersJob(filter);
 
             HashSet<int> JobPositionIDAdds = new HashSet<int>();
 
 
             foreach (var item in user.JobPositionIDs) {
                 
-                if (!usersJobs.Select(uj=>uj.JobPositionID).Contains(item))
+                if (!usersJobs.UserJobs.Select(uj=>uj.JobPositionID).Contains(item))
                 {
                     JobPositionIDAdds.Add(item);
                 }
@@ -149,7 +149,7 @@ namespace GCPack.Service
             usersRepository.DeleteUser(userId);
         }
 
-        public ICollection<UserJobModel> GetUsersJob(UserFilter filter)
+        public UserJobCollectionModel GetUsersJob(UserFilter filter)
         {
             return usersRepository.GetUsersJob(filter);
         }

@@ -41,9 +41,9 @@ namespace GCPack.Web.Controllers
             filter.JobPositionIDs = JoPostionIDs;
             filter.OrderBy = orderBy;
 
-            ICollection<UserJobModel> usersJob =  userService.GetUsersJob(filter);
+            UserJobCollectionModel usersJobCollection =  userService.GetUsersJob(filter);
             //return Json(usersJob.OrderBy(uj => uj.JobPositionName).ThenBy(uj =>uj.LastName), JsonRequestBehavior.AllowGet);
-            return Json(usersJob, JsonRequestBehavior.AllowGet);
+            return Json(usersJobCollection, JsonRequestBehavior.AllowGet);
         }
 
 

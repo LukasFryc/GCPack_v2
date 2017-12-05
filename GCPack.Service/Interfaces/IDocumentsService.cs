@@ -29,7 +29,7 @@ namespace GCPack.Service.Interfaces
         //void Archived(DocumentModel document, bool archiv);
         void AddReadConfirms(int documentID, ICollection<UserJobModel> usersJob);
 
-        ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter);
+        ReadConfirmCollectionModel GetReadConfirms(ReadConfirmFilter filter);
 
     }
 }

@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace GCPack.Model
 {
-        public class UserJobModel
+    public class UserJobCollectionModel
+    {
+        public UserJobCollectionModel()
+        {
+            UserJobs = new HashSet<UserJobModel>();
+        }
+        public ICollection<UserJobModel> UserJobs { get; set; }
+        public int Count { get; set; }
+
+        public UserFilter filter { get; set; }
+    }
+
+    public class UserJobModel
         {
             public int UserID { get; set; }
 

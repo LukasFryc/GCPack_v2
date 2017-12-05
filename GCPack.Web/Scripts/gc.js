@@ -1,28 +1,62 @@
-﻿function isEmpty(value) {
+﻿
+function isEmpty(value) {
     return (value === null || value.length === 0);
 }
 
 
-function SetSelectedColumn(thisObj, f) {
+function SetTable(tableId, orderBy) {
 
+    $('#' + tableId +' .dataRow').remove();
+
+   // $('#AllDocuments .dataRow').remove();
+
+    var $tableThis = $('#' + tableId);
+    $tableThis.find('span.glyphicon').each(function () {
+        var $sortBySpan = $(this);
+        $sortBySpan.removeClass('setSortBy');
+        $sortBySpan.addClass('setSortByDefault');
+    });
+
+    if (orderBy !== '') {
+        var sortByAX = $("a[sortBy='" + orderBy + "']");
+        var $sortBySpanX = sortByAX.find('span.glyphicon');
+        $sortBySpanX.removeClass('setSortByDefault');
+        $sortBySpanX.addClass('setSortBy');
+    };
+}
+
+
+function SetSelectedColumnPajc(thisObj, f) {
+    // LF 
+    // po kliku na link si uchovam tridu daneho linku (pro dalsi pouziti)
+    trida = thisObj.attr('class');
+
+    // najdu tabulku ktra obklopuje link na trideni
     var $tableThis = thisObj.closest('table');
 
-    $tableThis.find(".sortBy").each(function () {
+
+    // prochazim tabulku a hledam vsechny linky v tabulce
+    // nastavuji defaultni classu pro jejich ikonu
+    $tableThis.find('.' + trida).each(function () {
+        // this je spojen z each tj prochazenou kolekci    
         var $sortByA = $(this);
         var $sortBySpan = $sortByA.find('span.glyphicon');
         $sortBySpan.removeClass('setSortBy');
         $sortBySpan.addClass('setSortByDefault');
-        //alert($sortByA.attr('sortBy'));
     });
 
-    orderBy = thisObj.attr('sortBy');
-
+    // u zvoleneho prvku nastavuji classu s jinou barvou ikony
     var $sortByA = thisObj;
-
     var $sortBySpan = $sortByA.find('span.glyphicon');
 
     $sortBySpan.removeClass('setSortByDefault');
     $sortBySpan.addClass('setSortBy');
+
+    // z aktualniho linku si beru parametr trideni, pro nastaveni trideni se kterzm pocitam ve funkci
+    orderBy = thisObj.attr('sortBy');
+
+    // volani funkce viz param
+    // bacha ve funkci musi byt vzdy pouzita globalni promenna orderby 
 
     f();
 }
@@ -122,13 +156,11 @@ function GetUsersJob() {
 
             // LF 10.11.2017 pred tim nez jsme skryli jobPosition a dalsi pole $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
             $.getJSON(AllPath, query)
-                .done(function (usersJob) {
+                .done(function (usersJobCollection) {
 
-                  
-
-                    $('#AllUsersJob .dataRow').remove();
-
-                    $.each(usersJob, function (index, userjob) {
+                    SetTable('AllUsersJob', usersJobCollection.filter.OrderBy);
+                    
+                    $.each(usersJobCollection.UserJobs, function (index, userjob) {
                         $('#AllUsersJob').append('<tr class="dataRow">' +
                             '<td> ' + userjob.LastName + ' ' + userjob.FirstName+ '</td>' +
                             '<td> ' + userjob.JobPositionName + '</td>'
@@ -183,11 +215,13 @@ function GetReadConfirms() {
 
             // LF 10.11.2017 pred tim nez jsme skryli jobPosition a dalsi pole $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
             $.getJSON(AllPath, query)
-                .done(function (readConfirms) {
+                .done(function (readConfirmCollection) {
 
-                    $('#AllReadConfirms .dataRow').remove();
+//                    $('#AllReadConfirms .dataRow').remove();
 
-                    $.each(readConfirms, function (index, readConfirm) {
+                    SetTable('AllReadConfirms', readConfirmCollection.filter.OrderBy);
+
+                    $.each(readConfirmCollection.ReadConfirms, function (index, readConfirm) {
 
                         dateCreated = '';
                         if (readConfirm.Created !== null) {
@@ -224,37 +258,6 @@ function GetReadConfirms() {
         500);
 }
 
-function GetDocuments_SetParameters(name, Number, AdministratorName, DocumentTypeID, OrderBy, ProjectID,
-    DivisionID, AppSystemID, WorkplaceID, EffeciencyDateFrom, EffeciencyDateTo, NextReviewDateFrom,
-    NextReviewDateTo, ReadType, StateCode, Revision, ReviewNecessaryChange, Page, ItemsPerPage) {
-
-// nepouzito 
-    name = $('#Name').val();
-    name = $('#Name').val();
-    Number = $('#Number').val();
-    AdministratorName = $('#AdministratorName').val();
-    DocumentTypeID = $('#DocumentTypeID').val();
-    //OrderBy = orderBy;
-    ProjectID = $('#ProjectID').val();
-    DivisionID = $('#DivisionID').val();
-    AppSystemID = $('#AppSystemID').val();
-    WorkplaceID = $('#WorkplaceID').val();
-    EffeciencyDateFrom = $('#EffeciencyDateFrom').val();
-    EffeciencyDateTo = $('#EffeciencyDateTo').val();
-    NextReviewDateFrom = $('#NextReviewDateFrom').val();
-    NextReviewDateTo = $('#NextReviewDateTo').val();
-    ReadType = $('#ReadType').val();
-    //StateID: $('#StateID').val(),
-    StateCode = $('#StateCode').val();
-    Revision = $('#Revision').val();
-    //Archiv: $('#Archiv').val(),
-    ReviewNecessaryChange = $('#ReviewNecessaryChange').val();
-    alert($('#page').val());
-    Page = $('#page').val();
-    ItemsPerPage = $('.rowsPerPage').val();
-
-}
-
 function GetDocuments_Edit()
 {
 
@@ -265,8 +268,6 @@ function GetDocuments_Edit()
 
         timeoutHandle = setTimeout(
             function () {
-
-                alert(GetDocuments_Edit_orderBy);
 
                 var query = {
                     MainID: $('#MainID').val(),
@@ -281,7 +282,8 @@ function GetDocuments_Edit()
                 $.post(AppRoot + "/documents/getDocuments", query)
 
                     .done(function (documentCollection) {
-                         $('#AllIssue .dataRowClick').remove();
+                         //$('#AllIssue .dataRowClick').remove();
+                         SetTable('AllIssue', documentCollection.filter.OrderBy);
                          $.each(documentCollection.Documents, function (index, doc) {
 
                              var dateStr = "";
@@ -309,7 +311,7 @@ function GetDocuments_Edit()
                        
                              if (isEmpty(IssueChnageComent) === true) { IssueChnageComent = '-' };
 
-                             $('#AllIssue').append('<tr class="dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
+                             $('#AllIssue').append('<tr class="dataRow dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
                                  '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
                                  '<td> ' + doc.Title + '</td>' +
                                  '<td> ' + dateStr + '</td>' +

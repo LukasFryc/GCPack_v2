@@ -180,9 +180,9 @@
         // https://css-tricks.com/forums/topic/jquery-ui-tab-styling-cant-override-default-styling-for-a-specific-id/
         $("#tabs").tabs();
 
-        $('#filter').keyup(function () {
-            GetUsers();
-        });
+        //$('#filter').keyup(function () {
+        //    GetUsers();
+        //});
 
         // TODO: LF 10.11.2017 vyhledove rozchodit pro vsechny akce zobrazeni hlaseni o provedeni akce Ulozit, zaevidoval jste a podobne
         // nize uvedeny script je urcen k zobrazeni hlasnei o provedene akci v tomto pripade cancel
@@ -336,6 +336,8 @@
             function () {
                 GetReadConfirms_orderBy = $(this).attr('sortBy');
                 //alert("sortby");
+                //SetSelectedColumn($(this), GetReadConfirms);
+
                 GetReadConfirms();
             }
         );
@@ -345,6 +347,7 @@
                 GetUsersJob_orderBy = $(this).attr('sortBy');
                 //alert("sortby");
                 GetUsersJob();
+                //SetSelectedColumn($(this), GetUsersJob);
             }
         );
 
@@ -352,8 +355,7 @@
             function () {
 
                 GetDocuments_Edit_orderBy = $(this).attr('sortBy');
-                alert(GetDocuments_Edit_orderBy);
-                SetSelectedColumn($(this), GetDocuments_Edit);
+                GetDocuments_Edit();
             }
 
         );
@@ -833,13 +835,13 @@
                             <tr>
                                 <th>
                                     Jméno
-                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_NameA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
-                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_NameD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_NameA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_NameD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                                 </th>
                                 <th>
                                     Funkce
-                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_JobPostionA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up "></span></a>
-                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_JobPostionD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down "></span></a>
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_JobPostionA"><span class="glyphicon glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                                    <a href="#" class="GetUsersJob_SortBy" sortBy="GetUsersJob_JobPostionD"><span class="glyphicon glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                                 </th>
 
                             </tr>
@@ -856,23 +858,23 @@
                             <tr>
                                 <th>
                                     Jméno
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_NameA"><span class="glyphicon glyphicon-circle-arrow-up" style="color:blue" ></span></a>
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_NameD"><span class="glyphicon glyphicon-circle-arrow-down" style="color:blue" ></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_NameA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_NameD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                                 </th>
                                 <th>
                                     Funkce
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_JobPostionA"><span class="glyphicon glyphicon-circle-arrow-up "></span></a>
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_JobPostionD"><span class="glyphicon glyphicon-circle-arrow-down "></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_JobPostionA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_JobPostionD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                                 </th>
                                 <th>
                                     Přiřazeno
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_CreatedA"><span class="glyphicon glyphicon-circle-arrow-up"></span></a>
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_CreatedD"><span class="glyphicon glyphicon-circle-arrow-down"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_CreatedA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_CreatedD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                                 </th>
                                 <th>
                                     Seznámeno
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_ReadDateA"><span class="glyphicon glyphicon-circle-arrow-up"></span></a>
-                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_ReadDateD"><span class="glyphicon glyphicon-circle-arrow-down"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_ReadDateA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                                    <a href="#" class="GetReadConfirms_SortBy" sortBy="GetReadConfirms_ReadDateD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                                 </th>
 
                             </tr>
@@ -1194,15 +1196,15 @@
             <div id="tabs-8">
 
                 <table class="table" style="margin-top:20px" id="AllIssue">
-                    @*<tr>
+                    <tr>
                         <th>Číslo</th>
                         <th>Název</th>
                         <th>Účinnost</th>
                         <th>Změny</th>
                         <th></th>
-                    </tr>*@
+                    </tr>
 
-                    <tr>
+                    @*<tr>
                         <th>
                             Číslo
                             <a href="#" class="GetDocuments_Edit_SortBy" sortBy="NumberA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
@@ -1216,14 +1218,14 @@
 
                         <th>
                             Účinnost
-                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="RevisionA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
-                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="RevisionD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="EffeciencyDateA"><span class="glyphicon glyphicon-circle-arrow-up setSortByDefault"></span></a>
+                            <a href="#" class="GetDocuments_Edit_SortBy" sortBy="EffeciencyDateD"><span class="glyphicon glyphicon-circle-arrow-down setSortByDefault"></span></a>
                         </th>
                         <th>
                             Změny
                         </th>
                         <th>
-                        </th>
+                        </th>*@
 
                 </table>
 
