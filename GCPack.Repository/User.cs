@@ -23,9 +23,9 @@ namespace GCPack.Repository
             this.Signatures = new HashSet<Signature>();
             this.UserRoles = new HashSet<UserRole>();
             this.UserDocuments = new HashSet<UserDocument>();
+            this.ReadConfirmations = new HashSet<ReadConfirmation>();
             this.Documents = new HashSet<Document>();
             this.Documents1 = new HashSet<Document>();
-            this.ReadConfirmations = new HashSet<ReadConfirmation>();
         }
     
         public int ID { get; set; }
@@ -57,10 +57,10 @@ namespace GCPack.Repository
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserDocument> UserDocuments { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ReadConfirmation> ReadConfirmations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Document> Documents1 { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ReadConfirmation> ReadConfirmations { get; set; }
     }
 }

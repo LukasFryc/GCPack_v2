@@ -18,10 +18,9 @@
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
-select
- {
+select {
     max-width: 250px;
-    margin-bottom:5px;
+    margin-bottom: 5px;
 }
 
 .annotationArea {
@@ -68,8 +67,14 @@ IsAccessCSSClass
     cursor: pointer;
 }
 
+.tmaveSedePozadi {
+    /*viz filtr v indexu = setSortBydefault*/
+    background-color: #D1D1D1;
+}
+
 .setSortByDefault {
-    color: #CCCCCC;
+    /*color: #CCCCCC;*/
+    color: #D1D1D1;
     opacity: 0.7;
 }
 
@@ -78,4 +83,31 @@ IsAccessCSSClass
     opacity: 0.7;
 }
 
+/*vše ng-pluralize view /Documents/ Edit*/
+.row {
+    margin-bottom: 10px;
+}
 
+
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+    margin-bottom: -1px;
+    padding-bottom: 1px;
+    background: #3276B1;
+}
+
+.tableHlavicka {
+    background-color: aliceblue;
+}
+
+.modra {
+    color: #3276B1;
+}
+
+.sedaPozadi {
+    /*světlá - použito např pod vyběry kategorii v view Documet/Edit*/
+    background: #F5F5F5;
+}
+
+.categories {
+    width: 100%;
+}

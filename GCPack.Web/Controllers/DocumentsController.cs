@@ -124,17 +124,24 @@ namespace GCPack.Web.Controllers
             workplaces.Add(new WorkplaceModel() { ID = 0, Name = "Všechna pracoviště", orderBy = 1 });
             ViewBag.Workplaces = workplaces.OrderByDescending(p => p.orderBy).ThenBy(p => p.Name);
 
-            //@DivisionID int,
-            //@AppSystemID int,
-            //@WorkplaceID int
+            ICollection<Item> uniqueAuthors = new HashSet<Item>();
+            uniqueAuthors = documentService.GetUniqueAuthorsDocuments();
+            uniqueAuthors.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni" });
+            ViewBag.UniqueAuthors = uniqueAuthors.OrderBy(a => a.OrderBy);
+
+            ICollection<Item> uniqueAdministrators = new HashSet<Item>();
+            uniqueAdministrators = documentService.GetUniqueAdministratorsDocuments();
+            uniqueAdministrators.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni" });
+            ViewBag.UniqueAdministrators = uniqueAdministrators.OrderBy(a => a.OrderBy);
+
+            ICollection<Item> uniqueUsers = new HashSet<Item>();
+            uniqueUsers = documentService.GetUniqueReadConfirmsDocuments();
+            uniqueUsers.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni" });
+            ViewBag.UniqueUsers = uniqueUsers.OrderBy(a => a.OrderBy);
 
             // ViewBag.Message = Message;
 
-            
-
             return View(filter);
-            //DocumentFilter filterModel = new DocumentFilter() { WorkplaceID = 1, AppSystemID = 1, StateID = 2 };
-            //return View(filterModel);
 
         }
 

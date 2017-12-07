@@ -288,48 +288,55 @@ namespace GCPack.Repository
             {
                 //var dbUsers = db.Users.Where(u => filter.UserIDs.Contains(u.ID)).Select(u=>u);
 
-                var dbJobUsersPositions = db.JobPositionUsers.Select(jpu => jpu).Where(jpu=> filter.JobPositionIDs.Contains(jpu.JobPositionId) || filter.UserIDs.Contains(jpu.UserId));
+                var dbJobUsersPositions = db.JobPositionUsers.Where(jpu => filter.JobPositionIDs.Contains(jpu.JobPositionId) || filter.UserIDs.Contains(jpu.UserId)).Select(jpu => jpu);
                 //var dbJobUsersPositions = db.JobPositionUsers.Select(jpu => jpu).Where(jpu => filter.JobPositionIDs.Contains(jpu.JobPositionId));
 
                 List<UserJobModel> UserJobs = new List<UserJobModel>();
-
-                foreach (var item in dbJobUsersPositions)
-                {
-                    UserJobModel userJob = new UserJobModel();
-                    userJob.FirstName = item.User.FirstName;
-                    userJob.LastName = item.User.LastName;
-                    userJob.JobPositionID = item.JobPositionId;
-                    userJob.JobPositionName = item.JobPosition.Name;
-                    userJob.UserID = item.UserId;
-
-                    UserJobs.Add(userJob);
-                }
-
-                //                                ="GetUsersJob_NameA
-                //    GetUsersJob_NameD"
-                //GetUsersJob_JobPostionA
-                //GetUsersJob_JobPostionD"
 
                 UserJobCollectionModel UserJobCollection = new UserJobCollectionModel();
 
                 UserJobCollection.UserJobs = null;
 
-                switch (filter.OrderBy)
+                if (dbJobUsersPositions != null || dbJobUsersPositions.Count() > 0)
                 {
-                    case "GetUsersJob_NameA":
-                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderBy(uj => uj.LastName).ToList();
-                        break;
-                    case "GetUsersJob_NameD":
-                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderByDescending(uj => uj.LastName).ToList();
-                        break;
-                    case "GetUsersJob_JobPostionA":
 
-                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderBy(uj => uj.JobPositionName).ToList();
-                        break;
-                    case "GetUsersJob_JobPostionD":
-                        UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderByDescending(uj => uj.JobPositionName).ToList();
-                        break;
+                    foreach (var item in dbJobUsersPositions)
+                    {
+                        UserJobModel userJob = new UserJobModel();
+                        userJob.FirstName = item.User.FirstName;
+                        userJob.LastName = item.User.LastName;
+                        userJob.JobPositionID = item.JobPositionId;
+                        userJob.JobPositionName = item.JobPosition.Name;
+                        userJob.UserID = item.UserId;
+
+                        UserJobs.Add(userJob);
+                    }
+
+                    switch (filter.OrderBy)
+                    {
+                        case "GetUsersJob_NameA":
+                            UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderBy(uj => uj.LastName).ToList();
+                            break;
+                        case "GetUsersJob_NameD":
+                            UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderByDescending(uj => uj.LastName).ToList();
+                            break;
+                        case "GetUsersJob_JobPostionA":
+
+                            UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderBy(uj => uj.JobPositionName).ToList();
+                            break;
+                        case "GetUsersJob_JobPostionD":
+                            UserJobCollection.UserJobs = UserJobs.AsQueryable().OrderByDescending(uj => uj.JobPositionName).ToList();
+                            break;
+                        default:
+                            // pro pripad ze nebude vyplneno order by
+                            // coz se skutecne deje pokud funkce neni volana y view pres json, ale pri zaevidovani
+                            // pak to logicky padalo
+                            UserJobCollection.UserJobs = UserJobs.AsQueryable().ToList();
+                            break;
+                    }
+
                 }
+                
 
                 UserJobCollection.filter = filter;
 

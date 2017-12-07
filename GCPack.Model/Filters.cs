@@ -84,6 +84,11 @@ namespace GCPack.Model
             set { saveFilter = value; }
         }
 
+
+        public int? AministratorID { get; set; }
+        public int? AuthorID { get; set; }
+        public int? UserID { get; set; }
+
     }
 
     public class ReadConfirmFilter : Filter

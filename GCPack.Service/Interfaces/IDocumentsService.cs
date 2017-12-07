@@ -31,5 +31,11 @@ namespace GCPack.Service.Interfaces
 
         ReadConfirmCollectionModel GetReadConfirms(ReadConfirmFilter filter);
 
+        ICollection<Item> GetUniqueAuthorsDocuments();
+
+        ICollection<Item> GetUniqueAdministratorsDocuments();
+
+        ICollection<Item> GetUniqueReadConfirmsDocuments();
+
     }
 }

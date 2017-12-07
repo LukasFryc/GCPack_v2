@@ -18,7 +18,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                return db.DocumentStates.Where (s => s.Code == state).Select (s => s.ID).FirstOrDefault();
+                return db.DocumentStates.Where(s => s.Code == state).Select(s => s.ID).FirstOrDefault();
             }
         }
 
@@ -34,29 +34,31 @@ namespace GCPack.Repository
                                 from u in db.JobPositionUsers
                                 where j.JobPositionId == u.JobPositionId && j.DocumentId == documentID
                                 select u.User;
-                var allUsers2 = from ud in db.UserDocuments where ud.DocumentId == documentID
+                var allUsers2 = from ud in db.UserDocuments
+                                where ud.DocumentId == documentID
                                 select ud.User;
-                
+
 
                 var allUsers = allUsers1.Union(allUsers2);
 
-                
+
 
                 var usersRead = from r in db.ReadConfirmations
                                 from u in db.Users
                                 where
                                     r.DocumentID == documentID &&
                                     u.ID == r.UserID
-                                select new {User = u, Date = r.ReadDate };
+                                select new { User = u, Date = r.ReadDate };
                 usersInDocument.DocumentID = documentID;
 
                 usersInDocument.AllUsers = Mapper.Map<ICollection<UserModel>>(allUsers);
                 foreach (var userRead in usersRead)
                 {
-                    usersInDocument.UsersRead.Add(new UserReadDocument() {
+                    usersInDocument.UsersRead.Add(new UserReadDocument()
+                    {
                         //(DateTime)
                         DateRead = userRead.Date,
-                        User = Mapper.Map<UserModel> (userRead.User)
+                        User = Mapper.Map<UserModel>(userRead.User)
                     });
                 }
                 return usersInDocument;
@@ -76,7 +78,7 @@ namespace GCPack.Repository
             }
         }
 
-       
+
 
         // priklad paging 
         public ICollection<DocumentModel> GetDocuments_priklad(DocumentFilter filter)
@@ -87,10 +89,11 @@ namespace GCPack.Repository
                 return Mapper.Map<ICollection<DocumentModel>>(q);
             }
 
-         }
+        }
         public DocumentTypeModel GetDocumentType(int ID)
         {
-            using (GCPackContainer db = new GCPackContainer()) {
+            using (GCPackContainer db = new GCPackContainer())
+            {
                 return Mapper.Map<DocumentTypeModel>(db.DocumentTypes.Where(dt => dt.ID == ID).Select(dt => dt).FirstOrDefault());
             }
         }
@@ -121,7 +124,7 @@ namespace GCPack.Repository
                 else
                 {
                     var dbDocumentType = db.DocumentTypes.Where(dt => dt.ID == documentType.ID).FirstOrDefault();
-                    Mapper.Map(documentType,dbDocumentType);
+                    Mapper.Map(documentType, dbDocumentType);
                     dbDocumentType.AuthorizinOfficerID = 0;
                     db.SaveChanges();
                 }
@@ -194,7 +197,7 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                ICollection<int> AppSystemsID = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().SystemDocuments.Select (sd => sd.ID_System).ToList<int>();
+                ICollection<int> AppSystemsID = db.Documents.Where(d => d.ID == documentId).Select(d => d).FirstOrDefault().SystemDocuments.Select(sd => sd.ID_System).ToList<int>();
                 return AppSystemsID;
             }
         }
@@ -226,7 +229,7 @@ namespace GCPack.Repository
             // timto se yajisti i napr to, ye uyivatel s roli User se nedostane zadnym zpusobem na dokumenty 
             // kter jsou v jinem stavu nez Registered a jsou typ revize = p
             // nejde to obejit parametrz z prohlizece
-            
+
             DocumentFilter filter = new DocumentFilter() { DocumentID = documentId, ForUserID = userID };
             DocumentModel document = GetDocuments(filter).Documents.FirstOrDefault();
             return document;
@@ -327,20 +330,21 @@ namespace GCPack.Repository
                 }
 
                 if (!string.IsNullOrEmpty(filter.AdministratorName))
-                { documents =
-                    documents.Where(d =>
-                    //(d.AdministratorID == 0 && 
-                    //    (
-                    //        d.DocumentType.User.FirstName.Contains (filter.AdministratorName) ||
-                    //        d.DocumentType.User.LastName.Contains(filter.AdministratorName)
-                    //    )) ||
-                     (d.AdministratorID != 0 && 
-                        (
-                            db.Users.Where (u => u.FirstName.Contains(filter.AdministratorName) ||
-                            u.LastName.Contains(filter.AdministratorName)).Select(u => u.ID).Contains(d.AdministratorID) 
-                        )
-                     )
-                    );
+                {
+                    documents =
+                      documents.Where(d =>
+                       //(d.AdministratorID == 0 && 
+                       //    (
+                       //        d.DocumentType.User.FirstName.Contains (filter.AdministratorName) ||
+                       //        d.DocumentType.User.LastName.Contains(filter.AdministratorName)
+                       //    )) ||
+                       (d.AdministratorID != 0 &&
+                          (
+                              db.Users.Where(u => u.FirstName.Contains(filter.AdministratorName) ||
+                             u.LastName.Contains(filter.AdministratorName)).Select(u => u.ID).Contains(d.AdministratorID)
+                          )
+                       )
+                      );
                 }
 
                 switch (filter.OrderBy)
@@ -352,10 +356,10 @@ namespace GCPack.Repository
                         documents = documents.OrderByDescending(d => d.Title);
                         break;
                     case "NumberA":
-                        documents = documents.OrderBy(d => d.DocumentNumber).ThenBy(d => d.IssueNumber); 
+                        documents = documents.OrderBy(d => d.DocumentNumber).ThenBy(d => d.IssueNumber);
                         break;
                     case "NumberD":
-                        documents = documents.OrderByDescending(d => d.DocumentNumber).ThenBy(d => d.IssueNumber); 
+                        documents = documents.OrderByDescending(d => d.DocumentNumber).ThenBy(d => d.IssueNumber);
                         break;
                     case "RevisionA":
                         documents = documents.OrderBy(d => d.EffeciencyDate);
@@ -364,13 +368,13 @@ namespace GCPack.Repository
                         documents = documents.OrderByDescending(d => d.EffeciencyDate);
                         break;
                     default:
-                        documents = documents.OrderBy(d => d.DocumentNumber).ThenBy(d=>d.IssueNumber);
+                        documents = documents.OrderBy(d => d.DocumentNumber).ThenBy(d => d.IssueNumber);
                         break;
                 }
 
                 // tyka se strankovani: documents.Skip(filter.Page * filter.ItemPerPage).Take (filter.ItemPerPage)
 
-                ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documents.Skip(filter.Page * filter.ItemsPerPage).Take (filter.ItemsPerPage));
+                ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documents.Skip(filter.Page * filter.ItemsPerPage).Take(filter.ItemsPerPage));
 
                 foreach (DocumentModel document in docs)
                 {
@@ -405,9 +409,9 @@ namespace GCPack.Repository
 
                 if (!string.IsNullOrEmpty(filter.StateCode)) filter.StateID = GetDocumentState(filter.StateCode); // lF 25.10.2017
 
-                if (filter.DocumentID==null) filter.DocumentID = 0;
+                if (filter.DocumentID == null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments21_Result> documentsResult = db.GetDocuments21(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision,filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments21_Result>();
+                ICollection<GetDocuments21_Result> documentsResult = db.GetDocuments21(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments21_Result>();
                 documentCollection.Count = documentsResult.Count();
                 // v pripade ze se jedna o vyber jednoho dokumentu
                 if (filter.DocumentID != 0)
@@ -552,7 +556,7 @@ namespace GCPack.Repository
             {
                 var blob = db.Files.Where(f => f.ID == fileID).Select(f => f.FileBlob).FirstOrDefault();
                 string fileName = db.Files.Where(f => f.ID == fileID).Select(f => f.Name).FirstOrDefault();
-                return new FileItem() {Data = blob, Name = fileName };
+                return new FileItem() { Data = blob, Name = fileName };
             }
         }
 
@@ -655,7 +659,7 @@ namespace GCPack.Repository
                     newDocument.MainID = document.ID;
 
                     db.SaveChanges();
-                } 
+                }
 
 
                 if (document.JobPositionIDs != null)
@@ -681,7 +685,7 @@ namespace GCPack.Repository
                 db.SaveChanges();
             }
         }
-            // ulozeni editovaneho dokumentu
+        // ulozeni editovaneho dokumentu
         public DocumentModel EditDocument(DocumentModel document)
         {
             using (GCPackContainer db = new GCPackContainer())
@@ -689,7 +693,7 @@ namespace GCPack.Repository
                 var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
                 //int stateID = (int)dbDocument.StateID;
                 document.DocumentTypeID = dbDocument.DocumentTypeID;
-                document.ParentID = (int) dbDocument.ParentID;
+                document.ParentID = (int)dbDocument.ParentID;
                 // pokud je jiz vygenerovane cislo dokumentu, tak se vezme z databaze - jinak se necha stavajici
                 document.DocumentNumber = (string.IsNullOrEmpty(document.DocumentNumber)) ? dbDocument.DocumentNumber : document.DocumentNumber;
                 Mapper.Map(document, dbDocument);
@@ -716,29 +720,31 @@ namespace GCPack.Repository
         {
             using (GCPackContainer db = new GCPackContainer())
             {
-                db.Files.Add(new File() {
+                db.Files.Add(new File()
+                {
                     Name = name,
                     FileBlob = fileStream,
-                    Document = db.Documents.Where (d => d.ID == document.ID).Select(d => d).FirstOrDefault()
+                    Document = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault()
                 });
                 db.SaveChanges();
             }
         }
         public void ChangeDocumentState(DocumentModel document, string state)
         {
-           
-                ChangeDocumentState(document.ID, state);
-            
+
+            ChangeDocumentState(document.ID, state);
+
         }
 
         public void ChangeDocumentState(DocumentModel document, string state, string helpText)
-        { if (String.IsNullOrEmpty(helpText) )
-              {
+        {
+            if (String.IsNullOrEmpty(helpText))
+            {
                 ChangeDocumentState(document.ID, state);
             }
             else
             {
-               ChangeDocumentState(document.ID, state, helpText);
+                ChangeDocumentState(document.ID, state, helpText);
             }
         }
 
@@ -768,12 +774,12 @@ namespace GCPack.Repository
 
                 if (state == "Storno")
                 {
-                    dbDocument.StornoReason = helpText;                   
+                    dbDocument.StornoReason = helpText;
                 }
 
 
-                
-               
+
+
                 db.SaveChanges();
             }
         }
@@ -812,9 +818,9 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 var documentType = db.DocumentTypes.Where(dt => dt.ID == documentTypeID).Select(dt => dt).FirstOrDefault();
-                numberOfDocument = documentType.NumberingOfDocumentPrefix + documentType.NumberingOfDocumentSeparator + documentType.LastNumberOfDocument.ToString().PadLeft(System.Convert.ToInt32(documentType.NumberingOfDocumentLength),'0');
+                numberOfDocument = documentType.NumberingOfDocumentPrefix + documentType.NumberingOfDocumentSeparator + documentType.LastNumberOfDocument.ToString().PadLeft(System.Convert.ToInt32(documentType.NumberingOfDocumentLength), '0');
             }
-                return numberOfDocument;
+            return numberOfDocument;
         }
 
         public ICollection<int> GetWorkplacesFromDocument(int documentId)
@@ -838,7 +844,7 @@ namespace GCPack.Repository
 
                 db.SaveChanges();
             }
-            
+
 
         }
 
@@ -847,9 +853,9 @@ namespace GCPack.Repository
             using (GCPackContainer db = new GCPackContainer())
             {
                 var dbDocument = db.Documents.Where(d => d.ID == document.ID).Select(d => d).FirstOrDefault();
-                
+
                 StringBuilder builder = new StringBuilder(dbDocument.ReviewNecessaryChangeComment);
-                builder.AppendLine(DateTime.Now.ToString()+ " - " + userName + " :");
+                builder.AppendLine(DateTime.Now.ToString() + " - " + userName + " :");
                 builder.AppendLine(comment);
                 dbDocument.ReviewNecessaryChangeComment = builder.ToString();
                 dbDocument.ReviewNecessaryChange = true;
@@ -1020,6 +1026,10 @@ namespace GCPack.Repository
                     case "GetReadConfirms_ReadDateD":
                         dbRC = dbRC.OrderByDescending(rc => rc.ReadDate);
                         break;
+                    default:
+                        // pro pripad ze nebude vyplneno order by
+                        dbRC = dbRC;
+                        break;
 
                 }
 
@@ -1036,43 +1046,98 @@ namespace GCPack.Repository
                 return readConfirmCollection;
             }
         }
-        //public ICollection<ReadConfirmModel> GetReadConfirms(ReadConfirmFilter filter) {
-        //    using (GCPackContainer db = new GCPackContainer())
-        //    {
-        //        var dbRC = db.ReadConfirmations.Where(rc => rc.DocumentID == filter.DocumentID).Select(rc => rc);
 
-        //        switch (filter.OrderBy)
-        //        {
-        //            case "GetReadConfirms_NameA":
-        //                dbRC = dbRC.OrderBy(rc => rc.User.LastName);
-        //                break;
-        //            case "GetReadConfirms_NameD":
-        //                dbRC = dbRC.OrderByDescending(rc => rc.User.LastName);
-        //                break;
-        //            case "GetReadConfirms_JobPostionA":
-        //                dbRC = dbRC.OrderBy(rc => rc.JobPositionName);
-        //                break;
-        //            case "GetReadConfirms_JobPostionD":
-        //                dbRC = dbRC.OrderByDescending(rc => rc.JobPositionName);
-        //                break;
-        //            case "GetReadConfirms_CreatedA":
-        //                dbRC = dbRC.OrderBy(rc => EntityFunctions.TruncateTime(rc.Created));
-        //                break;
-        //            case "GetReadConfirms_CreatedD":
-        //                dbRC = dbRC.OrderByDescending(rc => EntityFunctions.TruncateTime(rc.Created));
-        //                break;
-        //            case "GetReadConfirms_ReadDateA":
-        //                dbRC = dbRC.OrderBy(rc => rc.ReadDate);
-        //                break;
-        //            case "GetReadConfirms_ReadDateD":
-        //                dbRC = dbRC.OrderByDescending(rc => rc.ReadDate);
-        //                break;
+        public ICollection<Item> GetUniqueAuthorsDocuments(DocumentFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                // User1 Author
+                //User Administrator
+                var docColl = db.Documents
+                .Where(rc => rc.StateID == filter.StateID && rc.Revision == "p" && rc.User.Active == true)
+                .Select(d => d.AuthorID).Distinct();
 
-        //        }
-                
-        //        return Mapper.Map<ICollection<ReadConfirmModel>>(dbRC);
+                var userColl = db.Users.Where(u => docColl.Contains(u.ID))
+                    .Select(u => new Item { ID = u.ID, Value = u.LastName + " " + u.FirstName })
+                    .OrderBy(u => u.Value)
+                    .ToList();
 
-        //    }
-        //}
+                int i = 1;
+                foreach (var item in userColl)
+                {
+                    item.OrderBy = i;
+                    i++;
+                }
+
+                return userColl;
+
+
+            }
+        }
+
+        public ICollection<Item> GetUniqueAdministratorsDocuments(DocumentFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                // User1 Author
+                //User Administrator
+
+                var docColl = db.Documents
+                    .Where(rc => rc.StateID == filter.StateID && rc.Revision == "p" && rc.User.Active == true)
+                    .Select(d => d.AdministratorID).Distinct();
+
+                var userColl = db.Users.Where(u => docColl.Contains(u.ID))
+                    .Select(u => new Item { ID = u.ID, Value = u.LastName + " " + u.FirstName })
+                    .OrderBy(u => u.Value)
+                    .ToList();
+
+                int i = 1;
+                foreach (var item in userColl)
+                {
+                    item.OrderBy = i;
+                    i++;
+                }
+
+                return userColl;
+
+
+            }
+        }
+
+
+        public ICollection<Item> GetUniqueReadConfirmsDocuments(DocumentFilter filter)
+        {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+                // User1 Author
+                //User Administrator
+
+                var docColl = db.Documents
+                    .Where(rc => rc.StateID == filter.StateID && rc.Revision == "p" && rc.User.Active == true)
+                    .Select(d => d.ID);
+
+                var readConfirmColl = db.ReadConfirmations.Where(rc => docColl.Contains(rc.DocumentID))
+                    .Select(rc => rc.UserID).Distinct();
+
+                var userColl = db.Users.Where(u => readConfirmColl.Contains(u.ID))
+                    .Select(u => new Item { ID = u.ID, Value = u.LastName + " " + u.FirstName })
+                    .OrderBy(u => u.Value)
+                    .ToList();
+
+
+                int i = 1;
+                foreach (var item in userColl)
+                {
+                    item.OrderBy = i;
+                    i++;
+                }
+
+                return userColl;
+
+
+            }
+        }
+
     }
+    
 }

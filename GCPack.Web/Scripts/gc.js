@@ -6,9 +6,9 @@ function isEmpty(value) {
 
 function SetTable(tableId, orderBy) {
 
-    $('#' + tableId +' .dataRow').remove();
+    $('#' + tableId + ' .dataRow').remove();
 
-   // $('#AllDocuments .dataRow').remove();
+    // $('#AllDocuments .dataRow').remove();
 
     var $tableThis = $('#' + tableId);
     $tableThis.find('span.glyphicon').each(function () {
@@ -148,7 +148,7 @@ function GetUsersJob() {
             var query = {
                 "selectedUserIDs": selectedUsers.join(','),
                 "selectedJobPositionIDs": selectedJobPositionIDs.join(','),
-                "orderBy": GetUsersJob_orderBy 
+                "orderBy": GetUsersJob_orderBy
 
             };
 
@@ -159,15 +159,15 @@ function GetUsersJob() {
                 .done(function (usersJobCollection) {
 
                     SetTable('AllUsersJob', usersJobCollection.filter.OrderBy);
-                    
+
                     $.each(usersJobCollection.UserJobs, function (index, userjob) {
                         $('#AllUsersJob').append('<tr class="dataRow">' +
-                            '<td> ' + userjob.LastName + ' ' + userjob.FirstName+ '</td>' +
+                            '<td> ' + userjob.LastName + ' ' + userjob.FirstName + '</td>' +
                             '<td> ' + userjob.JobPositionName + '</td>'
                         );
 
                     });
-                    
+
 
                 })
                 .fail(function (jqxhr, textStatus, error) {
@@ -210,14 +210,14 @@ function GetReadConfirms() {
                 //"selectedUserIDs": selectedUsers.join(','),
                 //"selectedJobPositionIDs": selectedJobPositionIDs.join(',')
                 "documentId": $('#ID').val(),
-                "orderBy": GetReadConfirms_orderBy 
+                "orderBy": GetReadConfirms_orderBy
             };
 
             // LF 10.11.2017 pred tim nez jsme skryli jobPosition a dalsi pole $.getJSON(AppRoot +"/user/getUsers", { name: $('#filter').val(), jobPositionId: $('#jobPosition').val(), preservedUsers: selectedUsers.join(',') })
             $.getJSON(AllPath, query)
                 .done(function (readConfirmCollection) {
 
-//                    $('#AllReadConfirms .dataRow').remove();
+                    //                    $('#AllReadConfirms .dataRow').remove();
 
                     SetTable('AllReadConfirms', readConfirmCollection.filter.OrderBy);
 
@@ -228,7 +228,7 @@ function GetReadConfirms() {
                             var dateC = eval(readConfirm.Created.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
                             dateCreated =
                                 dateC.getDate() + "." + (dateC.getMonth() + 1) + "." + dateC.getFullYear();
-                        } 
+                        }
 
                         dateRead = '';
                         if (readConfirm.ReadDate !== null) {
@@ -240,7 +240,7 @@ function GetReadConfirms() {
                         $('#AllReadConfirms').append('<tr class="dataRow">' +
                             '<td> ' + readConfirm.LastName + ' ' + readConfirm.FirstName + '</td>' +
                             '<td> ' + readConfirm.JobPositionName + '</td>' +
-                            '<td> ' + dateCreated + '</td>' + 
+                            '<td> ' + dateCreated + '</td>' +
                             '<td> ' + dateRead + '</td>'
                         );
 
@@ -258,10 +258,9 @@ function GetReadConfirms() {
         500);
 }
 
-function GetDocuments_Edit()
-{
+function GetDocuments_Edit() {
 
-    if ($('#MainID').val()!=="0") {
+    if ($('#MainID').val() !== "0") {
 
         var timeoutHandle;
         if (timeoutHandle !== null) window.clearTimeout(timeoutHandle);
@@ -282,40 +281,40 @@ function GetDocuments_Edit()
                 $.post(AppRoot + "/documents/getDocuments", query)
 
                     .done(function (documentCollection) {
-                         //$('#AllIssue .dataRowClick').remove();
-                         SetTable('AllIssue', documentCollection.filter.OrderBy);
-                         $.each(documentCollection.Documents, function (index, doc) {
+                        //$('#AllIssue .dataRowClick').remove();
+                        SetTable('AllIssue', documentCollection.filter.OrderBy);
+                        $.each(documentCollection.Documents, function (index, doc) {
 
-                             var dateStr = "";
+                            var dateStr = "";
 
-                             var unReadCount = 0;
+                            var unReadCount = 0;
 
-                             var redColor = "#EE9090";
-                             var blackColor = "#000000";
-                             var readColor = blackColor;
-                             var archiv = "";
+                            var redColor = "#EE9090";
+                            var blackColor = "#000000";
+                            var readColor = blackColor;
+                            var archiv = "";
 
-                             if (doc.EffeciencyDate !== null) {
-                                 var date = eval(doc.EffeciencyDate.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
-                                 dateStr =
-                                     date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
-                             }
+                            if (doc.EffeciencyDate !== null) {
+                                var date = eval(doc.EffeciencyDate.replace(/\/Date\((\d+)\)\//gi, "new Date($1)"));
+                                dateStr =
+                                    date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+                            }
 
-                             unReadCount = doc.AllUsers - doc.UsersRead;
+                            unReadCount = doc.AllUsers - doc.UsersRead;
 
-                             if (unReadCount > 0) {
-                                 readColor = redColor
-                             }
+                            if (unReadCount > 0) {
+                                readColor = redColor
+                            }
 
-                             var IssueChnageComent = doc.IssueChangeComment;
-                       
-                             if (isEmpty(IssueChnageComent) === true) { IssueChnageComent = '-' };
+                            var IssueChnageComent = doc.IssueChangeComment;
 
-                             $('#AllIssue').append('<tr class="dataRow dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
-                                 '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
-                                 '<td> ' + doc.Title + '</td>' +
-                                 '<td> ' + dateStr + '</td>' +
-                                 '<td> ' + IssueChnageComent + '</td>' +
+                            if (isEmpty(IssueChnageComent) === true) { IssueChnageComent = '-' };
+
+                            $('#AllIssue').append('<tr class="dataRow dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
+                                '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
+                                '<td> ' + doc.Title + '</td>' +
+                                '<td> ' + dateStr + '</td>' +
+                                '<td> ' + IssueChnageComent + '</td>' +
                                 '<td> <A href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID +
                                 '"><span class="glyphicon glyphicon-eye-open"></span></A></td>'
                             );
@@ -331,4 +330,23 @@ function GetDocuments_Edit()
             },
             500);
     }
+}
+
+//2 fce pro výběry např . kategorii v view/documents/Edit
+function ChangeItems(source, target) {
+    $(source + " :selected").each(function (index, item) {
+        $(target).append('<option value="' + item.value + '">' + item.text + '</option>');
+        $(item).remove();
+    });
+
+    SortItems(source);
+    SortItems(target);
+}
+
+function SortItems(source) {
+    var selectList = $(source + ' option');
+    var sortSelectList = selectList.sort(function (a, b) {
+        return a.text.localeCompare(b.text);
+    });
+    $(source).html(sortSelectList);
 }

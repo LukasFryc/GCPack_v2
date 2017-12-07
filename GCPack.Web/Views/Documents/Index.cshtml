@@ -154,7 +154,10 @@
                         //Archiv: $('#Archiv').val(),
                         ReviewNecessaryChange: $('#ReviewNecessaryChange').val(),
                         Page: $('#page').val(),
-                        ItemsPerPage: $('.rowsPerPage').val()
+                        ItemsPerPage: $('.rowsPerPage').val(),
+                        AministratorID: $('#AministratorID').val(),
+                        AuthorID: $('#AuthorID').val(),
+                        UserID: $('#UserID').val()
                     })
 
                         .done(function (documentCollection) {
@@ -217,6 +220,18 @@
                                 //    '"><span class="glyphicon glyphicon-trash"></span></A></td>'
                                 //);
 
+                                //$('#AllDocuments').append('<tr class="dataRow dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
+                                //    '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
+                                //    '<td> ' + doc.Title + '</td>' +
+                                //    '<td> ' + dateStr + '</td>' +
+                                //    '<td> ' + doc.DocumentAdministrator + '</td>' +
+                                //    revision +
+                                //    '<td> <b> <font color="' + readColor + '">' + doc.UsersRead + ':' + unReadCount + '</font></b></td>' +
+                                //    '<td><A href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
+                                //    '"><span class="glyphicon glyphicon-edit"></span></A> <A href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID + '&tabs=6' +
+                                //    '"><span class="glyphicon glyphicon-user"></span></A> <A href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
+                                //    '"><span class="glyphicon glyphicon-trash"></span></A></td>'
+                                //);
 
                                 $('#AllDocuments').append('<tr class="dataRow dataRowClick"' + doc.ID + ' value="' + doc.ID + '">' +
                                     '<td> ' + doc.DocumentNumber + ' (V' + doc.IssueNumber + ')</td>' +
@@ -224,12 +239,13 @@
                                     '<td> ' + dateStr + '</td>' +
                                     '<td> ' + doc.DocumentAdministrator + '</td>' +
                                     revision +
-                                    '<td> <b> <font color="' + readColor + '">' + doc.UsersRead + ':' + unReadCount + '</font></b></td>' +
+                                    '<td><A href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID + '&tabs=6' +'"><b><font color="' + readColor + '">' + doc.UsersRead + ':' + unReadCount + '</font></b></A></td>' +
                                     '<td><A href="' + AppRoot + '/Documents/Edit?documentId=' + doc.ID +
-                                    '"><span class="glyphicon glyphicon-edit"></span></A> <A href="' + AppRoot + '/Documents/Details?documentId=' + doc.ID + '&tabs=6' +
-                                    '"><span class="glyphicon glyphicon-user"></span></A> <A href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
+                                    '"><span class="glyphicon glyphicon-edit"></span></A><A href="' + AppRoot + '/Documents/Delete?documentId=' + doc.ID +
                                     '"><span class="glyphicon glyphicon-trash"></span></A></td>'
                                 );
+
+                               
                             });
                             
 
@@ -545,14 +561,14 @@
             <label for="Number">Název</label>
         </div>
         <div class="col-md-2">
-            <label for="AdministratorName">Správce</label>
+            <label for="AministratorID">Správce</label>
         </div>
         <div class="col-md-2">
-           
+            <label for="AuthorID">Autor</label>
         </div>
         
         <div class="col-md-2">
-           
+            <label for="UserID">Uživatel</label>
         </div>
 
         <div class="col-md-1">
@@ -573,13 +589,14 @@
                 <input class="filterText form-control" type="text" id="Name" value="@((filter != null) ? filter.Name : string.Empty)" />
             </div>
             <div class="col-md-2">
-                <input class="filterText form-control" type="text" id="AdministratorName" value="@((filter != null) ? filter.AdministratorName : string.Empty)" />
+                @*<input class="filterText form-control" type="text" id="AdministratorName" value="@((filter != null) ? filter.AdministratorName : string.Empty)" />*@
+                @Html.DropDownListFor(m => m.AministratorID, new SelectList(ViewBag.UniqueAdministrators, "ID", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-2">
-                
+                @Html.DropDownListFor(m => m.AuthorID, new SelectList(ViewBag.UniqueAuthors, "ID", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-2">
-                
+                @Html.DropDownListFor(m => m.UserID, new SelectList(ViewBag.UniqueUsers, "ID", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-1">
 

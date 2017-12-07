@@ -34,11 +34,11 @@ namespace GCPack.Web.Controllers
             //int[] UserIDs = (!string.IsNullOrEmpty(selectedUserIDs)) ? Array.ConvertAll(selectedUserIDs.Split(','), int.Parse) : new int[] { };
 
             ICollection<int> UserIDs = ((!string.IsNullOrEmpty(selectedUserIDs)) ? Array.ConvertAll(selectedUserIDs.Split(','), int.Parse) : new int[] { }).ToList();
-            ICollection<int> JoPostionIDs = ((!string.IsNullOrEmpty(selectedJobPositionIDs)) ? Array.ConvertAll(selectedJobPositionIDs.Split(','), int.Parse) : new int[] { }).ToList();
+            ICollection<int> JobPostionIDs = ((!string.IsNullOrEmpty(selectedJobPositionIDs)) ? Array.ConvertAll(selectedJobPositionIDs.Split(','), int.Parse) : new int[] { }).ToList();
 
             UserFilter filter = new UserFilter();
             filter.UserIDs = UserIDs;
-            filter.JobPositionIDs = JoPostionIDs;
+            filter.JobPositionIDs = JobPostionIDs;
             filter.OrderBy = orderBy;
 
             UserJobCollectionModel usersJobCollection =  userService.GetUsersJob(filter);

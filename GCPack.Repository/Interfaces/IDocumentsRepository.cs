@@ -58,5 +58,11 @@ namespace GCPack.Repository.Interfaces
         void AddReadConfirms(int documentID, ICollection<UserJobModel> usersJob);
         ReadConfirmCollectionModel GetReadConfirms(ReadConfirmFilter  filter);
 
+        ICollection<Item> GetUniqueAuthorsDocuments(DocumentFilter filter);
+
+        ICollection<Item> GetUniqueAdministratorsDocuments(DocumentFilter filter);
+
+        ICollection<Item> GetUniqueReadConfirmsDocuments(DocumentFilter filter);
+
     }
 }

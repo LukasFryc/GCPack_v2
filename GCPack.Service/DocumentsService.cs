@@ -403,5 +403,35 @@ namespace GCPack.Service
 
         }
 
+        public ICollection<Item> GetUniqueAuthorsDocuments()
+        {
+            DocumentFilter filter = new DocumentFilter();
+
+            filter.StateID = documentsRepository.GetDocumentState("Registered"); // pouze zaevidovane
+            filter.StateCode = "Registered"; // pouze zaevidovane
+            filter.Revision = "p"; // pouze platne
+            return documentsRepository.GetUniqueAuthorsDocuments(filter);
+        }
+
+        public ICollection<Item> GetUniqueAdministratorsDocuments()
+        {
+            DocumentFilter filter = new DocumentFilter();
+
+            filter.StateID = documentsRepository.GetDocumentState("Registered"); // pouze zaevidovane
+            filter.StateCode = "Registered"; // pouze zaevidovane
+            filter.Revision = "p"; // pouze platne
+            return documentsRepository.GetUniqueAdministratorsDocuments(filter);
+        }
+
+        public ICollection<Item> GetUniqueReadConfirmsDocuments()
+        {
+            DocumentFilter filter = new DocumentFilter();
+
+            filter.StateID = documentsRepository.GetDocumentState("Registered"); // pouze zaevidovane
+            filter.StateCode = "Registered"; // pouze zaevidovane
+            filter.Revision = "p"; // pouze platne
+            return documentsRepository.GetUniqueReadConfirmsDocuments(filter);
+        }
+
     }
 }
