@@ -1227,7 +1227,7 @@
             <End Role="User" EntitySet="Users" />
             <End Role="UserDocument" EntitySet="UserDocuments" />
           </AssociationSet>
-          <FunctionImport Name="GetDocuments21" ReturnType="Collection(GCPack.GetDocuments21_Result)">
+          <FunctionImport Name="GetDocuments21">
             <Parameter Name="forUserID" Mode="In" Type="Int32" />
             <Parameter Name="documentID" Mode="In" Type="Int32" />
             <Parameter Name="Name" Mode="In" Type="String" />
@@ -1309,6 +1309,30 @@
             <End Role="Document" EntitySet="Documents" />
             <End Role="WorkplaceDocument" EntitySet="WorkplaceDocuments" />
           </AssociationSet>
+          <FunctionImport Name="GetDocuments22" ReturnType="Collection(GCPack.GetDocuments22_Result)">
+            <Parameter Name="forUserID" Mode="In" Type="Int32" />
+            <Parameter Name="documentID" Mode="In" Type="Int32" />
+            <Parameter Name="Name" Mode="In" Type="String" />
+            <Parameter Name="Number" Mode="In" Type="String" />
+            <Parameter Name="Administrator" Mode="In" Type="String" />
+            <Parameter Name="OrderBy" Mode="In" Type="String" />
+            <Parameter Name="DocumentTypeID" Mode="In" Type="Int32" />
+            <Parameter Name="Page" Mode="In" Type="Int32" />
+            <Parameter Name="ItemsPerPage" Mode="In" Type="Int32" />
+            <Parameter Name="ProjectID" Mode="In" Type="Int32" />
+            <Parameter Name="DivisionID" Mode="In" Type="Int32" />
+            <Parameter Name="AppSystemID" Mode="In" Type="Int32" />
+            <Parameter Name="WorkplaceID" Mode="In" Type="Int32" />
+            <Parameter Name="NextReviewDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="NextReviewDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateFrom" Mode="In" Type="DateTime" />
+            <Parameter Name="EffeciencyDateTo" Mode="In" Type="DateTime" />
+            <Parameter Name="ReadType" Mode="In" Type="String" />
+            <Parameter Name="StateID" Mode="In" Type="Int32" />
+            <Parameter Name="Revision" Mode="In" Type="String" />
+            <Parameter Name="ReviewNecassaryChange" Mode="In" Type="String" />
+            <Parameter Name="MainID" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <EntityType Name="AppSystem">
           <Key>
@@ -1715,42 +1739,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <ComplexType Name="GetDocuments21_Result">
-          <Property Type="Int64" Name="row" Nullable="true" />
-          <Property Type="Int32" Name="ID" Nullable="false" />
-          <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
-          <Property Type="String" Name="DocumentNumber" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="Title" Nullable="true" MaxLength="100" />
-          <Property Type="DateTime" Name="EffeciencyDate" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="ReviewDate" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="NextReviewDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="AdministratorID" Nullable="false" />
-          <Property Type="Int32" Name="StateID" Nullable="true" />
-          <Property Type="Int32" Name="DocumentAdminType" Nullable="true" />
-          <Property Type="String" Name="Annotation" Nullable="true" />
-          <Property Type="String" Name="Revision" Nullable="true" MaxLength="1" />
-          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="IssueNumber" Nullable="true" />
-          <Property Type="Int32" Name="ParentID" Nullable="true" />
-          <Property Type="Boolean" Name="ReviewNecessaryChange" Nullable="true" />
-          <Property Type="Int32" Name="AuthorID" Nullable="true" />
-          <Property Type="String" Name="ReviewNecessaryChangeComment" Nullable="true" />
-          <Property Type="Int32" Name="PreviousStateID" Nullable="true" />
-          <Property Type="Int32" Name="MainID" Nullable="false" />
-          <Property Type="String" Name="IssueChangeComment" Nullable="true" />
-          <Property Type="String" Name="StornoReason" Nullable="true" />
-          <Property Type="Int32" Name="CanEdit" Nullable="false" />
-          <Property Type="Int32" Name="CanRevision" Nullable="false" />
-          <Property Type="DateTime" Name="Created" Nullable="true" Precision="23" />
-          <Property Type="DateTime" Name="ReadDate" Nullable="true" Precision="23" />
-          <Property Type="Int32" Name="CanConfirmRead" Nullable="false" />
-          <Property Type="String" Name="DocumentAdministrator" Nullable="true" MaxLength="101" />
-          <Property Type="String" Name="DocumentStateName" Nullable="true" MaxLength="50" />
-          <Property Type="String" Name="DocumentStateCode" Nullable="false" MaxLength="50" />
-          <Property Type="Int32" Name="UsersRead" Nullable="true" />
-          <Property Type="Int32" Name="AllUsers" Nullable="true" />
-          <Property Type="String" Name="AuthorName" Nullable="true" MaxLength="101" />
-        </ComplexType>
         <EntityType Name="ReadConfirmation">
           <Key>
             <PropertyRef Name="ID" />
@@ -1973,6 +1961,41 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="GetDocuments22_Result">
+          <Property Type="Int64" Name="row" Nullable="true" />
+          <Property Type="Int32" Name="ID" Nullable="false" />
+          <Property Type="Int32" Name="DocumentTypeID" Nullable="false" />
+          <Property Type="String" Name="DocumentNumber" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="EffeciencyDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="ReviewDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="NextReviewDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="AdministratorID" Nullable="false" />
+          <Property Type="Int32" Name="StateID" Nullable="true" />
+          <Property Type="Int32" Name="DocumentAdminType" Nullable="true" />
+          <Property Type="String" Name="Annotation" Nullable="true" />
+          <Property Type="String" Name="Revision" Nullable="true" MaxLength="1" />
+          <Property Type="DateTime" Name="EndDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="IssueNumber" Nullable="true" />
+          <Property Type="Int32" Name="ParentID" Nullable="true" />
+          <Property Type="Boolean" Name="ReviewNecessaryChange" Nullable="true" />
+          <Property Type="Int32" Name="AuthorID" Nullable="false" />
+          <Property Type="String" Name="ReviewNecessaryChangeComment" Nullable="true" />
+          <Property Type="Int32" Name="PreviousStateID" Nullable="true" />
+          <Property Type="Int32" Name="MainID" Nullable="false" />
+          <Property Type="String" Name="IssueChangeComment" Nullable="true" />
+          <Property Type="String" Name="StornoReason" Nullable="true" />
+          <Property Type="Int32" Name="CanEdit" Nullable="false" />
+          <Property Type="Int32" Name="CanRevision" Nullable="false" />
+          <Property Type="DateTime" Name="ReadDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="CanConfirmRead" Nullable="false" />
+          <Property Type="String" Name="DocumentAdministrator" Nullable="true" MaxLength="101" />
+          <Property Type="String" Name="DocumentStateName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="DocumentStateCode" Nullable="false" MaxLength="50" />
+          <Property Type="Int32" Name="AllUsers" Nullable="true" />
+          <Property Type="Int32" Name="UsersRead" Nullable="true" />
+          <Property Type="String" Name="AuthorName" Nullable="true" MaxLength="101" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2198,46 +2221,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <FunctionImportMapping FunctionImportName="GetDocuments21" FunctionName="GCPack.Store.GetDocuments">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="GCPack.GetDocuments21_Result">
-                <ScalarProperty Name="row" ColumnName="row" />
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
-                <ScalarProperty Name="DocumentNumber" ColumnName="DocumentNumber" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="EffeciencyDate" ColumnName="EffeciencyDate" />
-                <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
-                <ScalarProperty Name="NextReviewDate" ColumnName="NextReviewDate" />
-                <ScalarProperty Name="AdministratorID" ColumnName="AdministratorID" />
-                <ScalarProperty Name="StateID" ColumnName="StateID" />
-                <ScalarProperty Name="DocumentAdminType" ColumnName="DocumentAdminType" />
-                <ScalarProperty Name="Annotation" ColumnName="Annotation" />
-                <ScalarProperty Name="Revision" ColumnName="Revision" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />
-                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
-                <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
-                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
-                <ScalarProperty Name="ReviewNecessaryChangeComment" ColumnName="ReviewNecessaryChangeComment" />
-                <ScalarProperty Name="PreviousStateID" ColumnName="PreviousStateID" />
-                <ScalarProperty Name="MainID" ColumnName="MainID" />
-                <ScalarProperty Name="IssueChangeComment" ColumnName="IssueChangeComment" />
-                <ScalarProperty Name="StornoReason" ColumnName="StornoReason" />
-                <ScalarProperty Name="CanEdit" ColumnName="CanEdit" />
-                <ScalarProperty Name="CanRevision" ColumnName="CanRevision" />
-                <ScalarProperty Name="Created" ColumnName="Created" />
-                <ScalarProperty Name="ReadDate" ColumnName="ReadDate" />
-                <ScalarProperty Name="CanConfirmRead" ColumnName="CanConfirmRead" />
-                <ScalarProperty Name="DocumentAdministrator" ColumnName="DocumentAdministrator" />
-                <ScalarProperty Name="DocumentStateName" ColumnName="DocumentStateName" />
-                <ScalarProperty Name="DocumentStateCode" ColumnName="DocumentStateCode" />
-                <ScalarProperty Name="UsersRead" ColumnName="UsersRead" />
-                <ScalarProperty Name="AllUsers" ColumnName="AllUsers" />
-                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <EntitySetMapping Name="ReadConfirmations">
             <EntityTypeMapping TypeName="GCPack.ReadConfirmation">
               <MappingFragment StoreEntitySet="ReadConfirmation">
@@ -2279,6 +2262,45 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="GetDocuments22" FunctionName="GCPack.Store.GetDocuments">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="GCPack.GetDocuments22_Result">
+                <ScalarProperty Name="row" ColumnName="row" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="DocumentTypeID" ColumnName="DocumentTypeID" />
+                <ScalarProperty Name="DocumentNumber" ColumnName="DocumentNumber" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="EffeciencyDate" ColumnName="EffeciencyDate" />
+                <ScalarProperty Name="ReviewDate" ColumnName="ReviewDate" />
+                <ScalarProperty Name="NextReviewDate" ColumnName="NextReviewDate" />
+                <ScalarProperty Name="AdministratorID" ColumnName="AdministratorID" />
+                <ScalarProperty Name="StateID" ColumnName="StateID" />
+                <ScalarProperty Name="DocumentAdminType" ColumnName="DocumentAdminType" />
+                <ScalarProperty Name="Annotation" ColumnName="Annotation" />
+                <ScalarProperty Name="Revision" ColumnName="Revision" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="IssueNumber" ColumnName="IssueNumber" />
+                <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+                <ScalarProperty Name="ReviewNecessaryChange" ColumnName="ReviewNecessaryChange" />
+                <ScalarProperty Name="AuthorID" ColumnName="AuthorID" />
+                <ScalarProperty Name="ReviewNecessaryChangeComment" ColumnName="ReviewNecessaryChangeComment" />
+                <ScalarProperty Name="PreviousStateID" ColumnName="PreviousStateID" />
+                <ScalarProperty Name="MainID" ColumnName="MainID" />
+                <ScalarProperty Name="IssueChangeComment" ColumnName="IssueChangeComment" />
+                <ScalarProperty Name="StornoReason" ColumnName="StornoReason" />
+                <ScalarProperty Name="CanEdit" ColumnName="CanEdit" />
+                <ScalarProperty Name="CanRevision" ColumnName="CanRevision" />
+                <ScalarProperty Name="ReadDate" ColumnName="ReadDate" />
+                <ScalarProperty Name="CanConfirmRead" ColumnName="CanConfirmRead" />
+                <ScalarProperty Name="DocumentAdministrator" ColumnName="DocumentAdministrator" />
+                <ScalarProperty Name="DocumentStateName" ColumnName="DocumentStateName" />
+                <ScalarProperty Name="DocumentStateCode" ColumnName="DocumentStateCode" />
+                <ScalarProperty Name="AllUsers" ColumnName="AllUsers" />
+                <ScalarProperty Name="UsersRead" ColumnName="UsersRead" />
+                <ScalarProperty Name="AuthorName" ColumnName="AuthorName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

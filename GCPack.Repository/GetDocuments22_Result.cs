@@ -11,7 +11,7 @@ namespace GCPack.Repository
 {
     using System;
     
-    public partial class GetDocuments21_Result
+    public partial class GetDocuments22_Result
     {
         public Nullable<long> row { get; set; }
         public int ID { get; set; }
@@ -30,7 +30,7 @@ namespace GCPack.Repository
         public Nullable<int> IssueNumber { get; set; }
         public Nullable<int> ParentID { get; set; }
         public Nullable<bool> ReviewNecessaryChange { get; set; }
-        public Nullable<int> AuthorID { get; set; }
+        public int AuthorID { get; set; }
         public string ReviewNecessaryChangeComment { get; set; }
         public Nullable<int> PreviousStateID { get; set; }
         public int MainID { get; set; }
@@ -38,14 +38,13 @@ namespace GCPack.Repository
         public string StornoReason { get; set; }
         public int CanEdit { get; set; }
         public int CanRevision { get; set; }
-        public Nullable<System.DateTime> Created { get; set; }
         public Nullable<System.DateTime> ReadDate { get; set; }
         public int CanConfirmRead { get; set; }
         public string DocumentAdministrator { get; set; }
         public string DocumentStateName { get; set; }
         public string DocumentStateCode { get; set; }
-        public Nullable<int> UsersRead { get; set; }
         public Nullable<int> AllUsers { get; set; }
+        public Nullable<int> UsersRead { get; set; }
         public string AuthorName { get; set; }
     }
 }

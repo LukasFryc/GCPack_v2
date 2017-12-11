@@ -1,0 +1,18 @@
+﻿CREATE FUNCTION dbo.GetAssignDateUserToDocument   
+(  
+ @DocumentID int ,  
+ @UserID int   
+)  
+RETURNS DATETIME  
+BEGIN  
+ DECLARE @result DATETIME  
+ SET @result = NULL  
+ SELECT @result = created2 FROM (  
+ SELECT Max(Created) created2 FROM  UserDocument WHERE UserID = @UserID AND DocumentID = @DocumentID  
+ UNION   
+ SELECT Max(jpd.Created) created2 FROM JobPositionDocument jpd  
+ INNER JOIN JobPositionUser jpu ON jpd.JobPositionId = jpu.JobPositionId  
+ WHERE UserID = @UserID AND DocumentID = @DocumentID  
+ ) t1  
+ RETURN @result  
+END  

@@ -411,7 +411,7 @@ namespace GCPack.Repository
 
                 if (filter.DocumentID == null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments21_Result> documentsResult = db.GetDocuments21(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments21_Result>();
+                ICollection<GetDocuments22_Result> documentsResult = db.GetDocuments22(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments22_Result>();
                 documentCollection.Count = documentsResult.Count();
                 // v pripade ze se jedna o vyber jednoho dokumentu
                 if (filter.DocumentID != 0)
