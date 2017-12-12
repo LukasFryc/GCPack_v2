@@ -93,7 +93,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>GCPack.edmx</DependentUpon>
     </Compile>
-    <Compile Include="GetDocuments22_Result.cs">
+    <Compile Include="GetDocuments23_Result.cs">
       <DependentUpon>GCPack.tt</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ILogEventsRepository.cs" />
@@ -196,6 +196,7 @@
     <Content Include="SQL\2017_10_31 - GetDocuments_zaloha.txt" />
     <Content Include="SQL\2017_11_28_ - GetDocumentsZaloha.txt" />
     <Content Include="SQL\2017_11_9 - GetDocuments_zaloha.txt" />
+    <Content Include="SQL\2017_12_11 - getdocumnests - zaloha.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -280,7 +280,7 @@ namespace GCPack.Service
                     filter.Revision = "p"; // pouze platne
                     break;
             }
-
+            
             return documentsRepository.GetDocuments(filter);
         }
 

@@ -136,7 +136,7 @@
                     $.post(AppRoot + "/documents/getDocuments", {
                         name: $('#Name').val(),
                         Number: $('#Number').val(),
-                        AdministratorName: $('#AdministratorName').val(),
+                        //AdministratorName: $('#AdministratorName').val(),
                         DocumentTypeID: $('#DocumentTypeID').val(),
                         OrderBy: orderBy,
                         ProjectID: $('#ProjectID').val(),
@@ -312,6 +312,16 @@
 
         $(document).ready(function () {
 
+
+            if ("@UserRoles.IsAccess("User,Anonymous").ToString().ToLower()"=="true")
+            {
+                $('#StateCode').attr('disabled', 'disabled');
+                $('#Revision').attr('disabled', 'disabled');
+            }
+
+
+
+
             WSPager = $().WSPager({ owner: '#pager',  itemCount: 0, rowsPerPage: @((filter != null && filter.ItemsPerPage != 0) ? filter.ItemsPerPage : 10), fnGetPage: GetDocuments });
 
             if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorName").val() != '') {
@@ -340,7 +350,7 @@
                     setColorCompleted(this);
                 });
 
-                //alert("section-filter-plus0");    
+                //alert("section-filter-plus0");
                 GetDocuments();
 
             });
@@ -350,7 +360,10 @@
                 $("#btnCollapse1").html('<span class="glyphicon glyphicon-collapse-down"></span> +');
                 $("#Name").val('');
                 $("#Number").val('');
-                $("#AdministratorName").val('');
+                //$("#AdministratorName").val('');
+                $("#AdministratorID").val('0');
+                $("#AuthorID").val('0');
+                $("#UserID").val('0');
 
 
                 $('.filterText, .filter').each(function () {

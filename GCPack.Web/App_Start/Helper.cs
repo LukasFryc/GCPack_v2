@@ -63,9 +63,11 @@ namespace GCPack
 
 
         // nacteni konkretniho dokumentu
+
         public static DocumentModel GetDocument(int documentId, int forUserId)
+        
         {
-            ClaimsPrincipal principal = (ClaimsPrincipal)HttpContext.Current.User;
+            //ClaimsPrincipal principal = (ClaimsPrincipal)HttpContext.Current.User;
             return GetInstance().GetDocuments(new DocumentFilter() { DocumentID = documentId, ForUserID = forUserId }).Documents.FirstOrDefault();
         }
 

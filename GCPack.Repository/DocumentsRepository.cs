@@ -407,11 +407,24 @@ namespace GCPack.Repository
                 DocumentCollectionModel documentCollection = new DocumentCollectionModel();
                 filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
 
+                //LF 11.12.2017 NOVE
+                if (filter.UserID == null || filter.UserID == 0)
+                {
+                    filter.UserID = filter.ForUserID;
+                }
+
                 if (!string.IsNullOrEmpty(filter.StateCode)) filter.StateID = GetDocumentState(filter.StateCode); // lF 25.10.2017
 
                 if (filter.DocumentID == null) filter.DocumentID = 0;
 
-                ICollection<GetDocuments22_Result> documentsResult = db.GetDocuments22(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments22_Result>();
+                //LF 11.12.2017 NOVE
+                //AministratorID: $('#AministratorID').val(),
+                        //AuthorID: $('#AuthorID').val(),
+
+                ICollection<GetDocuments23_Result> documentsResult = db.GetDocuments23(filter.UserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID, filter.AministratorID, filter.AuthorID).ToList<GetDocuments23_Result>();
+                //ICollection<GetDocuments22_Result> documentsResult = db.GetDocuments22(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments22_Result>();
+                // prdchozi radek puvodne do 11.12.2017
+
                 documentCollection.Count = documentsResult.Count();
                 // v pripade ze se jedna o vyber jednoho dokumentu
                 if (filter.DocumentID != 0)

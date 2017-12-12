@@ -44,7 +44,9 @@ namespace GCPack.Model
     {
         public DocumentModel()
         {
-            FileItems = new HashSet<FileItem>();
+            this.FileItems = new HashSet<FileItem>();
+            this.SelectedUsers = new HashSet<int>();
+            this.JobPositionIDs = new HashSet<int>();
         }
 
         // LF 2.11.2017 Action - doplneno do modelu jen proto abych mohl delat validaci na vyplneni pole IssueCommentChange

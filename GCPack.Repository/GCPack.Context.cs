@@ -1713,7 +1713,7 @@ namespace GCPack.Repository
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetDocuments21", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter, divisionIDParameter, appSystemIDParameter, workplaceIDParameter, nextReviewDateFromParameter, nextReviewDateToParameter, effeciencyDateFromParameter, effeciencyDateToParameter, readTypeParameter, stateIDParameter, revisionParameter, reviewNecassaryChangeParameter, mainIDParameter);
         }
     
-        public virtual ObjectResult<GetDocuments22_Result> GetDocuments22(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage, Nullable<int> projectID, Nullable<int> divisionID, Nullable<int> appSystemID, Nullable<int> workplaceID, Nullable<System.DateTime> nextReviewDateFrom, Nullable<System.DateTime> nextReviewDateTo, Nullable<System.DateTime> effeciencyDateFrom, Nullable<System.DateTime> effeciencyDateTo, string readType, Nullable<int> stateID, string revision, string reviewNecassaryChange, Nullable<int> mainID)
+        public virtual int GetDocuments22(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage, Nullable<int> projectID, Nullable<int> divisionID, Nullable<int> appSystemID, Nullable<int> workplaceID, Nullable<System.DateTime> nextReviewDateFrom, Nullable<System.DateTime> nextReviewDateTo, Nullable<System.DateTime> effeciencyDateFrom, Nullable<System.DateTime> effeciencyDateTo, string readType, Nullable<int> stateID, string revision, string reviewNecassaryChange, Nullable<int> mainID)
         {
             var forUserIDParameter = forUserID.HasValue ?
                 new ObjectParameter("forUserID", forUserID) :
@@ -1803,7 +1803,108 @@ namespace GCPack.Repository
                 new ObjectParameter("MainID", mainID) :
                 new ObjectParameter("MainID", typeof(int));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocuments22_Result>("GetDocuments22", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter, divisionIDParameter, appSystemIDParameter, workplaceIDParameter, nextReviewDateFromParameter, nextReviewDateToParameter, effeciencyDateFromParameter, effeciencyDateToParameter, readTypeParameter, stateIDParameter, revisionParameter, reviewNecassaryChangeParameter, mainIDParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("GetDocuments22", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter, divisionIDParameter, appSystemIDParameter, workplaceIDParameter, nextReviewDateFromParameter, nextReviewDateToParameter, effeciencyDateFromParameter, effeciencyDateToParameter, readTypeParameter, stateIDParameter, revisionParameter, reviewNecassaryChangeParameter, mainIDParameter);
+        }
+    
+        public virtual ObjectResult<GetDocuments23_Result> GetDocuments23(Nullable<int> forUserID, Nullable<int> documentID, string name, string number, string administrator, string orderBy, Nullable<int> documentTypeID, Nullable<int> page, Nullable<int> itemsPerPage, Nullable<int> projectID, Nullable<int> divisionID, Nullable<int> appSystemID, Nullable<int> workplaceID, Nullable<System.DateTime> nextReviewDateFrom, Nullable<System.DateTime> nextReviewDateTo, Nullable<System.DateTime> effeciencyDateFrom, Nullable<System.DateTime> effeciencyDateTo, string readType, Nullable<int> stateID, string revision, string reviewNecassaryChange, Nullable<int> mainID, Nullable<int> administratorID, Nullable<int> authorID)
+        {
+            var forUserIDParameter = forUserID.HasValue ?
+                new ObjectParameter("forUserID", forUserID) :
+                new ObjectParameter("forUserID", typeof(int));
+    
+            var documentIDParameter = documentID.HasValue ?
+                new ObjectParameter("documentID", documentID) :
+                new ObjectParameter("documentID", typeof(int));
+    
+            var nameParameter = name != null ?
+                new ObjectParameter("Name", name) :
+                new ObjectParameter("Name", typeof(string));
+    
+            var numberParameter = number != null ?
+                new ObjectParameter("Number", number) :
+                new ObjectParameter("Number", typeof(string));
+    
+            var administratorParameter = administrator != null ?
+                new ObjectParameter("Administrator", administrator) :
+                new ObjectParameter("Administrator", typeof(string));
+    
+            var orderByParameter = orderBy != null ?
+                new ObjectParameter("OrderBy", orderBy) :
+                new ObjectParameter("OrderBy", typeof(string));
+    
+            var documentTypeIDParameter = documentTypeID.HasValue ?
+                new ObjectParameter("DocumentTypeID", documentTypeID) :
+                new ObjectParameter("DocumentTypeID", typeof(int));
+    
+            var pageParameter = page.HasValue ?
+                new ObjectParameter("Page", page) :
+                new ObjectParameter("Page", typeof(int));
+    
+            var itemsPerPageParameter = itemsPerPage.HasValue ?
+                new ObjectParameter("ItemsPerPage", itemsPerPage) :
+                new ObjectParameter("ItemsPerPage", typeof(int));
+    
+            var projectIDParameter = projectID.HasValue ?
+                new ObjectParameter("ProjectID", projectID) :
+                new ObjectParameter("ProjectID", typeof(int));
+    
+            var divisionIDParameter = divisionID.HasValue ?
+                new ObjectParameter("DivisionID", divisionID) :
+                new ObjectParameter("DivisionID", typeof(int));
+    
+            var appSystemIDParameter = appSystemID.HasValue ?
+                new ObjectParameter("AppSystemID", appSystemID) :
+                new ObjectParameter("AppSystemID", typeof(int));
+    
+            var workplaceIDParameter = workplaceID.HasValue ?
+                new ObjectParameter("WorkplaceID", workplaceID) :
+                new ObjectParameter("WorkplaceID", typeof(int));
+    
+            var nextReviewDateFromParameter = nextReviewDateFrom.HasValue ?
+                new ObjectParameter("NextReviewDateFrom", nextReviewDateFrom) :
+                new ObjectParameter("NextReviewDateFrom", typeof(System.DateTime));
+    
+            var nextReviewDateToParameter = nextReviewDateTo.HasValue ?
+                new ObjectParameter("NextReviewDateTo", nextReviewDateTo) :
+                new ObjectParameter("NextReviewDateTo", typeof(System.DateTime));
+    
+            var effeciencyDateFromParameter = effeciencyDateFrom.HasValue ?
+                new ObjectParameter("EffeciencyDateFrom", effeciencyDateFrom) :
+                new ObjectParameter("EffeciencyDateFrom", typeof(System.DateTime));
+    
+            var effeciencyDateToParameter = effeciencyDateTo.HasValue ?
+                new ObjectParameter("EffeciencyDateTo", effeciencyDateTo) :
+                new ObjectParameter("EffeciencyDateTo", typeof(System.DateTime));
+    
+            var readTypeParameter = readType != null ?
+                new ObjectParameter("ReadType", readType) :
+                new ObjectParameter("ReadType", typeof(string));
+    
+            var stateIDParameter = stateID.HasValue ?
+                new ObjectParameter("StateID", stateID) :
+                new ObjectParameter("StateID", typeof(int));
+    
+            var revisionParameter = revision != null ?
+                new ObjectParameter("Revision", revision) :
+                new ObjectParameter("Revision", typeof(string));
+    
+            var reviewNecassaryChangeParameter = reviewNecassaryChange != null ?
+                new ObjectParameter("ReviewNecassaryChange", reviewNecassaryChange) :
+                new ObjectParameter("ReviewNecassaryChange", typeof(string));
+    
+            var mainIDParameter = mainID.HasValue ?
+                new ObjectParameter("MainID", mainID) :
+                new ObjectParameter("MainID", typeof(int));
+    
+            var administratorIDParameter = administratorID.HasValue ?
+                new ObjectParameter("AdministratorID", administratorID) :
+                new ObjectParameter("AdministratorID", typeof(int));
+    
+            var authorIDParameter = authorID.HasValue ?
+                new ObjectParameter("AuthorID", authorID) :
+                new ObjectParameter("AuthorID", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<GetDocuments23_Result>("GetDocuments23", forUserIDParameter, documentIDParameter, nameParameter, numberParameter, administratorParameter, orderByParameter, documentTypeIDParameter, pageParameter, itemsPerPageParameter, projectIDParameter, divisionIDParameter, appSystemIDParameter, workplaceIDParameter, nextReviewDateFromParameter, nextReviewDateToParameter, effeciencyDateFromParameter, effeciencyDateToParameter, readTypeParameter, stateIDParameter, revisionParameter, reviewNecassaryChangeParameter, mainIDParameter, administratorIDParameter, authorIDParameter);
         }
     }
 }

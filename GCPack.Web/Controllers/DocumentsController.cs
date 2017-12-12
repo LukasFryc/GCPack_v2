@@ -88,9 +88,10 @@ namespace GCPack.Web.Controllers
             ViewBag.RevisionType = revisionType.OrderBy(rt => rt.OrderBy);
 
             ICollection<Item> readType = new HashSet<Item>(); ;
-            readType.Add(new Item { ID = 0, Code = "all", OrderBy = 0, Value = "Všechny" });
-            readType.Add(new Item { ID = 2, Code = "read", OrderBy = 1, Value = "Seznámeno" });
-            readType.Add(new Item { ID = 1, Code = "unread", OrderBy = 2, Value = "Neseznámeno" });
+            readType.Add(new Item { ID = 0, Code = "all", OrderBy = 0, Value = "Bez rozdělovníku" });
+            readType.Add(new Item { ID = 0, Code = "allWith", OrderBy = 1, Value = "S rozdělovníkem" });
+            readType.Add(new Item { ID = 2, Code = "read", OrderBy = 2, Value = "Seznámeno" });
+            readType.Add(new Item { ID = 1, Code = "unread", OrderBy = 3, Value = "Neseznámeno" });
             ViewBag.ReadType = readType.OrderBy(dt => dt.OrderBy);
 
             documentTypes.Add(new Item { ID = 0, OrderBy = -1, Value = "Všechny typy" });
@@ -126,17 +127,17 @@ namespace GCPack.Web.Controllers
 
             ICollection<Item> uniqueAuthors = new HashSet<Item>();
             uniqueAuthors = documentService.GetUniqueAuthorsDocuments();
-            uniqueAuthors.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni" });
+            uniqueAuthors.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni autoři" });
             ViewBag.UniqueAuthors = uniqueAuthors.OrderBy(a => a.OrderBy);
 
             ICollection<Item> uniqueAdministrators = new HashSet<Item>();
             uniqueAdministrators = documentService.GetUniqueAdministratorsDocuments();
-            uniqueAdministrators.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni" });
+            uniqueAdministrators.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni správci" });
             ViewBag.UniqueAdministrators = uniqueAdministrators.OrderBy(a => a.OrderBy);
 
             ICollection<Item> uniqueUsers = new HashSet<Item>();
             uniqueUsers = documentService.GetUniqueReadConfirmsDocuments();
-            uniqueUsers.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Všichni" });
+            uniqueUsers.Add(new Item { ID = 0, Code = "", OrderBy = 0, Value = "Přihlášená osoba" });
             ViewBag.UniqueUsers = uniqueUsers.OrderBy(a => a.OrderBy);
 
             // ViewBag.Message = Message;
@@ -335,6 +336,7 @@ namespace GCPack.Web.Controllers
             //? (DateTime?)null
             //: DateTime.Parse(filter.EffeciencyDateFrom.ToString());
             filter.ForUserID = UserRoles.GetUserId();
+
             if (filter.SaveFilter)
             {
                 Session["documentFilter"] = filter;
