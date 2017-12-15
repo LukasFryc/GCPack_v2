@@ -31,7 +31,10 @@ namespace GCPack.Web.Controllers
         [GCAuthorizeAttribute(Roles = "SystemAdmin,SuperDocAdmin,DocAdmin,User,Author")]
         public ActionResult Index(DocumentFilter filter)
         {
-            
+            //TODO> LF testik linq
+            documentService.GetDocuments_linqTest(filter);
+
+
             // TODO: dopsat filtrovani - pridat do filtru userId pro ktereho se vyberou pouze jeho dokumenty
             ICollection<DocumentModel> documents = new HashSet<DocumentModel>();
             ICollection<Item> documentTypes = documentService.GetDocumentTypes();

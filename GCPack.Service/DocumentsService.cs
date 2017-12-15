@@ -231,6 +231,18 @@ namespace GCPack.Service
         }
 
 
+        public ICollection<DocumentModel> GetDocuments_linqTest(DocumentFilter filter) {
+
+            filter.UserID = 9;
+            filter.Revision = "p";
+            filter.StateCode = "registered";
+            filter.ReadType = "read";
+
+
+            return documentsRepository.GetDocuments_linqTest(filter);
+
+        }
+
         // pokud newState neni vyplnen bude bran novy stav ze sloupce PrivousStateID 
         public void ChangeDocumentStateOnPreviousState(DocumentModel document, string newState)
         {
@@ -280,8 +292,9 @@ namespace GCPack.Service
                     filter.Revision = "p"; // pouze platne
                     break;
             }
-            
-            return documentsRepository.GetDocuments(filter);
+
+            //return documentsRepository.GetDocuments(filter);
+            return documentsRepository.GetDocuments_linq(filter);
         }
 
         public ICollection<Item> GetDocumentTypes()

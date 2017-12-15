@@ -244,8 +244,45 @@ namespace GCPack.Repository
         }
 
 
-        public ICollection<DocumentModel> GetDocuments_linq(DocumentFilter filter)
+        public ICollection<DocumentModel> GetDocuments_linqTest(DocumentFilter filter)
         {
+            using (GCPackContainer db = new GCPackContainer())
+            {
+
+
+
+                // join
+                ICollection <DocumentModel> docs =
+                (from D in db.Documents
+                join RC in db.ReadConfirmations on D.ID equals RC.DocumentID into RCGroup
+                
+                 from item in RCGroup.DefaultIfEmpty()
+                 select new DocumentModel { ID = D.ID, ReadDate = item.ReadDate, DocumentNumber = D.DocumentNumber, UsersRead = RCGroup.Count() }).ToList();
+
+                //https://stackoverflow.com/questions/3404975/left-outer-join-in-linq
+                // join ve where
+                //var docs = (
+                //    from D in db.Documents
+                //    from RC in db.ReadConfirmations
+                //         .Where(RC => RC.DocumentID == D.ID && RC.UserID == filter.UserID)
+                //         .DefaultIfEmpty() // <== makes join left join
+                //    select new DocumentModel { ID = D.ID, ReadDate = RC.ReadDate, DocumentNumber = D.DocumentNumber }
+                //    );
+
+                //ICollection<DocumentModel> documents = Mapper.Map<ICollection<DocumentModel>>(docs.Where(d =>!d.ReadDate.Equals(null)).Select(d=>d));
+
+                return docs;
+                
+
+                // join s count https://stackoverflow.com/questions/2767143/linq-join-with-count
+
+
+            }
+        }
+
+        public DocumentCollectionModel GetDocuments_linq(DocumentFilter filter)
+        {
+            DocumentCollectionModel documentCollection = new DocumentCollectionModel();
             using (GCPackContainer db = new GCPackContainer())
             {
                 filter.ReadType = (filter.ReadType is null) ? "all" : filter.ReadType;
@@ -253,15 +290,13 @@ namespace GCPack.Repository
                 if (!string.IsNullOrEmpty(filter.StateCode)) filter.StateID = GetDocumentState(filter.StateCode); // lF 25.10.2017
 
                 if (filter.DocumentID == null) filter.DocumentID = 0;
-
-                filter.ItemsPerPage = 10000;
-
+                
                 var documents = (
                     from d in db.Documents
-
                     select d);
 
                 // generovani where podminek
+                
                 if (filter.DocumentID != 0) documents = documents.Where(d => d.ID == filter.DocumentID);
                 if (filter.StateID != 0 && filter.StateID != null) documents = documents.Where(d => d.StateID == filter.StateID);
                 if (filter.Revision != "all" && filter.Revision != null) documents = documents.Where(d => d.Revision == filter.Revision);
@@ -270,9 +305,6 @@ namespace GCPack.Repository
                 if (!string.IsNullOrEmpty(filter.Name)) documents = documents.Where(d => d.Title.Contains(filter.Name));
                 if (!string.IsNullOrEmpty(filter.Number)) documents = documents.Where(d => d.DocumentNumber.Contains(filter.Number));
                 if (filter.DocumentTypeID != 0 && filter.DocumentTypeID != null) documents = documents.Where(d => d.DocumentTypeID == filter.DocumentTypeID);
-
-
-
 
                 if (filter.ProjectID != 0 && filter.ProjectID != null)
                     documents = documents.Where(
@@ -319,14 +351,21 @@ namespace GCPack.Repository
                     documents = documents.Where(d => filter.EffeciencyDateTo >= d.EffeciencyDate);
                 }
 
-                if (filter.ReadType == "read")
+
+                if (filter.ReadType == "allWith")
                 {
                     documents = documents.Where(d => d.ReadConfirmations.Where(rc => rc.UserID == filter.ForUserID).Select(rc => rc.DocumentID).Contains(d.ID));
                 }
 
+
+                if (filter.ReadType == "read")
+                {
+                    documents = documents.Where(d => d.ReadConfirmations.Where(rc => rc.ReadDate.Equals(null) && rc.UserID == filter.ForUserID).Select(rc => rc.DocumentID).Contains(d.ID));
+                }
+
                 if (filter.ReadType == "unread")
                 {
-                    documents = documents.Where(d => !d.ReadConfirmations.Where(rc => rc.UserID == filter.ForUserID).Select(rc => rc.DocumentID).Contains(d.ID));
+                    documents = documents.Where(d => d.ReadConfirmations.Where(rc => rc.ReadDate.Equals(null) && rc.UserID == filter.ForUserID).Select(rc => rc.DocumentID).Contains(d.ID));
                 }
 
                 if (!string.IsNullOrEmpty(filter.AdministratorName))
@@ -346,9 +385,21 @@ namespace GCPack.Repository
                        )
                       );
                 }
-
+                
                 switch (filter.OrderBy)
                 {
+                    case "AuthorA":
+                        documents = documents.OrderBy(d => d.User1.LastName).ThenBy (d => d.User1.FirstName);
+                        break;
+                    case "AuthorD":
+                        documents = documents.OrderByDescending(d => d.User1.LastName).ThenByDescending(d => d.User1.FirstName);
+                        break;
+                    case "AdminA":
+                        documents = documents.OrderBy(d => d.User.LastName).ThenBy(d => d.User.FirstName);
+                        break;
+                    case "AdminD":
+                        documents = documents.OrderByDescending(d => d.User.LastName).ThenByDescending(d => d.User.FirstName);
+                        break;
                     case "NameA":
                         documents = documents.OrderBy(d => d.Title);
                         break;
@@ -374,28 +425,47 @@ namespace GCPack.Repository
 
                 // tyka se strankovani: documents.Skip(filter.Page * filter.ItemPerPage).Take (filter.ItemPerPage)
 
-                ICollection<DocumentModel> docs = Mapper.Map<ICollection<DocumentModel>>(documents.Skip(filter.Page * filter.ItemsPerPage).Take(filter.ItemsPerPage));
+                documentCollection.Count = documents.Count();
 
-                foreach (DocumentModel document in docs)
+                int page = (filter.Page != 0) ? filter.Page - 1 : filter.Page;
+                int itemsPerPage = (filter.ItemsPerPage == 0) ? 1 : filter.ItemsPerPage;
+                
+                var items = documents.Skip(page * itemsPerPage).Take(itemsPerPage).Select(
+                    d => new  { d,
+                        AllUsers = ((from rc in db.ReadConfirmations where rc.DocumentID == d.ID select rc).Count()),
+                        UsersRead = ((from rc in db.ReadConfirmations where rc.DocumentID == d.ID && !rc.ReadDate.Equals(null) select rc).Count()),
+                        CanConfirmRead = ((from rc in db.ReadConfirmations where rc.DocumentID == d.ID && rc.UserID == filter.ForUserID && rc.ReadDate.Equals(null) select rc).Count() > 0 ),
+                        DocumentAdministrator = ((from u in db.Users where u.ID == d.AdministratorID select u.LastName + " " + u.FirstName).FirstOrDefault()),
+                        AuthorName = ((from u in db.Users where u.ID == d.AuthorID select u.LastName + " " + u.FirstName).FirstOrDefault()),
+                        DocumentStateName = ((from s in db.DocumentStates where s.ID == d.StateID select s.Name).FirstOrDefault()),
+                        DocumentStateCode = ((from s in db.DocumentStates where s.ID == d.StateID select s.Code).FirstOrDefault())
+                    }
+                    );
+
+                
+
+                ICollection <DocumentModel> documentsResult = new HashSet<DocumentModel>();
+                foreach (var item in items)
                 {
-                    if (document.AdministratorID == 0)
-                    {
-                        //document.DocumentAdministrator =
-                        //    db.DocumentTypes.Where(d => d.ID == document.DocumentTypeID).Select(d => d.User.FirstName + " " + d.User.LastName).FirstOrDefault();
-                    }
-                    else
-                    {
-                        document.DocumentAdministrator =
-                            db.Users.Where(u => u.ID == document.AdministratorID).Select(u => u.FirstName + " " + u.LastName).FirstOrDefault();
-                    }
-
-                    document.AllUsers = db.JobPositionDocuments.Where(jpd => jpd.DocumentId == document.ID).Count() + db.UserDocuments.Where(ud => ud.DocumentId == document.ID).Count();
-                    document.UsersRead = db.ReadConfirmations.Where(ud => ud.DocumentID == document.ID).Count();
+                    DocumentModel documentModelResult = Mapper.Map<DocumentModel>(item.d);
+                    documentModelResult.AllUsers = item.AllUsers;
+                    documentModelResult.UsersRead = item.UsersRead;
+                    documentModelResult.CanConfirmRead = item.CanConfirmRead;
+                    documentModelResult.DocumentAdministrator = item.DocumentAdministrator;
+                    documentModelResult.AuthorName = item.AuthorName;
+                    documentModelResult.DocumentStateName = item.DocumentStateName;
+                    documentModelResult.DocumentStateCode = item.DocumentStateCode;
 
 
+                    documentsResult.Add(documentModelResult);
                 }
 
-                return docs;
+                documentCollection.Documents = documentsResult;
+                documentCollection.filter = filter;
+
+
+
+                return documentCollection;
             }
         }
 
@@ -418,10 +488,10 @@ namespace GCPack.Repository
                 if (filter.DocumentID == null) filter.DocumentID = 0;
 
                 //LF 11.12.2017 NOVE
-                //AministratorID: $('#AministratorID').val(),
+                //AdministratorID: $('#AdministratorID').val(),
                         //AuthorID: $('#AuthorID').val(),
 
-                ICollection<GetDocuments23_Result> documentsResult = db.GetDocuments23(filter.UserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID, filter.AministratorID, filter.AuthorID).ToList<GetDocuments23_Result>();
+                ICollection<GetDocuments23_Result> documentsResult = db.GetDocuments23(filter.UserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID, filter.AdministratorID, filter.AuthorID).ToList<GetDocuments23_Result>();
                 //ICollection<GetDocuments22_Result> documentsResult = db.GetDocuments22(filter.ForUserID, filter.DocumentID, filter.Name, filter.Number, filter.AdministratorName, filter.OrderBy, filter.DocumentTypeID, 0, 100000, filter.ProjectID, filter.DivisionID, filter.AppSystemID, filter.WorkplaceID, filter.NextReviewDateFrom, filter.NextReviewDateTo, filter.EffeciencyDateFrom, filter.EffeciencyDateTo, filter.ReadType, filter.StateID, filter.Revision, filter.ReviewNecessaryChange, filter.MainID).ToList<GetDocuments22_Result>();
                 // prdchozi radek puvodne do 11.12.2017
 

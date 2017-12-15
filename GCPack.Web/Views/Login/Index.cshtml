@@ -4,6 +4,24 @@
 }
     @using (Html.BeginForm("Login", "Login", FormMethod.Post, new { id = "loginForm" }))
     {
+        <script>
+        /*    var config = [
+                { "type": "input", "id": "#UserName", "Value": "" },
+                { "type": "title", "id": "#title", "Value": "Titulek 1" }
+            ];
+
+            function setConfig()
+            {
+                $(config).foreach(
+                function (item, i)
+                {
+                    $(item.id).Value(item.Value);
+
+                }
+                    );
+            }
+            */
+        </script>
         <div>
             <h2>Přihlašeni</h2>
             Jméno: <input name="UserName" class="form-control" value="@Model.UserName" />
@@ -11,5 +29,5 @@
             <input type="hidden" name="RawUrl" value="@ViewBag.RawUrl" />
             <input type="submit" class="btn btn-primary" value="Přihlásit" />
         </div>
-        
+
     }

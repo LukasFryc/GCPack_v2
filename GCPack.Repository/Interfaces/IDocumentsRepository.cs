@@ -64,5 +64,8 @@ namespace GCPack.Repository.Interfaces
 
         ICollection<Item> GetUniqueReadConfirmsDocuments(DocumentFilter filter);
 
+        ICollection<DocumentModel> GetDocuments_linqTest(DocumentFilter filter);
+        DocumentCollectionModel GetDocuments_linq(DocumentFilter filter);
+
     }
 }

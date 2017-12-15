@@ -85,7 +85,7 @@ namespace GCPack.Model
         }
 
 
-        public int? AministratorID { get; set; }
+        public int? AdministratorID { get; set; }
         public int? AuthorID { get; set; }
         public int? UserID { get; set; }
 

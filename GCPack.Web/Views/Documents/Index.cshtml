@@ -17,6 +17,28 @@
         border: 3px solid #3276B1 !important;
     }
 
+    .mytooltip {
+        background-color: #FFFFE0;
+        color: black !important;
+        padding: 5px 10px;
+        border-radius: 5px;
+    }
+       
+
+    /*.mytooltip {
+        radius: 4px !important;
+        background-color: black;
+        color: rgb(255, 77, 85) !important;
+        padding: 5px 20px;
+        border-radius: 20px;
+        margin: 50px;
+        text-align: center;
+        font: bold 14px;
+        font-stretch: condensed;
+        text-decoration: none;
+        box-shadow: 0 0 10px black;
+    }*/
+
    
     
 </style>
@@ -74,7 +96,7 @@
         $(document).ready(function () {
 
                 $("#AllDocuments").delegate("tr.dataRowClick", "click", function () {
-                        window.location.href = '/Documents/Details/?documentId=' + $(this).attr('value');
+                        window.location.href = '/Documents/Details?documentId=' + $(this).attr('value');
                 });
 
                 GetDocuments();
@@ -155,7 +177,7 @@
                         ReviewNecessaryChange: $('#ReviewNecessaryChange').val(),
                         Page: $('#page').val(),
                         ItemsPerPage: $('.rowsPerPage').val(),
-                        AministratorID: $('#AministratorID').val(),
+                        AdministratorID: $('#AdministratorID').val(),
                         AuthorID: $('#AuthorID').val(),
                         UserID: $('#UserID').val()
                     })
@@ -312,6 +334,28 @@
 
         $(document).ready(function () {
 
+            //$(document).tooltip();
+
+            //$(document).tooltip({
+            //    position: {
+            //        my: "center bottom-20",
+            //        at: "center top",
+            //        using: function (position, feedback) {
+            //            $(this).css(position);
+            //            $("<div>")
+            //                .addClass("arrow")
+            //                .addClass(feedback.vertical)
+            //                .addClass(feedback.horizontal)
+            //                .appendTo(this);
+            //        }
+            //    }
+            //});
+
+            $(document).tooltip({
+                tooltipClass: "mytooltip"
+                //tooltipClass: "custom-tooltip-styling"
+            });
+
 
             if ("@UserRoles.IsAccess("User,Anonymous").ToString().ToLower()"=="true")
             {
@@ -324,7 +368,7 @@
 
             WSPager = $().WSPager({ owner: '#pager',  itemCount: 0, rowsPerPage: @((filter != null && filter.ItemsPerPage != 0) ? filter.ItemsPerPage : 10), fnGetPage: GetDocuments });
 
-            if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorName").val() != '') {
+            if ($("#Name").val() != '' || $("#Number").val() != '' || $("#AdministratorID").val() != 0 || $("#AuthorID").val() != 0) {
                 $("#section-filter-plus1").collapse('show');
             }
 
@@ -574,7 +618,7 @@
             <label for="Number">Název</label>
         </div>
         <div class="col-md-2">
-            <label for="AministratorID">Správce</label>
+            <label for="AdministratorID">Správce</label>
         </div>
         <div class="col-md-2">
             <label for="AuthorID">Autor</label>
@@ -603,13 +647,13 @@
             </div>
             <div class="col-md-2">
                 @*<input class="filterText form-control" type="text" id="AdministratorName" value="@((filter != null) ? filter.AdministratorName : string.Empty)" />*@
-                @Html.DropDownListFor(m => m.AministratorID, new SelectList(ViewBag.UniqueAdministrators, "ID", "Value"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.AdministratorID, new SelectList(ViewBag.UniqueAdministrators, "ID", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-2">
                 @Html.DropDownListFor(m => m.AuthorID, new SelectList(ViewBag.UniqueAuthors, "ID", "Value"), new { @class = "filter form-control" })
             </div>
             <div class="col-md-2">
-                @Html.DropDownListFor(m => m.UserID, new SelectList(ViewBag.UniqueUsers, "ID", "Value"), new { @class = "filter form-control" })
+                @Html.DropDownListFor(m => m.UserID, new SelectList(ViewBag.UniqueUsers, "ID", "Value"), new { @class = "filter form-control", @title = "Nápověda pro toto pole"  })
             </div>
             <div class="col-md-1">
 
