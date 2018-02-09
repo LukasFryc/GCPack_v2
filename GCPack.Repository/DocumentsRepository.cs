@@ -242,43 +242,7 @@ namespace GCPack.Repository
                 return Mapper.Map<ICollection<Item>>(db.DocumentTypes.Select(dt => dt).OrderBy(dt => dt.OrderBy));
             }
         }
-
-
-        public ICollection<DocumentModel> GetDocuments_linqTest(DocumentFilter filter)
-        {
-            using (GCPackContainer db = new GCPackContainer())
-            {
-
-
-
-                // join
-                ICollection <DocumentModel> docs =
-                (from D in db.Documents
-                join RC in db.ReadConfirmations on D.ID equals RC.DocumentID into RCGroup
-                
-                 from item in RCGroup.DefaultIfEmpty()
-                 select new DocumentModel { ID = D.ID, ReadDate = item.ReadDate, DocumentNumber = D.DocumentNumber, UsersRead = RCGroup.Count() }).ToList();
-
-                //https://stackoverflow.com/questions/3404975/left-outer-join-in-linq
-                // join ve where
-                //var docs = (
-                //    from D in db.Documents
-                //    from RC in db.ReadConfirmations
-                //         .Where(RC => RC.DocumentID == D.ID && RC.UserID == filter.UserID)
-                //         .DefaultIfEmpty() // <== makes join left join
-                //    select new DocumentModel { ID = D.ID, ReadDate = RC.ReadDate, DocumentNumber = D.DocumentNumber }
-                //    );
-
-                //ICollection<DocumentModel> documents = Mapper.Map<ICollection<DocumentModel>>(docs.Where(d =>!d.ReadDate.Equals(null)).Select(d=>d));
-
-                return docs;
-                
-
-                // join s count https://stackoverflow.com/questions/2767143/linq-join-with-count
-
-
-            }
-        }
+       
 
         public DocumentCollectionModel GetDocuments_linq(DocumentFilter filter)
         {
@@ -639,7 +603,7 @@ namespace GCPack.Repository
             {
                 var blob = db.Files.Where(f => f.ID == fileID).Select(f => f.FileBlob).FirstOrDefault();
                 string fileName = db.Files.Where(f => f.ID == fileID).Select(f => f.Name).FirstOrDefault();
-                return new FileItem() { Data = blob, Name = fileName };
+                return new FileItem() { Data = blob, Name = fileName};
             }
         }
 

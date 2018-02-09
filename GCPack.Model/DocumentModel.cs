@@ -26,6 +26,10 @@ namespace GCPack.Model
         public int ID { get; set; }
         public string Size { get; set; }
         public byte[] Data { get; set; }
+
+        //LF 18.12.2017
+        public string Comment { get; set; }
+
     }
 
     public class DocumentCollectionModel

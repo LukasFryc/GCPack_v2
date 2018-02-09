@@ -457,7 +457,7 @@
                     </div>*@
 
                 <div class="row">
-                    <label class="control-label col-md-2" for="DocumentAdminType">Typ správce dokumentu</label>
+                    <label class="control-label col-md-2" for="AdministratorID">Správce dokumentu</label>
                     <div class="col-md-4">
                         @*@if (ViewBag.TypeModel.AdministratorID != 0)
                             {
@@ -480,7 +480,7 @@
                 </div>
 
                 <div class="row">
-                    <label class="control-label col-md-2" for="Title">Anotace</label>
+                    <label class="control-label col-md-2" for="Annotation">Anotace</label>
                     <div class="col-md-9">
                         @Html.TextAreaFor(model => model.Annotation, new { @class = "form-control annotationArea", @placeholder = "Poznámka k dokumentu" })
                         @Html.ValidationMessageFor(model => model.Annotation, "", new { @class = "text-danger" })
@@ -490,7 +490,7 @@
                 @if (Model.IssueNumber > 1)
                 {
                     <div class="row">
-                        <label class="control-label col-md-2" for="Title">Popis změny</label>
+                        <label class="control-label col-md-2" for="IssueChangeComment">Popis změny</label>
                         <div class="col-md-9">
                             @Html.TextAreaFor(model => model.IssueChangeComment, new { @class = "form-control annotationArea", @placeholder = "Popis změny v tomto vydání" })
                             @Html.ValidationMessageFor(model => model.IssueChangeComment, "", new { @class = "text-danger" })
@@ -512,7 +512,16 @@
                         <div class="col-md-2">
                             @item.Name
                         </div>
-                        <div class="col-md-6">
+
+                        @*<div class="col-md-2">
+                            @item.Size
+                        </div>
+
+                        <div class="col-md-4">
+                            @item.Comment
+                        </div>*@
+
+                        <div class="col-md-4">
                             @if (Model.DocumentStateCode == "New")
                             {
                                 <a href="#" class="btn btn-default btn-sm removeFile" fileId="@item.ID">

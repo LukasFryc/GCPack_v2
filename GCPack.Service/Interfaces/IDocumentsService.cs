@@ -37,7 +37,5 @@ namespace GCPack.Service.Interfaces
 
         ICollection<Item> GetUniqueReadConfirmsDocuments();
 
-        ICollection<DocumentModel> GetDocuments_linqTest(DocumentFilter filter);
-
     }
 }
